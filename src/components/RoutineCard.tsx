@@ -1,35 +1,25 @@
-"use client";
+// "use client";
 
 import React from "react";
 import { Routine } from "../models/workout"; // Assume types are defined in this file or import from the correct location
 // import { useRoutine } from "@/context/RoutineContext";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface RoutineCardProps {
   routine: Routine;
 }
 
 const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
-  //  const { setRoutine } = useRoutine();
-  // const router = useRouter();
-
-  const handlePlayClick = () => {
-    console.log("routine.id:", routine.id);
-    /* router.push({
-     *   pathname: "/playview",
-     *   query: { routineId: routine.id },
-     * }); */
-  };
-
+  console.log(routine.id);
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 m-4 relative hover:bg-gray-100">
       <div className="absolute top-4 right-4 flex space-x-2">
-        <button
-          onClick={handlePlayClick}
-          className="text-lg font-semibold p-2 rounded-full bg-green-500 text-white hover:bg-green-600"
-        >
-          ▶️
-        </button>
+        <Link href={`/playview/${routine.id}`}>
+          <button className="text-lg font-semibold p-2 rounded-full bg-green-500 text-white hover:bg-green-600">
+            ▶️
+          </button>
+        </Link>
         <button className="text-lg font-semibold p-2 rounded-full bg-gray-300 hover:bg-gray-400">
           ⋮
         </button>

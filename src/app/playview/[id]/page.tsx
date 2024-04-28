@@ -2,12 +2,14 @@
 
 import type { NextPage } from "next";
 import React, { useState, useEffect } from "react";
-
-import { useRouter } from "next/router";
-// import { useWeb5 } from "@/context/Web5Context";
 import { getRoutine } from "@/lib/store/dwn/routines";
 
-export type CurrentRoutineState = {
+import { useRouter } from "next/navigation";
+import { useWeb5 } from "@/context/Web5Context";
+
+import TimerComponent from "@/components/TimerComponent";
+
+type CurrentRoutineState = {
   currentStepIndex: number;
   currentStepName: string;
   currentTimeLeft: string;
@@ -16,42 +18,71 @@ export type CurrentRoutineState = {
 
 const steps = ["Prepare", "Work", "Rest", "Work", "Rest", "Cool Down"];
 
-const PlayView: NextPage = () => {
+export default function PlayView({ params }: { params: { routerId: string } }) {
   const router = useRouter();
-  const { query } = router;
-  const { routineId } = query as { routineId: string }; // Safely access routineId
+  const { web5, did } = useWeb5();
 
-  // const { web5 } = useWeb5();
-
+  const [routine, setRoutine] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [totalTimeLeft, setTotalTimeLeft] = useState("30:00");
+  const [totalTimeLeft, setTotalTimeLeft] = useState(0);
   const [timeInStep, setTimeInStep] = useState("15:00");
 
+  const routineId = params.id;
   const totalCycles = 3;
   const currentCycle = 1;
-  /*
-   *   useEffect(async () => {
-   *     if (routineId) {
-   *       try {
-   *         await getRoutine(routineId, web5);
-   *       } catch (error) {
-   *         console.error(error);
-   *       }
-   *     }
-   *   }, [routineId, web5]);
-   *  */
+
+  const fetchRoutine = async (routineId, web5) => {
+    if (routineId) {
+      try {
+        const t = await getRoutine(routineId, web5);
+        setRoutine(t);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (web5 && routineId) {
+      fetchRoutine(routineId, web5);
+    }
+  }, [routineId, web5]);
+
+  useEffect(() => {
+    computeTotalTimeLeft(); // Run the function when myVariable changes
+  }, [routine]); // Specify myVariable as a dependency
+
+  const computeTotalTimeLeft = () => {
+    if (routine) {
+      console.log("----------");
+      setTotalTimeLeft(100);
+      //setTotalTimeLeft(routine.routine.Prepare.duration);
+      console.log("444444444");
+    }
+  };
+
   return (
     <div className="flex flex-col w-full h-screen ">
+      {totalTimeLeft}
       <div className="flex justify-between items-center p-4">
-        <button
-          className="p-2 rounded bg-blue-500 text-white"
-          onClick={() => setIsPlaying(!isPlaying)}
-        >
-          {isPlaying ? "Pause" : "Play"}
-        </button>
+        <div className="flex">
+          <button
+            className="p-2 rounded bg-blue-500 text-white"
+            onClick={() => setIsPlaying(!isPlaying)}
+          >
+            {isPlaying ? "Pause" : "Play"}
+          </button>
+          <button
+            className="p-2 rounded bg-blue-500 text-white"
+            onClick={() => router.push("/")}
+          >
+            Home
+          </button>
+        </div>
         <div className="p-4 text-center font-bold text-2xl">
-          Total Time: {totalTimeLeft}
+          Total Time Left: {totalTimeLeft}{" "}
+          <TimerComponent durationInSeconds={totalTimeLeft} />
         </div>
       </div>
       <div className="text-center">
@@ -85,6 +116,4 @@ const PlayView: NextPage = () => {
       </div>
     </div>
   );
-};
-
-export default PlayView;
+}
