@@ -1,39 +1,51 @@
-"use client";
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Web5 } from "@web5/api";
+import { configureProtocol } from "@/lib/store/dwn/routines";
 
-interface Web5ContextType {
+type Web5ContextType = {
   web5: any; // Define more specific types if available
-  aliceDid: string | null;
+  did: string | null;
   initWeb5: () => Promise<void>;
-}
+};
 
 export const Web5Context = createContext<Web5ContextType | undefined>(
   undefined,
 );
 
+export const useWeb5 = () => {
+  const context = useContext(Web5Context);
+  if (context === undefined) {
+    throw new Error("useWeb5 must be used within a Web5Provider");
+  }
+  return context;
+};
+
 export const Web5Provider: React.FC = ({ children }) => {
   const [web5, setWeb5] = useState<Web5 | null>(null);
   const [did, setDid] = useState<string | null>(null);
 
-  useEffect(async () => {
-    const { web51, did: did1 } = await Web5.connect();
-    setWeb5(web51);
-    setDid(did1);
-  }, []); // Initialize on mount
+  const initWeb5 = async () => {
+    console.log("initializing  web5");
+    try {
+      const { web5: connectedWeb5, did: myDid } = await Web5.connect({
+        password: "asdf",
+      });
+      setWeb5(connectedWeb5);
+      setDid(myDid);
+      await configureProtocol(connectedWeb5);
+      console.log("protocol configured");
+    } catch (error) {
+      console.error("Failed to connect to Web5:", error);
+    }
+  };
+
+  useEffect(() => {
+    initWeb5();
+  }, []);
 
   return (
-    <Web5Context.Provider value={{ web5, setWeb5 }}>
+    <Web5Context.Provider value={{ did: did, web5: web5, initWeb5: initWeb5 }}>
       {children}
     </Web5Context.Provider>
   );
-};
-
-export const useRoutine = () => {
-  const context = useContext(Web5Context);
-  if (context === undefined) {
-    throw new Error("useRoutine must be used within a Web5Provider");
-  }
-  return context;
 };

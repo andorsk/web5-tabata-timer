@@ -1,13 +1,9 @@
-// pages/_app.tsx
-import { AppProps } from "next/app";
-import { RoutineProvider } from "@/context/RoutineContext"; // Check the path
+import Layout from "@/components/layout";
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }) {
   return (
-    <RoutineProvider>
+    <Layout>
       <Component {...pageProps} />
-    </RoutineProvider>
+    </Layout>
   );
 }
-
-export default MyApp;

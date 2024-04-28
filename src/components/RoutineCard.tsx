@@ -2,21 +2,23 @@
 
 import React from "react";
 import { Routine } from "../models/workout"; // Assume types are defined in this file or import from the correct location
-import { useRoutine } from "@/context/RoutineContext";
-import { useRouter } from "next/navigation";
+// import { useRoutine } from "@/context/RoutineContext";
+import { useRouter } from "next/router";
 
 interface RoutineCardProps {
   routine: Routine;
 }
 
 const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
-  const router = useRouter();
-
-  const { setRoutine } = useRoutine();
+  //  const { setRoutine } = useRoutine();
+  // const router = useRouter();
 
   const handlePlayClick = () => {
-    setRoutine(routine);
-    router.push(`/playview`);
+    console.log("routine.id:", routine.id);
+    /* router.push({
+     *   pathname: "/playview",
+     *   query: { routineId: routine.id },
+     * }); */
   };
 
   return (
@@ -36,6 +38,7 @@ const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
         {routine.title} ({routine.name})
       </h2>
       <p className="text-gray-600">{routine.description}</p>
+      <p className="text-gray-600">{routine.id.slice(-6)}</p>
       <div className="mt-2">
         <p>Prepare: {routine.routine.Prepare.duration} seconds</p>
         <p>Work: {routine.routine.Work.duration} seconds</p>

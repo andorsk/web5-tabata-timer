@@ -1,7 +1,5 @@
 import Image from "next/image";
-import WorkoutSelectionView from "./workoutselectionview/page";
-// import PlayView from "./playview/page";
-import { RoutineProvider } from "@/context/RoutineContext"; // Adjust the import path as necessary
+import WorkoutSelectionView from "@/pages/workoutselectionview";
 
 export default function Home() {
   return (
