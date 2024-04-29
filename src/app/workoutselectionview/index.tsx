@@ -5,6 +5,7 @@ import { Routine } from "@/models/workout";
 import { storeRoutine, getRoutines } from "@/lib/store/dwn/routines";
 import { useWeb5 } from "@/context/Web5Context";
 import { useState, useEffect } from "react";
+import RoutineConfigurationForm from "@/components/configureRoutine/ConfigureRoutine";
 
 const mockRoutines: Routine[] = [
   {
@@ -34,10 +35,14 @@ const mockRoutines: Routine[] = [
 export default function WorkoutSelectionView() {
   const { web5, did } = useWeb5();
   const [routines, setRoutines] = useState([]);
+  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
 
-  const handleAddWorkout = async () => {
-    console.log("handling workout");
-    storeRoutine(mockRoutines[0], web5);
+  const handleAddWorkout = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   const handleGetRoutines = async (web5) => {
@@ -68,12 +73,34 @@ export default function WorkoutSelectionView() {
     <div className="p-4">
       DID: {did}
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Web5 Workouts</h1>
-      <button onClick={handleAddWorkout}> Add Workout </button>
+      <button
+        className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        onClick={handleAddWorkout}
+      >
+        {" "}
+        Add Workout{" "}
+      </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {routines.map((routine) => (
           <RoutineCard key={routine.id} routine={routine} />
         ))}
       </div>
+      {showModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
+            <div className="modal-container bg-red-500  w-full fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-screen-md p-6 rounded-lg shadow-lg overflow-y-auto">
+              <RoutineConfigurationForm className="w-full" />
+              <button
+                onClick={handleCloseModal}
+                className="py-2  px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

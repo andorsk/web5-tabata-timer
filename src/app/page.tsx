@@ -1,5 +1,5 @@
 import Image from "next/image";
-import WorkoutSelectionView from "@/pages/workoutselectionview";
+import WorkoutSelectionView from "@/app/workoutselectionview";
 
 export default function Home() {
   return (
