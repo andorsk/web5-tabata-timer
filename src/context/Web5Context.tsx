@@ -7,8 +7,8 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Web5 } from "@web5/api";
 import { configureProtocol } from "@/lib/store/dwn/routines";
+import { Web5 } from "@web5/api";
 
 type ProvidersProps = {
   children: ReactNode;
@@ -39,6 +39,8 @@ export const Web5Provider: React.FC<{ children: ReactNode }> = ({
   const [did, setDid] = useState<string | null>(null);
 
   const initWeb5 = async () => {
+    const { Web5 } = await import("@web5/api/browser");
+
     console.log("initializing  web5");
     try {
       const { web5: connectedWeb5, did: myDid } = await Web5.connect({
