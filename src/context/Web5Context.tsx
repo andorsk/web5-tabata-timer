@@ -1,6 +1,16 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { Web5 } from "@web5/api";
 import { configureProtocol } from "@/lib/store/dwn/routines";
+
+type ProvidersProps = {
+  children: ReactNode;
+};
 
 type Web5ContextType = {
   web5: any; // Define more specific types if available
@@ -20,7 +30,9 @@ export const useWeb5 = () => {
   return context;
 };
 
-export const Web5Provider: React.FC = ({ children }) => {
+export const Web5Provider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [web5, setWeb5] = useState<Web5 | null>(null);
   const [did, setDid] = useState<string | null>(null);
 

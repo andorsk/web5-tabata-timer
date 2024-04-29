@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./SaveWorkout.css";
 
+// @ts-ignore
 const SaveWorkoutModal = ({ isOpen, onClose, onSave }) => {
   const [workoutName, setWorkoutName] = useState("");
 

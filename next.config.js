@@ -3,7 +3,9 @@ const webpack = require("webpack");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

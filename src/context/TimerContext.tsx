@@ -1,21 +1,48 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 
-const TimerContext = createContext();
+type TimerContextType = {
+  stepTime: number;
+  totalTime: number;
+  timeLeft: number;
+  startTimers: (totalSeconds: number) => void;
+  startStepTimer: (seconds: number) => void;
+  setTimeElapsed: (seconds: number) => void;
+  setTotalTime: (seconds: number) => void;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+};
+// const TimerContext = createContext();
+const TimerContext = createContext<TimerContextType | undefined>(undefined);
 
-export const useTimer = () => useContext(TimerContext);
+export const useTimer = (): TimerContextType => {
+  const context = useContext(TimerContext);
+  if (!context) {
+    throw new Error("useTimer must be used within a TimerProvider");
+  }
+  return context;
+};
 
 type TimerState = {
   elapsedTime: number;
   totalTime: number;
-  timerStarted: string;
-  timerEnded: string;
+  timerStarted?: number;
+  timerEnded?: number;
 };
 
-export const TimerProvider = ({ children }) => {
+export const TimerProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [stepTime, setStepTime] = useState(0);
   const [state, setState] = useState<TimerState>({
     elapsedTime: 0,
     totalTime: 0,
+    timerStarted: 0,
+    timerEnded: 0,
   });
   const { elapsedTime, totalTime } = state;
   const [timeLeft, setTimeLeft] = useState(0);
@@ -43,20 +70,20 @@ export const TimerProvider = ({ children }) => {
     setTimeLeft(Math.max(totalTime - (elapsedTime - stepTime), 0));
   }, [totalTime, elapsedTime, stepTime]);
 
-  const startTimers = (totalSeconds) => {
+  const startTimers = (totalSeconds: number) => {
     setState({ elapsedTime: 0, totalTime: totalSeconds });
     setIsPaused(false);
   };
 
-  const startStepTimer = (seconds) => {
+  const startStepTimer = (seconds: number) => {
     setStepTime(seconds);
   };
 
-  const setTimeElapsed = (seconds) => {
+  const setTimeElapsed = (seconds: number) => {
     state.elapsedTime = seconds;
   };
 
-  const setTotalTime = (seconds) => {
+  const setTotalTime = (seconds: number) => {
     state.totalTime = seconds;
   };
 
@@ -70,7 +97,6 @@ export const TimerProvider = ({ children }) => {
     <TimerContext.Provider
       value={{
         stepTime,
-        elapsedTime,
         totalTime,
         timeLeft,
         startTimers,
