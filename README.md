@@ -40,7 +40,9 @@ bun dev
 
 ## Demo
 
-![./docs/imgs/play.png](./docs/imgs/demo.gif)
+<div class="align-center">
+ <img src="./docs/imgs/demo.gif" width=400px />
+</div>
 
 ## Work in Progress
 
