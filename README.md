@@ -1,5 +1,7 @@
 ## Web5 Tabata Timer
 
+No ads. Open source. Personal use. No tracking. Free. No paywall. Own and share your workout data with a web5 based tabata timer.
+
 Tabata timers are used for HIT excrcises. They give you short increments of
 exercies and rest. I use it quite a bit, but the one I use has a paywall after 2
 routines and has a ton of ads. I don't want any of that. 
@@ -37,6 +39,8 @@ bun dev
 ![./docs/imgs/play.png](./docs/imgs/demo.gif)
 
 ## TODO
+
+* Features
 
 - [ ] Play View
 - [ ] Workout Selection View
