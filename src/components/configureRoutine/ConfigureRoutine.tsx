@@ -79,6 +79,15 @@ const RoutineConfigurationForm: React.FC = () => {
       setErrors([]);
       storeRoutineWrapper(routineConfig, web5);
     } else {
+      console.log(
+        routine.Prepare.duration >= 0,
+        routine.Work.duration >= 0,
+        routine.Rest.duration >= 0,
+        routine.Cycles.value >= 1,
+        routine.Sets.value >= 1,
+        routine.RestBetweenSteps.duration >= 0,
+        routine.CoolDown.duration >= 0,
+      );
       // Display validation errors
       setErrors(["Invalid routine configuration. Please check your inputs."]);
     }
@@ -143,7 +152,7 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.Cycles.value}
-                onChange={(e) => handleInputChange(e, "routine.Cycles")}
+                onChange={(e) => handleInputChange(e, "routine.Cycles.value")}
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>

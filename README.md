@@ -30,7 +30,11 @@ bun dev
 ![./imgs/home.png](./docs/imgs/home.png)
 
 * Play through the routine
-![./imgs/play.png](./docs/imgs/play.png)
+![./docs/imgs/play.png](./docs/imgs/play.png)
+
+## Demo
+
+![./docs/imgs/play.png](./docs/imgs/demo.gif)
 
 ## TODO
 
@@ -41,4 +45,3 @@ bun dev
 - [ ] Sync 
 - [ ] Share sessions
 - [ ] Launch on play store
-- [ ]
