@@ -12,6 +12,10 @@ What does web5 mean? Well, you'll own your data. Entirely. This means that you
 don't need to worry about us looking at it ever. This was mostly a fun project
 for myself, but I'll try to release it out the play store in the near future.
 
+## Status
+
+**In Progress. Early Version Works**
+
 ## Getting Started
 
 First, run the development server:
@@ -38,7 +42,7 @@ bun dev
 
 ![./docs/imgs/play.png](./docs/imgs/demo.gif)
 
-## TODO
+## Work in Progress
 
 * Features
 
@@ -55,4 +59,5 @@ bun dev
 - [ ] Fix Pause/Play
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
+- [ ] Fix Build 
 
