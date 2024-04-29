@@ -1,0 +1,14 @@
+.modal-container {
+  position: fixed;
+  top: 40%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center the modal */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-open {
+  overflow: hidden;
+  position: fixed;
+}
