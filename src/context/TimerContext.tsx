@@ -4,53 +4,66 @@ const TimerContext = createContext();
 
 export const useTimer = () => useContext(TimerContext);
 
+type TimerState = {
+  elapsedTime: number;
+  totalTime: number;
+};
+
 export const TimerProvider = ({ children }) => {
-  const [globalTime, setGlobalTime] = useState(0);
   const [stepTime, setStepTime] = useState(0);
+  const [state, setState] = useState<TimerState>({
+    elapsedTime: 0,
+    totalTime: 0,
+  });
+  const { elapsedTime, totalTime } = state;
   const [timeLeft, setTimeLeft] = useState(0);
-  const [timeDone, setTimeDone] = useState(0);
-  const [totalTime, setTotalTime] = useState(0);
 
   useEffect(() => {
-    const globalInterval = setInterval(() => {
-      setTimeDone((prevGlobalTime) => {
-        const newTimeDone = prevGlobalTime + 1;
-        setTimeLeft((prevTimeLeft) => Math.max(totalTime - newTimeDone, 0)); // Update timeLeft
-        return newTimeDone;
-      });
-    }, 1000);
-
     const stepInterval = setInterval(() => {
-      setStepTime((prevStepTime) => Math.max(prevStepTime - 1, 0)); // Decrement stepTime
+      setStepTime((prevStepTime) => Math.max(prevStepTime - 1, 0));
+      setState((prevState) => ({
+        ...prevState,
+        elapsedTime: prevState.elapsedTime + 1,
+      }));
     }, 1000);
 
     return () => {
-      clearInterval(globalInterval);
       clearInterval(stepInterval);
     };
-  }, [totalTime]); // Add totalTime as a dependency
+  }, []);
 
-  // Function to start the timers
+  useEffect(() => {
+    console.log(totalTime, elapsedTime);
+    setTimeLeft(Math.max(totalTime - (elapsedTime - stepTime), 0));
+  }, [totalTime, elapsedTime, stepTime]);
+
   const startTimers = (totalSeconds) => {
-    setTotalTime(totalSeconds);
-    setTimeLeft(totalSeconds);
-    setTimeDone(0);
+    setState({ elapsedTime: 0, totalTime: totalSeconds });
   };
 
   const startStepTimer = (seconds) => {
     setStepTime(seconds);
   };
 
+  const setTimeElapsed = (seconds) => {
+    state.elapsedTime = seconds;
+  };
+
+  const setTotalTime = (seconds) => {
+    state.totalTime = seconds;
+  };
+
   return (
     <TimerContext.Provider
       value={{
-        globalTime,
         stepTime,
-        timeLeft,
-        timeDone,
+        elapsedTime,
         totalTime,
+        timeLeft,
         startTimers,
         startStepTimer,
+        setTimeElapsed,
+        setTotalTime,
       }}
     >
       {children}

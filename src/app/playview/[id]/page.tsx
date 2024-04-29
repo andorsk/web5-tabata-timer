@@ -17,89 +17,121 @@ type CurrentRoutineState = {
   currentTimeLeftInStep: string;
 };
 
-// const steps = ["Prepare", "Work", "Rest", "Work", "Rest", "Cool Down"];
-
-enum Color {
-  RED = "red",
-  GREEN = "green",
-  YELLOW = "yellow",
-}
-
 type Step = {
   name: string;
   duration: number;
   color: string;
+  cycle: number;
+  set: number;
+  totalSets: number;
+};
+
+const createSteps = (config: RoutineConfiguration): Step[] => {
+  console.log(config);
+  const steps = [
+    {
+      name: config.Prepare.name,
+      duration: config.Prepare.duration,
+      color: "bg-yellow-500",
+      cycle: 0,
+      set: 0,
+    } as Step,
+  ];
+
+  for (let i = 0; i < config.Cycles.value; i++) {
+    for (let j = 0; j < config.Sets.value; j++) {
+      steps.push({
+        name: config.Work.name,
+        duration: config.Work.duration,
+        color: "bg-red-500",
+        cycle: i,
+        set: j,
+        totalSets: config.Sets.value,
+      });
+      if (j <= config.Cycles.value - 1) {
+        steps.push({
+          name: config.Rest.name,
+          duration: config.Rest.duration,
+          color: "bg-green-500",
+          cycle: i,
+          set: j,
+          totalSets: config.Sets.value,
+        });
+      }
+    }
+    steps.push({
+      name: config.RestBetweenSteps.name,
+      duration: config.RestBetweenSteps.duration,
+      color: "bg-green-200",
+      cycle: i,
+      totalSets: config.Sets.value,
+      set: 0,
+    });
+  }
+  steps.push({
+    name: config.CoolDown.name,
+    duration: config.CoolDown.duration,
+    color: "bg-blue-500",
+    cycle: 0,
+    set: 0,
+  });
+
+  return steps;
+};
+
+const formatDuration = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  const formattedHours = String(hours).padStart(2, "0");
+  const formattedMinutes = String(minutes).padStart(2, "0");
+  const formattedSeconds = String(remainingSeconds).padStart(2, "0");
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+};
+
+const computeTotalTimeFromSteps = (steps: Step[]): number => {
+  const totalTime = steps.reduce((total, step) => {
+    return total + step.duration;
+  }, 0);
+  return totalTime;
 };
 
 export default function PlayView({ params }: { params: { routerId: string } }) {
   const router = useRouter();
   const { web5, did } = useWeb5();
   const {
-    globalTime,
     stepTime,
-    timeLeft,
-    timeDone,
+    elapsedTime,
     totalTime,
+    timeLeft,
     startTimers,
     startStepTimer,
+    setTimeElapsed,
+    setTotalTime,
   } = useTimer();
   const [routine, setRoutine] = useState(null);
   const [steps, setSteps] = useState([]);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [totalTimeLeft, setTotalTimeLeft] = useState(0);
   const [timeInStep, setTimeInStep] = useState(stepTime);
+  const [metadata, setMetadata] = useState({
+    currentSet: 0,
+    currentCycle: 0,
+    totalSets: 0,
+  });
 
   const routineId = params.id;
   const totalCycles = 3;
   const currentCycle = 1;
 
-  const createSteps = (config: RoutineConfiguration): Step[] => {
-    console.log(config);
-    const steps = [
-      {
-        name: config.Prepare.name,
-        duration: config.Prepare.duration,
-        color: "bg-yellow-500",
-      } as Step,
-    ];
-
-    for (let i = 0; i < config.Cycles.value; i++) {
-      for (let j = 0; j < config.Cycles.value; j++) {
-        steps.push({
-          name: config.Work.name,
-          duration: config.Work.duration,
-          color: "bg-red-500",
-        });
-        if (j <= config.Cycles.value - 1) {
-          steps.push({
-            name: config.Rest.name,
-            duration: config.Rest.duration,
-            color: "bg-green-500",
-          });
-        }
-      }
-      steps.push({
-        name: config.RestBetweenSteps.name,
-        duration: config.RestBetweenSteps.duration,
-        color: "bg-green-200",
-      });
-    }
-    steps.push({
-      name: config.CoolDown.name,
-      duration: config.CoolDown.duration,
-      color: "bg-blue-500",
-    });
-
-    return steps;
-  };
-
-  const computeTotalTimeFromSteps = (steps: Step[]): number => {
-    const totalTime = steps.reduce((total, step) => {
+  const computeTimeElapsed = (steps: Step[]): number => {
+    const time = steps.reduce((total, step) => {
       return total + step.duration;
     }, 0);
-    return totalTime;
+    return time + timeInStep;
   };
 
   const fetchRoutine = async (routineId, web5) => {
@@ -110,12 +142,47 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
         const steps = createSteps(t.routine);
         setSteps(steps);
         const time = computeTotalTimeFromSteps(steps);
-        setTotalTimeLeft(time);
+        setTotalTime(time);
         startTimers(time);
         startStepTimer(steps[0].duration);
       } catch (error) {
         console.error(error);
       }
+    }
+  };
+
+  const getCurrentSet = () => {
+    if (steps.length > 0) {
+      return {
+        set: steps[currentStep].set,
+        totalSets: steps[currentStep].totalSets,
+      };
+    }
+    return { set: 0, totalSets: 0 };
+  };
+
+  const getCurrentCycle = () => {
+    if (steps.length > 0) {
+      return steps[currentStep].cycle;
+    }
+    return 0;
+  };
+
+  useEffect(() => {
+    const { set, totalSets } = getCurrentSet();
+    const cycle = getCurrentCycle();
+    setMetadata({
+      currentSet: set,
+      currentCycle: cycle,
+      currentTotalSets: totalSets,
+    });
+  }, [currentStep, steps]);
+
+  const getCurrentStepColor = () => {
+    if (steps.length > 0) {
+      return steps[currentStep].color;
+    } else {
+      return "";
     }
   };
 
@@ -130,6 +197,11 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     setCurrentStep(index);
     startStepTimer(steps[index].duration);
   };
+
+  useEffect(() => {
+    const elapsedTime = computeTimeElapsed(steps.slice(0, currentStep + 1));
+    setTimeElapsed(elapsedTime);
+  });
 
   return (
     <div className="flex flex-col w-full h-screen ">
@@ -149,17 +221,13 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
           </button>
         </div>
         <div className="p-4 text-center font-bold text-2xl">
-          Total Time Left: {timeLeft}{" "}
+          Total Time Left: {formatDuration(timeLeft)}{" "}
         </div>
       </div>
       <div className="text-center">
-        {steps.length === 0 ? (
-          <h1>Loading...</h1>
-        ) : (
-          <h1 className={`text-4xl p-12 ${steps[currentStep].color} font-bold`}>
-            {stepTime}
-          </h1>
-        )}
+        <h1 className={`text-4xl p-12 ${getCurrentStepColor()} font-bold`}>
+          {stepTime}
+        </h1>
       </div>
       <div className="flex-grow grid grid-cols-1 gap-1 p-4">
         {steps.map((step, index) => (
@@ -178,15 +246,16 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
         <button className="p-2 rounded bg-blue-500 text-white">⬅️</button>
         <div>
           <span>
-            Cycle: {currentCycle}/{totalCycles}
+            Cycle: {metadata.currentCycle}/{totalCycles}
           </span>{" "}
           <br />
           <span>
-            Step: {currentStep + 1}/{steps.length}
+            Step: {metadata.currentSet}/{metadata.currentTotalSets}
           </span>
         </div>
         <button className="p-2 rounded bg-blue-500 text-white">➡️</button>
       </div>
+      )
     </div>
   );
 }
