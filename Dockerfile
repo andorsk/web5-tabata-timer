@@ -18,10 +18,5 @@ RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install
 COPY . .
 RUN pnpm build
 
-FROM base
-
-WORKDIR /app
-COPY --from=deps /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
 ENV NODE_ENV production
-CMD ["node", "./dist/index.js"]
+CMD ["pnpm", "start"]
