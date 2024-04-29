@@ -39,9 +39,19 @@ export type Session = {
   completed: boolean;
 };
 
-export const validateRoutineConfiguration = (routine: RoutineConfiguration) : boolean {
-  if ((routine.Prepare.duration < 0) || (routine.Work.duration < 0) || (routine.Rest.duration < 0) || (routine.Cycles.value < 1) || (routine.Sets.value < 1)  || (routine.RestBetweenSteps.duration < 0) || (routine.CoolDown.duration < 0)){
-    return false
-  } return true
-
-}
+export const validateRoutineConfiguration = (
+  routine: RoutineConfiguration,
+): boolean => {
+  if (
+    routine.Prepare.duration < 0 ||
+    routine.Work.duration < 0 ||
+    routine.Rest.duration < 0 ||
+    routine.Cycles.value < 1 ||
+    routine.Sets.value < 1 ||
+    routine.RestBetweenSteps.duration < 0 ||
+    routine.CoolDown.duration < 0
+  ) {
+    return false;
+  }
+  return true;
+};

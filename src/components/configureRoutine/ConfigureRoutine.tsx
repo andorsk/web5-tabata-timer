@@ -5,9 +5,8 @@ import { storeRoutine } from "@/lib/store/dwn/routines";
 
 // Validation function
 export const validateRoutineConfiguration = (
-  r: RoutineConfiguration,
+  routine: RoutineConfiguration,
 ): boolean => {
-  const routine = r.routine;
   return (
     routine.Prepare.duration >= 0 &&
     routine.Work.duration >= 0 &&
@@ -40,9 +39,9 @@ const RoutineConfigurationForm: React.FC = () => {
     },
   });
 
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const handleInputChange = (event, key) => {
+  const handleInputChange = (event: any, key: string) => {
     let value = event.target.value;
 
     if (event.target.type === "number") {
@@ -55,14 +54,17 @@ const RoutineConfigurationForm: React.FC = () => {
     for (let i = 0; i < keys.length; i++) {
       const currentKey = keys[i];
       if (i === keys.length - 1) {
+        // @ts-ignore
         currentObj[currentKey] = value;
       } else {
+        // @ts-ignore
         currentObj = currentObj[currentKey];
       }
     }
     setRoutineConfig(updatedRoutineConfig);
   };
 
+  // @ts-ignore
   const storeRoutineWrapper = async (routineConfig, web5) => {
     await storeRoutine(routineConfig, web5);
     console.log("got routine config", routineConfig);
@@ -72,7 +74,7 @@ const RoutineConfigurationForm: React.FC = () => {
   // Function to handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const isValid = validateRoutineConfiguration(routineConfig);
+    const isValid = validateRoutineConfiguration(routineConfig.routine);
     if (isValid) {
       setErrors([]);
       storeRoutineWrapper(routineConfig, web5);

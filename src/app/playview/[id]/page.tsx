@@ -7,9 +7,10 @@ import SaveWorkoutModal from "@/components/play/SaveWorkout";
 
 import { useRouter } from "next/navigation";
 import { useWeb5 } from "@/context/Web5Context";
+import { Web5 } from "@web5/api";
 import { useTimer } from "@/context/TimerContext";
 
-import TimerComponent from "@/components/TimerComponent";
+import { RoutineConfiguration } from "@/models/workout";
 
 type CurrentRoutineState = {
   currentStepIndex: number;
@@ -73,13 +74,14 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
     duration: config.CoolDown.duration,
     color: "bg-blue-500",
     cycle: 0,
+    totalSets: 1,
     set: 0,
   });
 
   return steps;
 };
 
-const formatDuration = (seconds) => {
+const formatDuration = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
@@ -98,12 +100,12 @@ const computeTotalTimeFromSteps = (steps: Step[]): number => {
   return totalTime;
 };
 
-export default function PlayView({ params }: { params: { routerId: string } }) {
+export default function PlayView({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { web5, did } = useWeb5();
+  //@ts-ignore
   const {
     stepTime,
-    elapsedTime,
     totalTime,
     timeLeft,
     startTimers,
@@ -112,8 +114,8 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     setTotalTime,
     setIsPaused,
   } = useTimer();
-  const [routine, setRoutine] = useState(null);
-  const [steps, setSteps] = useState([]);
+  const [routine, setRoutine] = useState({});
+  const [steps, setSteps] = useState<Step[]>([]);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -143,17 +145,18 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     return time + timeInStep;
   };
 
-  const handleSaveWorkout = (workoutName) => {
+  const handleSaveWorkout = (workoutName: string) => {
     // Save the workout to localStorage
     localStorage.setItem("workoutName", workoutName);
   };
 
-  const fetchRoutine = async (routineId, web5) => {
+  const fetchRoutine = async (routineId: string, web5: Web5) => {
     if (routineId) {
       try {
         const t = await getRoutine(routineId, web5);
         setRoutine(t);
         const steps = createSteps(t.routine);
+        //@ts-ignore
         setSteps(steps);
         const time = computeTotalTimeFromSteps(steps);
         setTotalTime(time);
@@ -168,7 +171,9 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
   const getCurrentSet = () => {
     if (steps.length > 0) {
       return {
+        // @ts-ignore
         set: steps[currentStep].set,
+        // @ts-ignore
         totalSets: steps[currentStep].totalSets,
       };
     }
@@ -177,6 +182,7 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
 
   const getCurrentCycle = () => {
     if (steps.length > 0) {
+      //@ts-ignore
       return steps[currentStep].cycle;
     }
     return 0;
@@ -188,12 +194,14 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     setMetadata({
       currentSet: set,
       currentCycle: cycle,
-      currentTotalSets: totalSets,
+      // @ts-ignore
+      totalSets: totalSets,
     });
   }, [currentStep, steps]);
 
   const getCurrentStepColor = () => {
     if (steps.length > 0) {
+      // @ts-ignore
       return steps[currentStep].color;
     } else {
       return "";
@@ -206,11 +214,12 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     }
   }, [routineId, web5]);
 
-  const handleClickedStep = (index) => {
+  const handleClickedStep = (index: number) => {
     if (steps.length === 0) {
       return;
     }
     setCurrentStep(index);
+    // @ts-ignore
     startStepTimer(steps[index].duration);
   };
 
@@ -286,7 +295,7 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
           </span>{" "}
           <br />
           <span>
-            Step: {metadata.currentSet}/{metadata.currentTotalSets}
+            Step: {metadata.currentSet}/{metadata.totalSets}
           </span>
         </div>
         <button className="p-2 rounded bg-blue-500 text-white">➡️</button>
