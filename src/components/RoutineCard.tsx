@@ -29,7 +29,7 @@ const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
       </h2>
       <p className="text-gray-600">{routine.description}</p>
       <p className="text-gray-600">{routine.id.slice(-6)}</p>
-      <div className="mt-2">
+      <div className="mt-2 text-gray-400">
         <p>Prepare: {routine.routine.Prepare.duration} seconds</p>
         <p>Work: {routine.routine.Work.duration} seconds</p>
         <p>Rest: {routine.routine.Rest.duration} seconds</p>

@@ -6,6 +6,7 @@ import { getRoutine } from "@/lib/store/dwn/routines";
 
 import { useRouter } from "next/navigation";
 import { useWeb5 } from "@/context/Web5Context";
+import { useTimer } from "@/context/TimerContext";
 
 import TimerComponent from "@/components/TimerComponent";
 
@@ -16,27 +17,102 @@ type CurrentRoutineState = {
   currentTimeLeftInStep: string;
 };
 
-const steps = ["Prepare", "Work", "Rest", "Work", "Rest", "Cool Down"];
+// const steps = ["Prepare", "Work", "Rest", "Work", "Rest", "Cool Down"];
+
+enum Color {
+  RED = "red",
+  GREEN = "green",
+  YELLOW = "yellow",
+}
+
+type Step = {
+  name: string;
+  duration: number;
+  color: string;
+};
 
 export default function PlayView({ params }: { params: { routerId: string } }) {
   const router = useRouter();
   const { web5, did } = useWeb5();
-
+  const {
+    globalTime,
+    stepTime,
+    timeLeft,
+    timeDone,
+    totalTime,
+    startTimers,
+    startStepTimer,
+  } = useTimer();
   const [routine, setRoutine] = useState(null);
+  const [steps, setSteps] = useState([]);
+
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [totalTimeLeft, setTotalTimeLeft] = useState(0);
-  const [timeInStep, setTimeInStep] = useState("15:00");
+  const [timeInStep, setTimeInStep] = useState(stepTime);
 
   const routineId = params.id;
   const totalCycles = 3;
   const currentCycle = 1;
+
+  const createSteps = (config: RoutineConfiguration): Step[] => {
+    console.log(config);
+    const steps = [
+      {
+        name: config.Prepare.name,
+        duration: config.Prepare.duration,
+        color: "bg-yellow-500",
+      } as Step,
+    ];
+
+    for (let i = 0; i < config.Cycles.value; i++) {
+      for (let j = 0; j < config.Cycles.value; j++) {
+        steps.push({
+          name: config.Work.name,
+          duration: config.Work.duration,
+          color: "bg-red-500",
+        });
+        if (j <= config.Cycles.value - 1) {
+          steps.push({
+            name: config.Rest.name,
+            duration: config.Rest.duration,
+            color: "bg-green-500",
+          });
+        }
+      }
+      steps.push({
+        name: config.RestBetweenSteps.name,
+        duration: config.RestBetweenSteps.duration,
+        color: "bg-green-200",
+      });
+    }
+    steps.push({
+      name: config.CoolDown.name,
+      duration: config.CoolDown.duration,
+      color: "bg-blue-500",
+    });
+
+    return steps;
+  };
+
+  const computeTotalTimeFromSteps = (steps: Step[]): number => {
+    const totalTime = steps.reduce((total, step) => {
+      return total + step.duration;
+    }, 0);
+    return totalTime;
+  };
 
   const fetchRoutine = async (routineId, web5) => {
     if (routineId) {
       try {
         const t = await getRoutine(routineId, web5);
         setRoutine(t);
+        const steps = createSteps(t.routine);
+        setSteps(steps);
+        const time = computeTotalTimeFromSteps(steps);
+        setTotalTimeLeft(time);
+        startTimers(time);
+        startStepTimer(steps[0].duration);
       } catch (error) {
         console.error(error);
       }
@@ -49,22 +125,14 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     }
   }, [routineId, web5]);
 
-  useEffect(() => {
-    computeTotalTimeLeft(); // Run the function when myVariable changes
-  }, [routine]); // Specify myVariable as a dependency
-
-  const computeTotalTimeLeft = () => {
-    if (routine) {
-      console.log("----------");
-      setTotalTimeLeft(100);
-      //setTotalTimeLeft(routine.routine.Prepare.duration);
-      console.log("444444444");
-    }
+  const handleClickedStep = (index) => {
+    console.log(steps[index]);
+    setCurrentStep(index);
+    startStepTimer(steps[index].duration);
   };
 
   return (
     <div className="flex flex-col w-full h-screen ">
-      {totalTimeLeft}
       <div className="flex justify-between items-center p-4">
         <div className="flex">
           <button
@@ -81,23 +149,28 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
           </button>
         </div>
         <div className="p-4 text-center font-bold text-2xl">
-          Total Time Left: {totalTimeLeft}{" "}
-          <TimerComponent durationInSeconds={totalTimeLeft} />
+          Total Time Left: {timeLeft}{" "}
         </div>
       </div>
       <div className="text-center">
-        <h1 className="text-4xl font-bold">{timeInStep}</h1>{" "}
+        {steps.length === 0 ? (
+          <h1>Loading...</h1>
+        ) : (
+          <h1 className={`text-4xl p-12 ${steps[currentStep].color} font-bold`}>
+            {stepTime}
+          </h1>
+        )}
       </div>
-      <div className="flex-grow grid grid-cols-1 gap-4 p-4">
+      <div className="flex-grow grid grid-cols-1 gap-1 p-4">
         {steps.map((step, index) => (
           <button
             key={index}
+            onClick={() => handleClickedStep(index)}
             className={`p-2 text-center w-full rounded ${
               index === currentStep ? "bg-blue-500 text-white" : "bg-gray-200"
             }`}
-            onClick={() => setCurrentStep(index)}
           >
-            {step}
+            {step.name}
           </button>
         ))}
       </div>
