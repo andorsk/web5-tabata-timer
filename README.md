@@ -25,10 +25,10 @@ bun dev
 ## Screenshots
 
 * Choose your routine
-![./imgs/home.png](./imgs/home.png)
+![./imgs/home.png](./docs/imgs/home.png)
 
 * Play through the routine
-![./imgs/play.png](./imgs/play.png)
+![./imgs/play.png](./docs/imgs/play.png)
 
 ## TODO
 
