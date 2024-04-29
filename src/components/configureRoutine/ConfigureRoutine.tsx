@@ -79,16 +79,6 @@ const RoutineConfigurationForm: React.FC = () => {
       setErrors([]);
       storeRoutineWrapper(routineConfig, web5);
     } else {
-      console.log(
-        routine.Prepare.duration >= 0,
-        routine.Work.duration >= 0,
-        routine.Rest.duration >= 0,
-        routine.Cycles.value >= 1,
-        routine.Sets.value >= 1,
-        routine.RestBetweenSteps.duration >= 0,
-        routine.CoolDown.duration >= 0,
-      );
-      // Display validation errors
       setErrors(["Invalid routine configuration. Please check your inputs."]);
     }
   };

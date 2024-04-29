@@ -46,14 +46,16 @@ bun dev
 
 * Features
 
-- [ ] Play View
-- [ ] Workout Selection View
-- [ ] Configure Routine View
+- [x] Play View
+- [x] Workout Selection View
+- [x] Configure Routine View
+- [ ] Sound
 - [ ] Record Sessions
 - [ ] Sync 
 - [ ] Share sessions
 - [ ] Launch on play store
-- [ ] Sound
+- [ ] Edit
+- [ ] Settings
 
 * Bug Fixes
 
@@ -61,6 +63,7 @@ bun dev
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
 - [ ] Fix Build 
+- [ ] Fix Inputs For Form
 
 * Other
 
