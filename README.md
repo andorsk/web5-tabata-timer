@@ -45,3 +45,10 @@ bun dev
 - [ ] Sync 
 - [ ] Share sessions
 - [ ] Launch on play store
+
+* Bug Fixes
+
+- [ ] Fix Pause/Play
+- [ ] Show running workout on top of home and allow you to re-enter it. 
+- [ ] Backup/Sync
+
