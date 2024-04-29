@@ -53,6 +53,7 @@ bun dev
 - [ ] Sync 
 - [ ] Share sessions
 - [ ] Launch on play store
+- [ ] Sound
 
 * Bug Fixes
 
@@ -61,3 +62,6 @@ bun dev
 - [ ] Backup/Sync
 - [ ] Fix Build 
 
+* Other
+
+- [ ] Major Refactor. Consider not using nextjs. No reason to use it.
