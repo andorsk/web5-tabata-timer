@@ -53,7 +53,7 @@ bun dev
 - [ ] Record Sessions
 - [ ] Sync 
 - [ ] Share sessions
-- [ ] Launch on play store
+- [ ] Launch on Google Play store
 - [ ] Edit
 - [ ] Settings
 
@@ -67,4 +67,4 @@ bun dev
 
 * Other
 
-- [ ] Major Refactor. Consider not using nextjs. No reason to use it.
+- [ ] Major Refactor. Consider not using Next JS. No reason to use it.
