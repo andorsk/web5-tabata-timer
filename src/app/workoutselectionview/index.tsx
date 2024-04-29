@@ -5,6 +5,8 @@ import { Routine } from "@/models/workout";
 import { storeRoutine, getRoutines } from "@/lib/store/dwn/routines";
 import { useWeb5 } from "@/context/Web5Context";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import RoutineConfigurationForm from "@/components/configureRoutine/ConfigureRoutine";
 
 const mockRoutines: Routine[] = [
@@ -36,6 +38,7 @@ export default function WorkoutSelectionView() {
   const { web5, did } = useWeb5();
   const [routines, setRoutines] = useState([]);
   const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+  const router = useRouter();
 
   const handleAddWorkout = () => {
     setShowModal(true);
@@ -50,7 +53,6 @@ export default function WorkoutSelectionView() {
       const r = await getRoutines(web5);
       const routinesData = await Promise.all(
         r?.records?.map(async (v, _) => {
-          console.log(v);
           const vv = await v.data.json();
           vv.id = v.id;
           return vv; // Return vv to include it in the array of routinesData
@@ -62,6 +64,22 @@ export default function WorkoutSelectionView() {
       console.error("Error fetching routines:", error);
     }
   };
+
+  useEffect(() => {
+    if (web5) {
+      console.log("GOT Dispatched Event");
+      const handleFormSubmitted = async () => {
+        setShowModal(false);
+        console.log("testing dispatch");
+        await handleGetRoutines(web5);
+        console.log("passed dispatch");
+      };
+      document.addEventListener("routineSubmitted", handleFormSubmitted);
+      return () => {
+        document.removeEventListener("routineSubmitted", handleFormSubmitted);
+      };
+    }
+  }, [router, web5]);
 
   useEffect(() => {
     if (web5) {

@@ -24,7 +24,6 @@ const RoutineConfigurationForm: React.FC = () => {
 
   const [routineConfig, setRoutineConfig] = useState({
     name: "",
-    title: "",
     description: "",
     routine: {
       Prepare: { duration: 300, name: "Preparation", value: 60 },
@@ -40,31 +39,43 @@ const RoutineConfigurationForm: React.FC = () => {
       CoolDown: { duration: 300, name: "Cool Down", value: 60 },
     },
   });
+
   const [errors, setErrors] = useState([]);
 
   const handleInputChange = (event, key) => {
-    const value = event.target.value;
-    if (key === "Cycles" || key === "Sets") {
-      setRoutineConfig((prevConfig) => ({
-        ...prevConfig,
-        [key]: { value: parseInt(value) },
-      }));
-    } else {
-      setRoutineConfig((prevConfig) => ({
-        ...prevConfig,
-        [key]: value,
-      }));
+    let value = event.target.value;
+
+    if (event.target.type === "number") {
+      value = parseInt(value);
     }
+
+    const keys = key.split(".");
+    const updatedRoutineConfig = { ...routineConfig };
+    let currentObj = updatedRoutineConfig;
+    for (let i = 0; i < keys.length; i++) {
+      const currentKey = keys[i];
+      if (i === keys.length - 1) {
+        currentObj[currentKey] = value;
+      } else {
+        currentObj = currentObj[currentKey];
+      }
+    }
+    setRoutineConfig(updatedRoutineConfig);
   };
 
+  const storeRoutineWrapper = async (routineConfig, web5) => {
+    await storeRoutine(routineConfig, web5);
+    console.log("got routine config", routineConfig);
+    document.dispatchEvent(new CustomEvent("routineSubmitted"));
+    console.log("dispatched Event");
+  };
   // Function to handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid = validateRoutineConfiguration(routineConfig);
     if (isValid) {
       setErrors([]);
-      storeRoutine(routineConfig, web5);
-      console.log("got routine config", routineConfig);
+      storeRoutineWrapper(routineConfig, web5);
     } else {
       // Display validation errors
       setErrors(["Invalid routine configuration. Please check your inputs."]);
@@ -95,18 +106,7 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="text"
                 value={routineConfig.name}
-                onChange={(e) => handleInputChange(e, "Name")}
-                className="py-2 px-3 border border-gray-300 rounded-md"
-              />
-            </label>
-          </div>
-          <div className="flex flex-col w-full">
-            <label className="mb-1 flex justify-between">
-              Routine Title:
-              <input
-                type="text"
-                value={routineConfig.title}
-                onChange={(e) => handleInputChange(e, "Title")}
+                onChange={(e) => handleInputChange(e, "name")}
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -117,7 +117,7 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="textarea"
                 value={routineConfig.description}
-                onChange={(e) => handleInputChange(e, "Description")}
+                onChange={(e) => handleInputChange(e, "description")}
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -128,7 +128,9 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.Prepare.duration}
-                onChange={(e) => handleInputChange(e, "Prepare")}
+                onChange={(e) =>
+                  handleInputChange(e, "routine.Prepare.duration")
+                }
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -139,7 +141,7 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.Cycles.value}
-                onChange={(e) => handleInputChange(e, "Cycles")}
+                onChange={(e) => handleInputChange(e, "routine.Cycles")}
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -150,7 +152,7 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.Sets.value}
-                onChange={(e) => handleInputChange(e, "Sets")}
+                onChange={(e) => handleInputChange(e, "routine.Sets.value")}
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -161,7 +163,7 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.Work.duration}
-                onChange={(e) => handleInputChange(e, "Work")}
+                onChange={(e) => handleInputChange(e, "routine.Work.duration")}
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -172,7 +174,7 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.Rest.duration}
-                onChange={(e) => handleInputChange(e, "Rest")}
+                onChange={(e) => handleInputChange(e, "routine.Rest.duration")}
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -183,7 +185,9 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.RestBetweenSteps.duration}
-                onChange={(e) => handleInputChange(e, "RestBetweenSteps")}
+                onChange={(e) =>
+                  handleInputChange(e, "routine.RestBetweenSteps.duration")
+                }
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
@@ -194,7 +198,9 @@ const RoutineConfigurationForm: React.FC = () => {
               <input
                 type="number"
                 value={routineConfig.routine.CoolDown.duration}
-                onChange={(e) => handleInputChange(e, "CoolDown")}
+                onChange={(e) =>
+                  handleInputChange(e, "routine.CoolDown.duration")
+                }
                 className="py-2 px-3 border border-gray-300 rounded-md"
               />
             </label>
