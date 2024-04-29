@@ -2,7 +2,9 @@
 
 Tabata timers are used for HIT excrcises. They give you short increments of
 exercies and rest. I use it quite a bit, but the one I use has a paywall after 2
-routines. This is a web5 based tabata timer.
+routines and has a ton of ads. I don't want any of that. 
+
+This is a web5 based tabata timer.
 
 What does web5 mean? Well, you'll own your data. Entirely. This means that you
 don't need to worry about us looking at it ever. This was mostly a fun project
@@ -38,3 +40,5 @@ bun dev
 - [ ] Record Sessions
 - [ ] Sync 
 - [ ] Share sessions
+- [ ] Launch on play store
+- [ ]

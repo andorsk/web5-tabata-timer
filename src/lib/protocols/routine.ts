@@ -23,11 +23,12 @@ export const routineProtocol = {
         $actions: [
           {
             who: "anyone",
-            can: "create",
+            can: ["create"],
           },
           {
             who: "author",
-            can: "update",
+            of: "session",
+            can: ["create", "update"],
           },
         ],
       },

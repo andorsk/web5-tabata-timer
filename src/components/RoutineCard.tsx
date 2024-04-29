@@ -11,7 +11,6 @@ interface RoutineCardProps {
 }
 
 const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
-  console.log(routine.id);
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 m-4 relative hover:bg-gray-100">
       <div className="absolute top-4 right-4 flex space-x-2">
@@ -20,13 +19,11 @@ const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
             ▶️
           </button>
         </Link>
-        <button className="text-lg font-semibold p-2 rounded-full bg-gray-300 hover:bg-gray-400">
+        {/*  <button { className="text-lg font-semibold p-2 rounded-full bg-gray-300 hover:bg-gray-400">
           ⋮
-        </button>
+        </button> */}
       </div>
-      <h2 className="text-xl font-bold text-gray-800">
-        {routine.title} ({routine.name})
-      </h2>
+      <h4 className="text-md font-bold text-gray-900">{routine.name}</h4>
       <p className="text-gray-600">{routine.description}</p>
       <p className="text-gray-600">{routine.id.slice(-6)}</p>
       <div className="mt-2 text-gray-400">

@@ -19,14 +19,19 @@ export const TimerProvider = ({ children }) => {
   });
   const { elapsedTime, totalTime } = state;
   const [timeLeft, setTimeLeft] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
-      setStepTime((prevStepTime) => Math.max(prevStepTime - 1, 0));
-      setState((prevState) => ({
-        ...prevState,
-        elapsedTime: prevState.elapsedTime + 1,
-      }));
+      if (!isPaused) {
+        setStepTime((prevStepTime) => Math.max(prevStepTime - 1, 0));
+        setState((prevState) => ({
+          ...prevState,
+          elapsedTime: prevState.elapsedTime + 1,
+        }));
+      } else {
+        console.log("is paused");
+      }
     }, 1000);
 
     return () => {
@@ -40,6 +45,7 @@ export const TimerProvider = ({ children }) => {
 
   const startTimers = (totalSeconds) => {
     setState({ elapsedTime: 0, totalTime: totalSeconds });
+    setIsPaused(false);
   };
 
   const startStepTimer = (seconds) => {
@@ -54,7 +60,11 @@ export const TimerProvider = ({ children }) => {
     state.totalTime = seconds;
   };
 
-  const endTimer = () => {};
+  useEffect(() => {
+    if (timeLeft === 0) {
+      console.log("Timer ended");
+    }
+  }, [timeLeft]);
 
   return (
     <TimerContext.Provider
@@ -63,11 +73,11 @@ export const TimerProvider = ({ children }) => {
         elapsedTime,
         totalTime,
         timeLeft,
-        endTimer,
         startTimers,
         startStepTimer,
         setTimeElapsed,
         setTotalTime,
+        setIsPaused,
       }}
     >
       {children}

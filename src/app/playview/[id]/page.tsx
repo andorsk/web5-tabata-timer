@@ -110,12 +110,13 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     startStepTimer,
     setTimeElapsed,
     setTotalTime,
+    setIsPaused,
   } = useTimer();
   const [routine, setRoutine] = useState(null);
   const [steps, setSteps] = useState([]);
 
   const [currentStep, setCurrentStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isDone, setIsDone] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -129,6 +130,11 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
   const routineId = params.id;
   const totalCycles = 3;
   const currentCycle = 1;
+
+  useEffect(() => {
+    console.log("setting to ", !isPlaying);
+    setIsPaused(!isPlaying);
+  }, [isPlaying]);
 
   const computeTimeElapsed = (steps: Step[]): number => {
     const time = steps.reduce((total, step) => {
