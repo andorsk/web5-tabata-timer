@@ -29,3 +29,12 @@ export type RoutineConfiguration = {
   RestBetweenSteps: TimedIntervalConfiguration;
   CoolDown: TimedIntervalConfiguration;
 };
+
+export type Session = {
+  startTime: string;
+  endTime: string;
+  notes: string[];
+  routineId: string;
+  routine: Routine;
+  completed: boolean;
+};

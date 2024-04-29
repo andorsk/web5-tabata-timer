@@ -3,6 +3,7 @@
 import type { NextPage } from "next";
 import React, { useState, useEffect } from "react";
 import { getRoutine } from "@/lib/store/dwn/routines";
+import SaveWorkoutModal from "@/components/play/SaveWorkout";
 
 import { useRouter } from "next/navigation";
 import { useWeb5 } from "@/context/Web5Context";
@@ -27,7 +28,6 @@ type Step = {
 };
 
 const createSteps = (config: RoutineConfiguration): Step[] => {
-  console.log(config);
   const steps = [
     {
       name: config.Prepare.name,
@@ -116,6 +116,9 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [timeInStep, setTimeInStep] = useState(stepTime);
   const [metadata, setMetadata] = useState({
     currentSet: 0,
@@ -132,6 +135,11 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
       return total + step.duration;
     }, 0);
     return time + timeInStep;
+  };
+
+  const handleSaveWorkout = (workoutName) => {
+    // Save the workout to localStorage
+    localStorage.setItem("workoutName", workoutName);
   };
 
   const fetchRoutine = async (routineId, web5) => {
@@ -193,7 +201,9 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
   }, [routineId, web5]);
 
   const handleClickedStep = (index) => {
-    console.log(steps[index]);
+    if (steps.length === 0) {
+      return;
+    }
     setCurrentStep(index);
     startStepTimer(steps[index].duration);
   };
@@ -203,8 +213,26 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
     setTimeElapsed(elapsedTime);
   });
 
+  const incrementCurrentStep = () => {
+    if (currentStep === steps.length - 1) {
+      setIsDone(true);
+    } else {
+      handleClickedStep(currentStep + 1);
+    }
+  };
+  useEffect(() => {
+    if (stepTime === 0) {
+      incrementCurrentStep();
+    }
+  }, [stepTime]);
+
   return (
     <div className="flex flex-col w-full h-screen ">
+      <SaveWorkoutModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveWorkout}
+      />
       <div className="flex justify-between items-center p-4">
         <div className="flex">
           <button
@@ -235,7 +263,9 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
             key={index}
             onClick={() => handleClickedStep(index)}
             className={`p-2 text-center w-full rounded ${
-              index === currentStep ? "bg-blue-500 text-white" : "bg-gray-200"
+              index === currentStep
+                ? "bg-blue-500 p-5 text-white"
+                : "bg-gray-200"
             }`}
           >
             {step.name}
@@ -255,6 +285,12 @@ export default function PlayView({ params }: { params: { routerId: string } }) {
         </div>
         <button className="p-2 rounded bg-blue-500 text-white">➡️</button>
       </div>
+      <button
+        className="p-2 rounded bg-blue-500 text-white"
+        onClick={() => setIsModalOpen(true)}
+      >
+        Save Workout
+      </button>
       )
     </div>
   );

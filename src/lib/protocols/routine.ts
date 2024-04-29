@@ -6,6 +6,10 @@ export const routineProtocol = {
       schema: "routine",
       dataFormats: ["application/json"],
     },
+    session: {
+      schema: "session",
+      dataFormats: ["application/json"],
+    },
   },
   structure: {
     routine: {
@@ -15,6 +19,18 @@ export const routineProtocol = {
           can: ["create", "update"],
         },
       ],
+      session: {
+        $actions: [
+          {
+            who: "anyone",
+            can: "create",
+          },
+          {
+            who: "author",
+            can: "update",
+          },
+        ],
+      },
     },
   },
 };

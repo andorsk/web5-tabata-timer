@@ -7,6 +7,8 @@ export const useTimer = () => useContext(TimerContext);
 type TimerState = {
   elapsedTime: number;
   totalTime: number;
+  timerStarted: string;
+  timerEnded: string;
 };
 
 export const TimerProvider = ({ children }) => {
@@ -33,7 +35,6 @@ export const TimerProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    console.log(totalTime, elapsedTime);
     setTimeLeft(Math.max(totalTime - (elapsedTime - stepTime), 0));
   }, [totalTime, elapsedTime, stepTime]);
 
@@ -53,6 +54,8 @@ export const TimerProvider = ({ children }) => {
     state.totalTime = seconds;
   };
 
+  const endTimer = () => {};
+
   return (
     <TimerContext.Provider
       value={{
@@ -60,6 +63,7 @@ export const TimerProvider = ({ children }) => {
         elapsedTime,
         totalTime,
         timeLeft,
+        endTimer,
         startTimers,
         startStepTimer,
         setTimeElapsed,
