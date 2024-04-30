@@ -250,7 +250,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
   }, [stepTime]);
 
   return (
-    <div className="flex flex-col w-full h-screen ">
+    <div className={`flex flex-col w-full h-screen ${getCurrentStepColor()}`}>
       <SaveWorkoutModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
