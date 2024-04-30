@@ -1,7 +1,7 @@
 "use client";
 
 import type { NextPage } from "next";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getRoutine } from "@/lib/store/dwn/routines";
 import SaveWorkoutModal from "@/components/play/SaveWorkout";
 
@@ -11,6 +11,7 @@ import { Web5 } from "@web5/api";
 import { useTimer } from "@/context/TimerContext";
 
 import { RoutineConfiguration } from "@/models/workout";
+import SoundPlayer from "@/components/sound/SoundLibrary";
 
 type CurrentRoutineState = {
   currentStepIndex: number;
@@ -121,6 +122,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isDone, setIsDone] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const soundPlayerRef = useRef<any>(null);
 
   const [timeInStep, setTimeInStep] = useState(stepTime);
   const [metadata, setMetadata] = useState({
@@ -137,6 +139,12 @@ export default function PlayView({ params }: { params: { id: string } }) {
     console.log("setting to ", !isPlaying);
     setIsPaused(!isPlaying);
   }, [isPlaying]);
+
+  useEffect(() => {
+    if (stepTime === 3 && soundPlayerRef.current) {
+      soundPlayerRef.current.play();
+    }
+  }, [stepTime]);
 
   const computeTimeElapsed = (steps: Step[]): number => {
     const time = steps.reduce((total, step) => {
@@ -248,6 +256,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveWorkout}
       />
+      <SoundPlayer ref={soundPlayerRef} />
       <div className="flex justify-between items-center p-4">
         <div className="flex">
           <button

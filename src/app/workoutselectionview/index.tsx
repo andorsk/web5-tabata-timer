@@ -4,36 +4,11 @@ import RoutineCard from "@/components/RoutineCard"; // Make sure the path is cor
 import { Routine } from "@/models/workout";
 import { storeRoutine, getRoutines } from "@/lib/store/dwn/routines";
 import { useWeb5 } from "@/context/Web5Context";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Web5 } from "@web5/api";
 
 import RoutineConfigurationForm from "@/components/configureRoutine/ConfigureRoutine";
-
-const mockRoutines: Routine[] = [
-  {
-    name: "Morning Boost",
-    title: "Quick Morning Routine",
-    description: "A quick, energetic start to your morning.",
-    lastUpdated: new Date().toISOString(),
-    createdOn: new Date().toISOString(),
-    createdBy: "user123",
-    id: "routine1",
-    routine: {
-      Prepare: { duration: 60, name: "Preparation", value: 60 },
-      Work: { duration: 30, name: "Work", value: 30 },
-      Rest: { duration: 10, name: "Rest", value: 10 },
-      Cycles: { value: 3, name: "Cycles" },
-      Sets: { value: 2, name: "Sets" },
-      RestBetweenSteps: {
-        duration: 30,
-        name: "Rest Between Cycles",
-        value: 30,
-      },
-      CoolDown: { duration: 60, name: "Cool Down", value: 60 },
-    },
-  },
-];
 
 export default function WorkoutSelectionView() {
   const { web5, did } = useWeb5();
