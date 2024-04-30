@@ -48,8 +48,8 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
         name: config.Work.name,
         duration: config.Work.duration,
         color: "bg-red-500",
-        cycle: j,
-        set: i,
+        cycle: i,
+        set: j,
         totalSets: config.Sets.value,
         totalCycles: config.Cycles.value,
       });
@@ -58,8 +58,8 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
           name: config.Rest.name,
           duration: config.Rest.duration,
           color: "bg-green-500",
-          cycle: j,
-          set: i,
+          cycle: i,
+          set: j,
           totalSets: config.Sets.value,
           totalCycles: config.Cycles.value,
         });

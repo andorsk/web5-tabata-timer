@@ -51,7 +51,7 @@ bun dev
 - [x] Play View
 - [x] Workout Selection View
 - [x] Configure Routine View
-- [ ] Sound
+- [x] Sound
 - [ ] Record Sessions
 - [ ] Sync 
 - [ ] Share sessions
@@ -64,7 +64,7 @@ bun dev
 - [ ] Fix Pause/Play
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
-- [ ] Fix Build 
+- [x] Fix Build 
 - [ ] Fix Inputs For Form
 
 * Other
