@@ -10,7 +10,7 @@ import { useWeb5 } from "@/context/Web5Context";
 import { Web5 } from "@web5/api";
 import { useTimer } from "@/context/TimerContext";
 
-import { RoutineConfiguration } from "@/models/workout";
+import { RoutineConfiguration, Routine } from "@/models/workout";
 import SoundPlayer from "@/components/sound/SoundLibrary";
 
 type CurrentRoutineState = {
@@ -26,7 +26,8 @@ type Step = {
   color: string;
   cycle: number;
   set: number;
-  totalSets: number;
+  totalSets?: number;
+  totalCycles?: number;
 };
 
 const createSteps = (config: RoutineConfiguration): Step[] => {
@@ -121,7 +122,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
     setTotalTime,
     setIsPaused,
   } = useTimer();
-  const [routine, setRoutine] = useState({});
+  const [routine, setRoutine] = useState<Routine | null>(null);
   const [steps, setSteps] = useState<Step[]>([]);
 
   const [currentStep, setCurrentStep] = useState(0);
