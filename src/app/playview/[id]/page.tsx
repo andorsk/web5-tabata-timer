@@ -281,20 +281,28 @@ export default function PlayView({ params }: { params: { id: string } }) {
           {stepTime}
         </h1>
       </div>
-      <div className="flex-grow grid grid-cols-1 gap-1 p-4">
-        {steps.map((step, index) => (
-          <button
-            key={index}
-            onClick={() => handleClickedStep(index)}
-            className={`p-2 text-center w-full rounded ${
-              index === currentStep
-                ? "bg-blue-500 p-5 text-white"
-                : "bg-gray-200"
-            }`}
-          >
-            {step.name}
-          </button>
-        ))}
+      <div className="flex-grow p-4 overflow-y-auto">
+        <div className="flex flex-col justify-center items-center">
+          {steps.map((step, index) => (
+            <button
+              key={index}
+              onClick={() => handleClickedStep(index)}
+              className={`w-full  rounded ${
+                index === currentStep
+                  ? "bg-blue-500 text-white p-5"
+                  : "bg-gray-200"
+              }`}
+              style={{
+                minHeight: "40px", // Set a fixed height for each button
+                marginBottom: "0px", // Add some space between buttons
+                outline: "none", // Remove default outline on focus
+                border: "1px solid black", // Add border around each button
+              }}
+            >
+              {step.name}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="flex justify-between items-center p-4 bg-gray-100">
         <button className="p-2 rounded bg-blue-500 text-white">⬅️</button>
