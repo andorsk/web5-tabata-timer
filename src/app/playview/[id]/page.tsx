@@ -286,9 +286,8 @@ export default function PlayView({ params }: { params: { id: string } }) {
         </div>
       </div>
       <div className="text-center">
-        <h1 className={`text-4xl p-12 ${getCurrentStepColor()} font-bold`}>
-          {stepTime}
-        </h1>
+        <h1 className={`text-3xl  font-bold`}>{steps[currentStep]?.name}</h1>
+        <h1 className={`text-4xl pb-10 font-bold`}>{stepTime}</h1>
       </div>
       <div className="flex-grow overflow-y-auto">
         <div className="flex flex-col justify-center items-center">
@@ -317,7 +316,12 @@ export default function PlayView({ params }: { params: { id: string } }) {
         </div>
       </div>
       <div className="flex justify-between items-center p-4 border-2 border-black border-solid">
-        <button className="p-2 rounded bg-blue-500 text-white">⬅️</button>
+        <button
+          onClick={() => setCurrentStep(currentStep - 1)}
+          className="p-2 rounded text-white"
+        >
+          ⬅️
+        </button>
         <div>
           <span>
             Cycle: {steps[currentStep]?.cycle + 1 || 0}/
@@ -329,7 +333,12 @@ export default function PlayView({ params }: { params: { id: string } }) {
             {routine?.routine?.Sets?.value || 0}
           </span>
         </div>
-        <button className="p-2 rounded bg-blue-500 text-white">➡️</button>
+        <button
+          onClick={() => setCurrentStep(currentStep + 1)}
+          className="p-2 rounded text-white"
+        >
+          ➡️
+        </button>
       </div>
       <button
         className="p-2 rounded bg-blue-500 text-white"
