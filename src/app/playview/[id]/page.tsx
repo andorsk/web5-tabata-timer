@@ -282,7 +282,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
           </button>
         </div>
         <div className="p-4 text-center font-bold text-2xl">
-          Total Time Left: {formatDuration(timeLeft)}{" "}
+          {formatDuration(timeLeft)}{" "}
         </div>
       </div>
       <div className="text-center">
