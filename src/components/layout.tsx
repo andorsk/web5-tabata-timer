@@ -23,7 +23,6 @@ export default function Layout({
         <meta name="msapplication-TileColor" content="#2B5797" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content="#000000" />
-
         <link rel="apple-touch-icon" href="/icons/touch-icon-iphone.png" />
         <link
           rel="apple-touch-icon"
@@ -40,7 +39,6 @@ export default function Layout({
           sizes="167x167"
           href="/icons/touch-icon-ipad-retina.png"
         />
-
         <link
           rel="icon"
           type="image/png"
@@ -64,7 +62,6 @@ export default function Layout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
         />
-
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" content="https://yourdomain.com" />
         <meta name="twitter:title" content="PWA App" />
