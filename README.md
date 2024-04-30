@@ -52,6 +52,7 @@ bun dev
 - [x] Workout Selection View
 - [x] Configure Routine View
 - [x] Sound
+- [x] PWA
 - [ ] Record Sessions
 - [ ] Sync 
 - [ ] Share sessions

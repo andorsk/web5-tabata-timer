@@ -111,6 +111,7 @@ const computeTotalTimeFromSteps = (steps: Step[]): number => {
 export default function PlayView({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { web5, did } = useWeb5();
+
   //@ts-ignore
   const {
     stepTime,
@@ -124,13 +125,10 @@ export default function PlayView({ params }: { params: { id: string } }) {
   } = useTimer();
   const [routine, setRoutine] = useState<Routine | null>(null);
   const [steps, setSteps] = useState<Step[]>([]);
-
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isDone, setIsDone] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const soundPlayerRef = useRef<any>(null);
-
+  const [isDone, setIsDone] = useState(false);
   const [timeInStep, setTimeInStep] = useState(stepTime);
   const [metadata, setMetadata] = useState({
     currentSet: 0,
@@ -139,11 +137,11 @@ export default function PlayView({ params }: { params: { id: string } }) {
     totalCycles: 0,
   });
 
+  const soundPlayerRef = useRef<any>(null);
   const routineId = params.id;
   const currentCycle = 1;
 
   useEffect(() => {
-    console.log("setting to ", !isPlaying);
     setIsPaused(!isPlaying);
   }, [isPlaying]);
 
@@ -187,10 +185,10 @@ export default function PlayView({ params }: { params: { id: string } }) {
     if (steps.length > 0) {
       return {
         // @ts-ignore
-        set: steps[currentStep].set,
+        set: steps[currentStep]?.set,
         // @ts-ignore
-        totalSets: steps[currentStep].totalSets,
-        totalCycels: steps[currentStep].totalCycles,
+        totalSets: steps[currentStep]?.totalSets,
+        totalCycels: steps[currentStep]?.totalCycles,
       };
     }
     return { set: 0, totalSets: 0, totalCycles: 0 };
@@ -199,7 +197,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
   const getCurrentCycle = () => {
     if (steps.length > 0) {
       //@ts-ignore
-      return steps[currentStep].cycle;
+      return steps[currentStep]?.cycle;
     }
     return 0;
   };
@@ -207,6 +205,8 @@ export default function PlayView({ params }: { params: { id: string } }) {
   useEffect(() => {
     const { set, totalSets } = getCurrentSet();
     const cycle = getCurrentCycle();
+    if (currentStep >= steps.length) {
+    }
     setMetadata({
       currentSet: set,
       currentCycle: cycle,
@@ -214,12 +214,15 @@ export default function PlayView({ params }: { params: { id: string } }) {
       totalSets: 0,
       totalCycles: 0,
     });
+    if (currentStep >= steps.length && routine) {
+      setIsDone(true);
+    }
   }, [currentStep, steps, routine]);
 
   const getCurrentStepColor = () => {
     if (steps.length > 0) {
       // @ts-ignore
-      return steps[currentStep].color;
+      return steps[currentStep]?.color;
     } else {
       return "";
     }
@@ -243,15 +246,12 @@ export default function PlayView({ params }: { params: { id: string } }) {
   useEffect(() => {
     const elapsedTime = computeTimeElapsed(steps.slice(0, currentStep + 1));
     setTimeElapsed(elapsedTime);
-  });
+  }, [currentStep]);
 
   const incrementCurrentStep = () => {
-    if (currentStep === steps.length - 1) {
-      setIsDone(true);
-    } else {
-      handleClickedStep(currentStep + 1);
-    }
+    handleClickedStep(currentStep + 1);
   };
+
   useEffect(() => {
     if (stepTime === 0) {
       incrementCurrentStep();
@@ -317,7 +317,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
       </div>
       <div className="flex justify-between items-center p-4 border-2 border-black border-solid">
         <button
-          onClick={() => setCurrentStep(currentStep - 1)}
+          onClick={() => setCurrentStep(Math.max(currentStep - 1, 0))}
           className="p-2 rounded text-white"
         >
           ⬅️
@@ -334,7 +334,9 @@ export default function PlayView({ params }: { params: { id: string } }) {
           </span>
         </div>
         <button
-          onClick={() => setCurrentStep(currentStep + 1)}
+          onClick={() =>
+            setCurrentStep(Math.min(currentStep + 1, steps.length))
+          }
           className="p-2 rounded text-white"
         >
           ➡️
