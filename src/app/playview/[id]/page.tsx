@@ -37,6 +37,7 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
       color: "bg-yellow-500",
       cycle: 0,
       set: 0,
+      totalCycles: config.Cycles.value,
     } as Step,
   ];
 
@@ -49,6 +50,7 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
         cycle: i,
         set: j,
         totalSets: config.Sets.value,
+        totalCycles: config.Cycles.value,
       });
       if (j <= config.Cycles.value - 1) {
         steps.push({
@@ -58,6 +60,7 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
           cycle: i,
           set: j,
           totalSets: config.Sets.value,
+          totalCycles: config.Cycles.value,
         });
       }
     }
@@ -67,6 +70,8 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
       color: "bg-green-200",
       cycle: i,
       totalSets: config.Sets.value,
+      totalCycles: config.Cycles.value,
+
       set: 0,
     });
   }
@@ -76,6 +81,7 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
     color: "bg-blue-500",
     cycle: 0,
     totalSets: 1,
+    totalCycles: config.Cycles.value,
     set: 0,
   });
 
@@ -129,10 +135,10 @@ export default function PlayView({ params }: { params: { id: string } }) {
     currentSet: 0,
     currentCycle: 0,
     totalSets: 0,
+    totalCycles: 0,
   });
 
   const routineId = params.id;
-  const totalCycles = 3;
   const currentCycle = 1;
 
   useEffect(() => {
@@ -183,9 +189,10 @@ export default function PlayView({ params }: { params: { id: string } }) {
         set: steps[currentStep].set,
         // @ts-ignore
         totalSets: steps[currentStep].totalSets,
+        totalCycels: steps[currentStep].totalCycles,
       };
     }
-    return { set: 0, totalSets: 0 };
+    return { set: 0, totalSets: 0, totalCycles: 0 };
   };
 
   const getCurrentCycle = () => {
@@ -204,8 +211,9 @@ export default function PlayView({ params }: { params: { id: string } }) {
       currentCycle: cycle,
       // @ts-ignore
       totalSets: totalSets,
+      totalCycles: 6, // TODO: fix
     });
-  }, [currentStep, steps]);
+  }, [currentStep, steps, routine]);
 
   const getCurrentStepColor = () => {
     if (steps.length > 0) {
@@ -290,13 +298,16 @@ export default function PlayView({ params }: { params: { id: string } }) {
               className={`w-full  rounded ${
                 index === currentStep
                   ? "bg-blue-500 text-white p-5"
-                  : "bg-gray-200"
+                  : "bg-transparent"
               }`}
               style={{
                 minHeight: "40px", // Set a fixed height for each button
                 marginBottom: "0px", // Add some space between buttons
                 outline: "none", // Remove default outline on focus
                 border: "1px solid black", // Add border around each button
+                boxShadow: `0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1)`, // Add box shadow for depth
+                background:
+                  index === currentStep ? "rgba(0, 0, 0, 0.1)" : "transparent", // Semi-transparent overlay
               }}
             >
               {step.name}
@@ -308,11 +319,11 @@ export default function PlayView({ params }: { params: { id: string } }) {
         <button className="p-2 rounded bg-blue-500 text-white">⬅️</button>
         <div>
           <span>
-            Cycle: {metadata.currentCycle}/{totalCycles}
+            Cycle: {metadata.currentCycle}/{metadata.totalCycles}
           </span>{" "}
           <br />
           <span>
-            Step: {metadata.currentSet}/{metadata.totalSets}
+            Sets: {metadata.currentSet}/{metadata.totalSets}
           </span>
         </div>
         <button className="p-2 rounded bg-blue-500 text-white">➡️</button>
