@@ -41,14 +41,14 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
     } as Step,
   ];
 
-  for (let i = 0; i < config.Cycles.value; i++) {
-    for (let j = 0; j < config.Sets.value; j++) {
+  for (let j = 0; j < config.Sets.value; j++) {
+    for (let i = 0; i < config.Cycles.value; i++) {
       steps.push({
         name: config.Work.name,
         duration: config.Work.duration,
         color: "bg-red-500",
-        cycle: i,
-        set: j,
+        cycle: j,
+        set: i,
         totalSets: config.Sets.value,
         totalCycles: config.Cycles.value,
       });
@@ -57,8 +57,8 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
           name: config.Rest.name,
           duration: config.Rest.duration,
           color: "bg-green-500",
-          cycle: i,
-          set: j,
+          cycle: j,
+          set: i,
           totalSets: config.Sets.value,
           totalCycles: config.Cycles.value,
         });
@@ -68,13 +68,13 @@ const createSteps = (config: RoutineConfiguration): Step[] => {
       name: config.RestBetweenSteps.name,
       duration: config.RestBetweenSteps.duration,
       color: "bg-green-200",
-      cycle: i,
+      cycle: 0,
       totalSets: config.Sets.value,
       totalCycles: config.Cycles.value,
-
-      set: 0,
+      set: j,
     });
   }
+
   steps.push({
     name: config.CoolDown.name,
     duration: config.CoolDown.duration,
@@ -210,8 +210,8 @@ export default function PlayView({ params }: { params: { id: string } }) {
       currentSet: set,
       currentCycle: cycle,
       // @ts-ignore
-      totalSets: totalSets,
-      totalCycles: 6, // TODO: fix
+      totalSets: 0,
+      totalCycles: 0,
     });
   }, [currentStep, steps, routine]);
 
@@ -289,7 +289,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
           {stepTime}
         </h1>
       </div>
-      <div className="flex-grow p-4 overflow-y-auto">
+      <div className="flex-grow overflow-y-auto">
         <div className="flex flex-col justify-center items-center">
           {steps.map((step, index) => (
             <button
@@ -315,15 +315,17 @@ export default function PlayView({ params }: { params: { id: string } }) {
           ))}
         </div>
       </div>
-      <div className="flex justify-between items-center p-4 bg-gray-100">
+      <div className="flex justify-between items-center p-4 border-2 border-black border-solid">
         <button className="p-2 rounded bg-blue-500 text-white">⬅️</button>
         <div>
           <span>
-            Cycle: {metadata.currentCycle}/{metadata.totalCycles}
+            Cycle: {steps[currentStep]?.cycle + 1 || 0}/
+            {routine?.routine?.Cycles?.value || 0}
           </span>{" "}
           <br />
           <span>
-            Sets: {metadata.currentSet}/{metadata.totalSets}
+            Sets: {steps[currentStep]?.set + 1 || 0}/
+            {routine?.routine?.Sets?.value || 0}
           </span>
         </div>
         <button className="p-2 rounded bg-blue-500 text-white">➡️</button>
