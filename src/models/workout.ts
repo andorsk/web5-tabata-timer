@@ -30,13 +30,15 @@ export type RoutineConfiguration = {
   CoolDown: TimedIntervalConfiguration;
 };
 
-export type Session = {
+export type WorkoutSession = {
   startTime: string;
   endTime: string;
   notes: string[];
   routineId: string;
   routine: Routine;
   completed: boolean;
+  totalTime: number;
+  steps: Step[];
 };
 
 export const validateRoutineConfiguration = (
@@ -54,4 +56,14 @@ export const validateRoutineConfiguration = (
     return false;
   }
   return true;
+};
+
+export type Step = {
+  name: string;
+  duration: number;
+  color: string;
+  cycle: number;
+  set: number;
+  totalSets?: number;
+  totalCycles?: number;
 };
