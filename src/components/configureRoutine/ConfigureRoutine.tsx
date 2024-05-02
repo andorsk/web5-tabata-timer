@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { RoutineConfiguration } from "@/models/workout"; // Import your types from the correct location
+import {
+  RoutineConfiguration,
+  TimedIntervalConfiguration,
+} from "@/models/workout"; // Import your types from the correct location
 import { useWeb5 } from "@/context/Web5Context";
 import { storeRoutine } from "@/lib/store/dwn/routines";
 
@@ -47,6 +50,7 @@ const RoutineConfigurationForm: React.FC = () => {
     if (event.target.type === "number") {
       value = parseInt(value);
     }
+    console.log("value is ", value);
 
     const keys = key.split(".");
     const updatedRoutineConfig = { ...routineConfig };
@@ -64,12 +68,36 @@ const RoutineConfigurationForm: React.FC = () => {
     setRoutineConfig(updatedRoutineConfig);
   };
 
+  const isTimedIntervalConfiguration = (
+    value: any,
+  ): value is TimedIntervalConfiguration => {
+    return typeof value === "object" && "duration" in value;
+  };
+  const multiplyDurationsBy1000 = (
+    config: RoutineConfiguration,
+  ): RoutineConfiguration => {
+    const adjustedConfig: RoutineConfiguration = { ...config };
+    for (const key in adjustedConfig) {
+      if (adjustedConfig.hasOwnProperty(key)) {
+        // @ts-ignore
+        const value = adjustedConfig[key];
+        if (isTimedIntervalConfiguration(value)) {
+          // @ts-ignore
+          adjustedConfig[key].duration *= 1000;
+        }
+      }
+    }
+    return adjustedConfig;
+  };
+
   // @ts-ignore
   const storeRoutineWrapper = async (routineConfig, web5) => {
+    const adjustedRoutineConfig = multiplyDurationsBy1000(
+      routineConfig.routine,
+    );
+    routineConfig.routine = adjustedRoutineConfig;
     await storeRoutine(routineConfig, web5);
-    console.log("got routine config", routineConfig);
     document.dispatchEvent(new CustomEvent("routineSubmitted"));
-    console.log("dispatched Event");
   };
   // Function to handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -84,7 +112,7 @@ const RoutineConfigurationForm: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center  w-full">
+    <div className="flex items-center justify-center w-full">
       <div className="w-full overflow-y-auto">
         <div className="text-center text-2xl">
           <h1>Routine Configuration</h1>

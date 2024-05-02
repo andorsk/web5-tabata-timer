@@ -52,6 +52,7 @@ bun dev
 - [x] Workout Selection View
 - [x] Configure Routine View
 - [x] Sound
+- [x] PWA
 - [ ] Record Sessions
 - [ ] Sync 
 - [ ] Share sessions
@@ -61,15 +62,20 @@ bun dev
 
 * Bug Fixes
 
+- [x] Fix Build 
 - [ ] Fix Pause/Play
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
-- [x] Fix Build 
 - [ ] Fix Inputs For Form
 
 * Other
 
 - [ ] Major Refactor. Consider not using Next JS. No reason to use it.
+- [ ] Change state mangaement to redux
+
+## Disclosures
+
+This was also a project for me to get to learn moer about how front end works. The way react manages state, redux, etc, required me to come up the learning curve. There are for sure better ways to handle this. 
 
 ## Alternatives
 

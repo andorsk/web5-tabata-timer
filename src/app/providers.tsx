@@ -2,15 +2,13 @@
 
 import React, { ReactNode } from "react";
 import { Web5Provider } from "@/context/Web5Context";
-import { RoutineProvider } from "@/context/RoutineContext";
-import { TimerProvider } from "@/context/TimerContext";
+import { Provider } from "react-redux";
+import { store } from "@/lib/store";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <Web5Provider>
-      <TimerProvider>
-        <RoutineProvider>{children}</RoutineProvider>
-      </TimerProvider>
-    </Web5Provider>
+    <Provider store={store}>
+      <Web5Provider>{children}</Web5Provider>
+    </Provider>
   );
 }

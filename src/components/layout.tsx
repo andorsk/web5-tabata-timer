@@ -12,11 +12,11 @@ export default function Layout({
   return (
     <html lang="en">
       <Head>
-        <meta name="application-name" content="PWA App" />
+        <meta name="application-name" content="Web5 Tabata Timer" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="PWA App" />
-        <meta name="description" content="Best PWA App in the world" />
+        <meta name="apple-mobile-web-app-title" content="Web5 Tabata Timer" />
+        <meta name="description" content="Tabata Timer Web5" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/icons/browserconfig.xml" />

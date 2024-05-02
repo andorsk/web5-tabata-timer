@@ -8,10 +8,15 @@ export const configureProtocol = async (web5: Web5) => {
       definition: routineProtocol,
     },
   });
-  console.log(protocol, status);
+  if (status.code !== 202) {
+    throw new Error("failed to store routine");
+  }
 };
 
 export const storeRoutine = async (routine: Routine, web5: Web5) => {
+  if (!routine.routine) {
+    throw new Error("routine is missing");
+  }
   const payload = JSON.stringify(routine);
   const replyResponse = await web5.dwn.records.create({
     store: true,
@@ -23,7 +28,9 @@ export const storeRoutine = async (routine: Routine, web5: Web5) => {
       protocolPath: "routine",
     },
   });
-  console.log(replyResponse);
+  if (replyResponse.status.code !== 202) {
+    throw new Error("failed to store routine");
+  }
 };
 
 export const getRoutines = async (web5: Web5) => {
