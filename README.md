@@ -68,6 +68,8 @@ bun dev
 - [ ] Backup/Sync
 - [ ] Fix Inputs For Form
 
+* Code
+
 * Other
 
 - [ ] Major Refactor. Consider not using Next JS. No reason to use it.
@@ -75,7 +77,9 @@ bun dev
 
 ## Disclosures
 
-This was also a project for me to get to learn moer about how front end works. The way react manages state, redux, etc, required me to come up the learning curve. There are for sure better ways to handle this. 
+This was also a project for me to get to learn more about how front end works. The way react manages state, redux, etc, required me to come up the learning curve. 
+
+I'm sure that those more comfortable with front end might gouge out their eyes at some of the patterns. I will try to fix them.
 
 ## Alternatives
 
