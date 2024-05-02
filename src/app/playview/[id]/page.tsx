@@ -57,8 +57,14 @@ export default function PlayView({ params }: { params: { id: string } }) {
     console.log("web5 state");
     console.log(web5state);
     // @ts-ignore
-    if (web5state.loaded && params.id && web5state.web5) {
+    if (
+      web5state.loaded &&
+      params.id &&
+      web5state.web5 &&
+      !workoutSession.set
+    ) {
       const loadWorkout = async () => {
+        console.log("loading workout");
         await workoutManager.manager.setWorkout({
           id: params.id,
           // @ts-ignore
@@ -84,6 +90,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
 
   return (
     <div className={`flex flex-col w-full h-screen ${currentColor}`}>
+      {JSON.stringify(workoutSession.set)}
       <div className="flex justify-between items-center p-4">
         <div className="flex">
           <button

@@ -58,7 +58,6 @@ export class WorkoutManagerImpl implements WorkoutManager {
     this.setStep(0);
     this.isWorkoutActive = true;
     this.started = true;
-    // @ts-ignore
     dispatch(STW());
   }
 
@@ -114,6 +113,8 @@ export class WorkoutManagerImpl implements WorkoutManager {
     if (!this.workout || step < 0 || step > this.workout.steps.length) {
       throw new Error("Invalid step set. Must be valid and session created.");
     }
+
+    console.log("setting step", step);
     if (this.timer) {
       this.currentStep = step;
       this.timer.reset();
@@ -133,6 +134,7 @@ export class WorkoutManagerImpl implements WorkoutManager {
     ) {
       this.endWorkout();
       this.isCompleted = true;
+      return;
     }
     this.setStep(this.currentStep + 1);
   }
@@ -147,6 +149,7 @@ export class WorkoutManagerImpl implements WorkoutManager {
   onTimerTick() {
     if (this.timer && this.dispatch && this.started) {
       const state = this.timer.state();
+      //console.log("timer state", state);
       this.timeLeft =
         this.timeFromBegginningOfSet -
         (this.timer.totalTime - this.timer.remainingTime);
@@ -156,6 +159,7 @@ export class WorkoutManagerImpl implements WorkoutManager {
         }
       }
       if (state.remainingTime <= 0) {
+        console.log("calling next step because time ran out");
         this.nextStep();
       }
       // @ts-ignore
@@ -175,7 +179,6 @@ export class WorkoutManagerImpl implements WorkoutManager {
       console.log(params.web5);
       throw new Error("no web5 provided. can't get workout");
     }
-
     const routine = await getRoutine(params.id, params.web5);
     const steps = createSteps(routine.routine);
     const totalTime = computeTotalTimeFromSteps(steps);
@@ -187,6 +190,7 @@ export class WorkoutManagerImpl implements WorkoutManager {
       isWorkoutActive: true,
       completed: false,
     };
+    console.log("Settting timer");
     this.timer = new Timer(() => this.onTimerTick());
     this.set = true;
     params.dispatch(isReady());
