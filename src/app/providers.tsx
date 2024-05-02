@@ -2,12 +2,13 @@
 
 import React, { ReactNode } from "react";
 import { Web5Provider } from "@/context/Web5Context";
-import { WorkoutSessionProvider } from "@/context/WorkoutSessionContext";
+import { Provider } from "react-redux";
+import { store } from "@/lib/store";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <Web5Provider>
-      <WorkoutSessionProvider>{children}</WorkoutSessionProvider>
-    </Web5Provider>
+    <Provider store={store}>
+      <Web5Provider>{children}</Web5Provider>
+    </Provider>
   );
 }

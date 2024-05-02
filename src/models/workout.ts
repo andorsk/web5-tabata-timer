@@ -41,6 +41,7 @@ export type WorkoutSession = {
   steps: Step[];
 };
 
+// TODO: Move
 export const validateRoutineConfiguration = (
   routine: RoutineConfiguration,
 ): boolean => {

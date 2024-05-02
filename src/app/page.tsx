@@ -1,4 +1,3 @@
-import Image from "next/image";
 import WorkoutSelectionView from "@/app/workoutselectionview";
 import VersionInfo from "@/components/VersionInfo";
 

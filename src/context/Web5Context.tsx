@@ -49,7 +49,6 @@ export const Web5Provider: React.FC<{ children: ReactNode }> = ({
       setWeb5(connectedWeb5);
       setDid(myDid);
       await configureProtocol(connectedWeb5);
-      console.log("protocol configured");
     } catch (error) {
       console.error("Failed to connect to Web5:", error);
     }

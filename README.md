@@ -62,15 +62,16 @@ bun dev
 
 * Bug Fixes
 
+- [x] Fix Build 
 - [ ] Fix Pause/Play
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
-- [x] Fix Build 
 - [ ] Fix Inputs For Form
 
 * Other
 
 - [ ] Major Refactor. Consider not using Next JS. No reason to use it.
+- [ ] Change state mangaement to redux
 
 ## Alternatives
 
