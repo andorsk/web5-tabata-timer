@@ -39,3 +39,4 @@ dist
 
 public/sw.js*
 public/workbox-*
+public/version.json
