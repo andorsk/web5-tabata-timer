@@ -1,5 +1,5 @@
 // actions.ts
-import TimerState from "@/components/Timer";
+import TimerState from "@/components/timer";
 import { Web5 } from "@web5/api";
 
 export const SET_WORKOUT = "SET_WORKOUT";

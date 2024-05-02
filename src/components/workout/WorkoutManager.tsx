@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Timer from "@/components/Timer";
+import Timer from "@/components/timer";
 import { WorkoutSession } from "@/models/workout";
 import { createSteps, computeTotalTimeFromSteps } from "@/lib/workout";
 import { soundPlayer } from "@/components/sound/SoundLibrary"; // Ensure this is correctly set up to play sounds
