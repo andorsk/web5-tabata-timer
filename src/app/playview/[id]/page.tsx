@@ -89,7 +89,6 @@ export default function PlayView({ params }: { params: { id: string } }) {
 
   return (
     <div className={`flex flex-col w-full h-screen ${currentColor}`}>
-      {JSON.stringify(workoutSession.set)}
       <div className="flex justify-between items-center p-4">
         <div className="flex">
           <button
