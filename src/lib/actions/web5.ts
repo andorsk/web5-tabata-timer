@@ -6,8 +6,9 @@ export const INIT_WEB5_START = "INIT_WEB5_START";
 export const INIT_WEB5_SUCCESS = "INIT_WEB5_SUCCESS";
 export const INIT_WEB5_FAILURE = "INIT_WEB5_FAILURE";
 import { Web5 } from "@web5/api";
+import { Dispatch } from "redux";
 
-type Web5State = {
+export type Web5State = {
   web5: Web5;
   did: string;
   loading: boolean;
@@ -31,14 +32,17 @@ export const web5failure = (): FailureWeb5Action => ({
 
 export interface StartWeb5Action {
   type: typeof INIT_WEB5_START;
+  payload?: Web5State;
 }
 
 export interface SuccessWeb5Action {
   type: typeof INIT_WEB5_SUCCESS;
+  payload?: Web5State;
 }
 
 export interface FailureWeb5Action {
   type: typeof INIT_WEB5_FAILURE;
+  payload?: Web5State;
 }
 
 export type Web5ActionTypes =
@@ -46,7 +50,7 @@ export type Web5ActionTypes =
   | SuccessWeb5Action
   | FailureWeb5Action;
 
-export const initWeb5 = async (dispatch) => {
+export const initWeb5 = async (dispatch: Dispatch) => {
   dispatch({ type: INIT_WEB5_START });
   try {
     const { web5, did } = await Web5.connect({ password: "asdf" });

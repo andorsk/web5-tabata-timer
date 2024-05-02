@@ -8,18 +8,19 @@ export class Timer {
   private _totalTime: number = 0;
   private _remainingTime: number = 0;
   private _isPlaying: boolean;
-  private _intervalId: NodeJS.Timer | null;
   private _timerId: string;
   private _finished: boolean = false;
+  private _intervalId: any;
+  tickHandler: () => void;
 
   constructor(tickHandler: () => void) {
     this._totalTime = 0;
     this._remainingTime = 0;
     this._isPlaying = false;
-    this._intervalId = null;
     this._finished = false;
     this._timerId = crypto.randomUUID();
     this.tickHandler = tickHandler;
+    this._intervalId = null;
   }
 
   get totalTime() {
@@ -32,10 +33,6 @@ export class Timer {
 
   get isPlaying() {
     return this._isPlaying;
-  }
-
-  get intervalId() {
-    return this._intervalId;
   }
 
   get timerId() {
@@ -94,14 +91,13 @@ export class Timer {
 
   play() {
     if (!this.isPlaying && this.remainingTime > 0) {
-      conosle.log("playing");
       this.start(this.remainingTime);
     }
   }
 
   setFinished() {
     this._isPlaying = false;
-    this.finished = true;
+    this._finished = true;
   }
 
   reset() {

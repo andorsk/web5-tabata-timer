@@ -79,8 +79,10 @@ const RoutineConfigurationForm: React.FC = () => {
     const adjustedConfig: RoutineConfiguration = { ...config };
     for (const key in adjustedConfig) {
       if (adjustedConfig.hasOwnProperty(key)) {
+        // @ts-ignore
         const value = adjustedConfig[key];
         if (isTimedIntervalConfiguration(value)) {
+          // @ts-ignore
           adjustedConfig[key].duration *= 1000;
         }
       }

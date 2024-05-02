@@ -1,7 +1,5 @@
 // actions.ts
-import { Routine } from "@/models/workout";
-import { SetRemainingTime } from "./timer";
-import { TimerState } from "@/components/Timer";
+import TimerState from "@/components/Timer";
 import { Web5 } from "@web5/api";
 
 export const SET_WORKOUT = "SET_WORKOUT";
@@ -66,8 +64,7 @@ export type WorkoutActionTypes =
   | SetStepAction
   | RefreshTimerAction
   | RefreshWorkoutAction
-  | IsReadyAction
-  | SetRemainingTime;
+  | IsReadyAction;
 
 export const setWorkout = (id: string, web5: Web5): SetWorkoutAction => ({
   type: SET_WORKOUT,

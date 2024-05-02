@@ -73,6 +73,10 @@ bun dev
 - [ ] Major Refactor. Consider not using Next JS. No reason to use it.
 - [ ] Change state mangaement to redux
 
+## Disclosures
+
+This was also a project for me to get to learn moer about how front end works. The way react manages state, redux, etc, required me to come up the learning curve. There are for sure better ways to handle this. 
+
 ## Alternatives
 
 - [Tabata Timer: Interval Timer ](https://play.google.com/store/apps/details?id=com.evgeniysharafan.tabatatimer&hl=en&gl=US&google_abuse=GOOGLE_ABUSE_EXEMPTION%3DID%3Db350816d64fae8f3:TM%3D1714433385:C%3D%3E:IP%3D49.37.163.25-:S%3DnDI4qYnhbHEdeM3q0kSbaw%3B+path%3D/%3B+domain%3Dgoogle.com%3B+expires%3DTue,+30-Apr-2024+02:29:45+GMT) -- The main app on the app store. 5M+ downloads. This is hidden behind a paywall, has ads, is not open source. We can do better. It's farther along, and has been worked on longer, but I hope that in time this app is going to clearly be better than that app. 

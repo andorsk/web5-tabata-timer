@@ -4,6 +4,7 @@ import {
   INIT_WEB5_START,
   INIT_WEB5_SUCCESS,
   INIT_WEB5_FAILURE,
+  Web5ActionTypes,
 } from "@/lib/actions/web5";
 
 const initialState = {
@@ -21,12 +22,11 @@ export const web5Reducer = (state = initialState, action: Web5ActionTypes) => {
     case INIT_WEB5_SUCCESS:
       return {
         ...state,
-        web5: action.payload.web5,
-        did: action.payload.did,
+        web5: action.payload?.web5,
+        did: action.payload?.did,
         loaded: true,
         loading: false,
       };
-      console.log("web5 was loaded");
     case INIT_WEB5_FAILURE:
       return { ...state, error: action.payload, loading: false };
     default:

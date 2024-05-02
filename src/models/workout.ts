@@ -32,12 +32,13 @@ export type RoutineConfiguration = {
 
 export type WorkoutSession = {
   startTime: string;
-  endTime: string;
-  notes: string[];
-  routineId: string;
+  endTime?: string;
+  notes?: string[];
+  routineId?: string;
   routine: Routine;
   completed: boolean;
   totalTime: number;
+  isWorkoutActive: boolean;
   steps: Step[];
 };
 

@@ -22,6 +22,7 @@ type WorkoutState = {
 };
 
 const initialState: WorkoutState = {
+  // @ts-ignore
   manager: {},
   set: false,
 };
@@ -29,7 +30,7 @@ const initialState: WorkoutState = {
 export const workoutReducer = (
   state = initialState,
   action: WorkoutActionTypes,
-): WorkoutManager => {
+): WorkoutState => {
   const wm = WorkoutManagerSingleton.getInstance();
   switch (action.type) {
     case IS_READY:
@@ -51,7 +52,6 @@ export const workoutReducer = (
     case REFRESH_TIMER:
       return {
         ...state,
-        timer: state.manager.timer,
       };
     case PAUSE_WORKOUT:
       return {
