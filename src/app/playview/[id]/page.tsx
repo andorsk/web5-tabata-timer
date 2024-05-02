@@ -7,6 +7,9 @@ import { getRoutine } from "@/lib/store/dwn/routines";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/reducers";
 import { setWorkout, startWorkout, pauseWorkout } from "@/lib/actions/workout"; // Import the setWorkout action creator
+import { formatDuration } from "@/lib/time";
+import { initWeb5, SayHi } from "@/lib/actions/web5";
+
 import {
   incrementCounter,
   decrementCounter,
@@ -16,81 +19,158 @@ import { WorkoutManagerSingleton } from "@/components/workout";
 
 export default function PlayView({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const { web5, did } = useWeb5();
   const [isPlaying, setIsPlaying] = useState(true);
-  const selectWorkoutSession = (state: RootState) => state.workout;
-  const dispatch = useDispatch();
-  const workoutSession = useSelector(selectWorkoutSession);
+  const [steps, setSteps] = useState(true);
+  const [currentColor, setCurrentColor] = useState("bg-blue-500");
 
-  // TODO: remove
-  const counter = useSelector((state) => state.counter);
+  const dispatch = useDispatch();
+  const selectWorkoutSession = (state: RootState) => state.workout;
+  const workoutSession = useSelector(selectWorkoutSession);
+  const web5state = useSelector((state) => state.web5);
+  const workoutManager = WorkoutManagerSingleton.getInstance();
+  workoutManager.setDispatcher(dispatch);
 
   useEffect(() => {
-    const workoutManager = WorkoutManagerSingleton.getInstance();
-    workoutManager.setDispatcher(dispatch);
-  }, [dispatch]);
+    if (!web5state.loaded) {
+      const load = async () => {
+        initWeb5(dispatch);
+      };
+      load();
+    }
+  }, []);
 
   const handleToggleWorkout = () => {
     const workoutManager = WorkoutManagerSingleton.getInstance();
     workoutManager.manager.toggleWorkout();
   };
 
+  const handleClickedStep = (index: number) => {
+    if (workoutSession.manager?.workout?.steps.length === 0) {
+      return;
+    }
+    workoutSession.manager?.setStep(index);
+  };
+
   useEffect(() => {
-    const fetchRoutine = async () => {
-      if (web5 && params.id) {
-        try {
-          const r = await getRoutine(params.id, web5);
-          dispatch(setWorkout(r)); // Pass the routine object to setWorkout action
-          console.log("STARTING WORK");
-          dispatch(startWorkout());
-        } catch (error) {
-          console.error("Error fetching routine:", error);
-        }
-      }
-    };
-    fetchRoutine();
-  }, [web5, params]);
+    if (web5state.loaded && params.id && web5state.web5) {
+      const loadWorkout = async () => {
+        await workoutManager.manager.setWorkout({
+          id: params.id,
+          web5: web5state.web5,
+          dispatch: dispatch,
+        });
+      };
+      loadWorkout();
+    }
+  }, [dispatch, web5state.loaded, params.id]);
 
-  const getCurrentStepColor = () => {
-    return "bg-blue-500";
-  };
-
-  const handleSetCounter = (e) => {
-    const value = parseInt(e.target.value);
-    dispatch(setCounter(value));
-  };
+  useEffect(() => {
+    if (workoutSession.manager.set) {
+      workoutManager.manager.startWorkout(dispatch);
+    }
+    setCurrentColor(
+      workoutSession.manager.workout?.steps[workoutSession.manager.currentStep]
+        ?.color,
+    );
+  }, [workoutSession]);
 
   return (
-    <div className={`flex flex-col w-full h-screen ${getCurrentStepColor()}`}>
-      Name: {workoutSession.manager?.workout?.name}
-      <br />
-      Remaining Time: {workoutSession.manager.timer?.remainingTime}
-      <br />
-      CurrentStep: {JSON.stringify(workoutSession.manager.currentStep)}
-      <br />
-      Total Time: {JSON.stringify(workoutSession.manager.workout?.totalTime)}
-      <br />
-      Total Time Left: {JSON.stringify(workoutSession.manager?.timeLeft)}
-      <br />
-      Is Completed: {JSON.stringify(workoutSession.manager?.isCompleted)}
-      <br />
-      Is Playing: {JSON.stringify(workoutSession.timer)}
-      <br />
-      Current Step:{" "}
-      {JSON.stringify(
-        workoutSession.manager?.workout?.steps[
-          workoutSession.manager.currentStep
-        ],
-      )}
+    <div className={`flex flex-col w-full h-screen ${currentColor}`}>
       <div className="flex justify-between items-center p-4">
         <div className="flex">
           <button
-            className="p-2 rounded bg-blue-500 text-white"
+            className="p-2 text-4xl rounded "
             onClick={() => handleToggleWorkout()}
           >
-            {isPlaying ? "Pause" : "Play"}
+            {workoutSession.timer?.isPlaying ? "⏸️" : "▶️"}
+          </button>
+          <button
+            className="p-2 text-4xl rounded "
+            onClick={() => router.push("/")}
+          >
+            🏠
           </button>
         </div>
+        <div className="p-4 text-center font-bold text-2xl">
+          {workoutSession.manager?.timeLeft !== undefined
+            ? formatDuration(
+                Math.floor(workoutSession.manager.timeLeft / 1000 ?? 0),
+              )
+            : "00:00"}
+        </div>
+      </div>
+      <div className="text-center">
+        <h1 className={`text-3xl  font-bold`}>
+          {
+            workoutSession.manager?.workout?.steps[
+              workoutSession.manager?.currentStep
+            ]?.name
+          }
+        </h1>
+        <h1 className={`text-4xl pb-10 font-bold`}>
+          {Math.floor(
+            (workoutSession.manager?.timer?.remainingTime ?? 0) / 1000,
+          ).toString()}
+        </h1>
+      </div>
+      <div className="flex-grow overflow-y-auto">
+        <div className="flex flex-col justify-center items-center">
+          {workoutSession.manager?.workout?.steps.map((step, index) => (
+            <button
+              key={index}
+              onClick={() => handleClickedStep(index)}
+              className={`w-full  rounded ${
+                index === workoutSession.manager.currentStep
+                  ? "bg-blue-500 text-white p-5"
+                  : "bg-transparent"
+              }`}
+              style={{
+                minHeight: "40px", // Set a fixed height for each button
+                marginBottom: "0px", // Add some space between buttons
+                outline: "none", // Remove default outline on focus
+                border: "1px solid black", // Add border around each button
+                boxShadow: `0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1)`, // Add box shadow for depth
+                background:
+                  index === workoutSession.manager.currentStep
+                    ? "rgba(0, 0, 0, 0.1)"
+                    : "transparent", // Semi-transparent overlay
+              }}
+            >
+              {step.name}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="flex justify-between items-center p-4 border-2 border-black border-solid">
+        <button
+          onClick={() => workoutSession.manager?.previousStep()}
+          className="p-2 rounded text-white"
+        >
+          ⬅️
+        </button>
+        <div>
+          <span>
+            Cycle:{" "}
+            {workoutSession.manager?.workout?.steps[
+              workoutSession.manager.currentStep
+            ]?.cycle + 1 || 0}
+            /{workoutSession.manager?.workout?.routine?.Cycles?.value || 0}
+          </span>{" "}
+          <br />
+          <span>
+            Sets:{" "}
+            {workoutSession.manager?.workout?.steps[
+              workoutSession.manager.currentStep
+            ]?.set + 1 || 0}
+            /{workoutSession.manager?.workout?.routine?.Sets?.value || 0}
+          </span>
+        </div>
+        <button
+          onClick={() => workoutSession.manager?.nextStep()}
+          className="p-2 rounded text-white"
+        >
+          ➡️
+        </button>
       </div>
     </div>
   );

@@ -1,27 +1,30 @@
 import React, { useState } from "react";
 import Timer, { TimerComponent } from "@/components/Timer";
 import { WorkoutSession, Routine } from "@/models/workout";
-import { endWorkout } from "@/lib/actions/workout";
-import { setWorkout } from "@/lib/actions/workout";
 import { createSteps, computeTotalTimeFromSteps } from "@/lib/workout";
+import { soundPlayer } from "@/components/sound/SoundLibrary"; // Ensure this is correctly set up to play sounds
+import { getRoutine, configureProtocol } from "@/lib/store/dwn/routines";
 
 import {
   refreshTimer,
   startWorkout as STW,
   endWorkout as EW,
   setWorkout as SW,
+  isReady,
 } from "@/lib/actions/workout";
+
+import { Web5 } from "@web5/api";
 
 export type WorkoutManager = {
   workout: WorkoutSession | null;
   isWorkoutActive: boolean;
-  startWorkout: (routine: Routine) => void;
+  startWorkout: () => void;
   pauseWorkout: () => void;
   resetWorkout: () => void;
   endWorkout: () => void;
   setStep: (step: number) => void;
   timer: Timer | null;
-  setWorkout: (routine: Routine) => void;
+  setWorkout: (id: string) => void;
 };
 
 export class WorkoutManagerImpl implements WorkoutManager {
@@ -32,14 +35,18 @@ export class WorkoutManagerImpl implements WorkoutManager {
   timer: Timer | null = null;
   timeLeft: number;
   timeFromBegginningOfSet: number;
+  playedThreeSecondSound: boolean = false; // To ensure sound plays only once
+  started: false;
+  set: boolean = false;
 
   constructor() {}
 
-  startWorkout(routine: Routine) {
+  startWorkout(dispatch) {
     if (this.isWorkoutActive) return;
     this.setStep(0);
-    this.timer.play();
     this.isWorkoutActive = true;
+    this.started = true;
+    dispatch(SW());
   }
 
   setDispatcher(dispatch: Dispatch) {
@@ -70,6 +77,7 @@ export class WorkoutManagerImpl implements WorkoutManager {
       this.pauseWorkout();
     }
   }
+
   resetWorkout() {
     this.isWorkoutActive = false;
     this.workout = null;
@@ -93,11 +101,13 @@ export class WorkoutManagerImpl implements WorkoutManager {
     }
     if (this.timer) {
       this.currentStep = step;
+      this.timer.reset();
       this.timer.start(this.workout.steps[step].duration);
     }
     this.timeFromBegginningOfSet = computeTotalTimeFromSteps(
-      this.workout.steps.slice(this.currentStep, this.workout.steps.length - 1),
+      this.workout.steps.slice(this.currentStep, this.workout.steps.length),
     );
+    this.playedThreeSecondSound = false;
   }
 
   nextStep() {
@@ -116,19 +126,29 @@ export class WorkoutManagerImpl implements WorkoutManager {
   }
 
   onTimerTick() {
-    if (this.timer && this.dispatch) {
-      if (this.timer.remainingTime <= 0) {
+    if (this.timer && this.dispatch && this.started) {
+      const state = this.timer.state();
+      this.timeLeft =
+        this.timeFromBegginningOfSet -
+        (this.timer.totalTime - this.timer.remainingTime);
+      if (state.remainingTime === 3000 && !this.playedThreeSecondSound) {
+        soundPlayer.play();
+      }
+      if (state.remainingTime <= 0) {
         this.nextStep();
       }
-      const state = this.timer.state();
       this.dispatch(refreshTimer(state));
-      this.timeLeft = this.timeFromBegginningOfSet + this.timer.remainingTime;
     } else {
       console.log(this.timer, this.dispatch);
     }
   }
 
-  setWorkout(routine: Routine) {
+  async setWorkout(params = { id: string, web5: Web5, dispatch: any }) {
+    if (!params.web5) {
+      console.log(params.web5);
+      throw new Error("no web5 provided. can't get workout");
+    }
+    const routine = await getRoutine(params.id, params.web5);
     const steps = createSteps(routine.routine);
     const totalTime = computeTotalTimeFromSteps(steps);
     this.workout = {
@@ -138,8 +158,9 @@ export class WorkoutManagerImpl implements WorkoutManager {
       startTime: new Date().toISOString(),
       isWorkoutActive: true,
     };
-    this.setStep(0);
     this.timer = new Timer(() => this.onTimerTick());
+    this.set = true;
+    params.dispatch(isReady());
   }
 }
 

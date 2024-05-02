@@ -5,38 +5,60 @@ export type TimerState = {
 };
 
 export class Timer {
-  totalTime = 0;
-  remainingTime = 0;
-  isPlaying = false;
-  intervalId: null;
-  timerId = "";
-  tickHandler: () => void;
-  finished = false;
+  private _totalTime: number = 0;
+  private _remainingTime: number = 0;
+  private _isPlaying: boolean;
+  private _intervalId: NodeJS.Timer | null;
+  private _timerId: string;
+  private _finished: boolean = false;
 
   constructor(tickHandler: () => void) {
-    this.totalTime = 0;
-    this.remainingTime = 0;
-    this.isPlaying = false;
-    this.intervalId = null;
-    this.timerId = crypto.randomUUID();
+    this._totalTime = 0;
+    this._remainingTime = 0;
+    this._isPlaying = false;
+    this._intervalId = null;
+    this._finished = false;
+    this._timerId = crypto.randomUUID();
     this.tickHandler = tickHandler;
   }
 
-  start(totalSeconds: number) {
-    if (!this.isPlaying) {
-      this.totalTime = totalSeconds;
-      this.remainingTime = totalSeconds;
-      this.isPlaying = true;
-      this.intervalId = setInterval(() => {
-        if (this.remainingTime > 0) {
-          this.remainingTime--;
-          //        console.log("Remaining Time:", this.remainingTime);
+  get totalTime() {
+    return this._totalTime;
+  }
+
+  get remainingTime() {
+    return this._remainingTime;
+  }
+
+  get isPlaying() {
+    return this._isPlaying;
+  }
+
+  get intervalId() {
+    return this._intervalId;
+  }
+
+  get timerId() {
+    return this._timerId;
+  }
+
+  get finished() {
+    return this._finished;
+  }
+
+  start(totalMilliseconds: number) {
+    if (!this._isPlaying) {
+      this._totalTime = totalMilliseconds;
+      this._remainingTime = totalMilliseconds;
+      this._isPlaying = true;
+      this._intervalId = setInterval(() => {
+        if (this._remainingTime > 0) {
+          this._remainingTime -= 10; // Decrease by 10 milliseconds each tick
           this.update();
         } else {
-          this.pause();
-          console.log("Timer ended");
+          this.setFinished();
         }
-      }, 1000);
+      }, 10); // Tick every 10 milliseconds
     }
   }
 
@@ -55,30 +77,38 @@ export class Timer {
   }
 
   toggle() {
-    this.isPlaying = !this.isPlaying;
-    console.log("toggling timer");
-    if (!this.isPlaying && this.intervalId) clearInterval(this.intervalId);
-    this.update();
+    if (this._isPlaying) {
+      this.pause();
+    } else {
+      this.play();
+    }
   }
 
   pause() {
-    if (this.isPlaying) {
-      this.toggle();
+    if (this._isPlaying && this._intervalId) {
+      clearInterval(this._intervalId);
+      this._intervalId = null;
+      this._isPlaying = false;
     }
   }
 
   play() {
-    if (!this.isPlaying) {
-      this.toggle();
+    if (!this.isPlaying && this.remainingTime > 0) {
+      conosle.log("playing");
+      this.start(this.remainingTime);
     }
   }
 
+  setFinished() {
+    this._isPlaying = false;
+    this.finished = true;
+  }
+
   reset() {
-    this.totalTime = 0;
-    this.remainingTime = 0;
-    this.isPlaying = false;
-    if (this.intervalId) clearInterval(this.intervalId);
-    this.update();
+    this._totalTime = 0;
+    this._remainingTime = 0;
+    this._isPlaying = false;
+    if (this._intervalId) clearInterval(this._intervalId);
   }
 }
 

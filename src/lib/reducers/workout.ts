@@ -11,16 +11,19 @@ import {
   RESET_WORKOUT,
   END_WORKOUT,
   SET_STEP,
+  IS_READY,
 } from "@/lib/actions/workout";
 
 import { WorkoutManager, WorkoutManagerImpl } from "@/components/workout";
 
 type WorkoutState = {
   manager: WorkoutManager;
+  set: boolean;
 };
 
 const initialState: WorkoutState = {
   manager: {},
+  set: false,
 };
 
 export const workoutReducer = (
@@ -29,14 +32,18 @@ export const workoutReducer = (
 ): WorkoutManager => {
   const wm = WorkoutManagerSingleton.getInstance();
   switch (action.type) {
+    case IS_READY:
+      return {
+        ...state,
+        manager: wm.manager,
+        set: true,
+      };
     case SET_WORKOUT:
-      wm.manager.setWorkout(action.payload);
       return {
         ...state,
         manager: wm.manager,
       };
     case START_WORKOUT:
-      wm.manager.startWorkout();
       return {
         ...state,
         manager: wm.manager,

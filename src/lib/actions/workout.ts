@@ -2,8 +2,11 @@
 import { Routine } from "@/models/workout";
 import { SetRemainingTime } from "./timer";
 import { TimerState } from "@/components/Timer";
+import { Web5 } from "@web5/api";
 
 export const SET_WORKOUT = "SET_WORKOUT";
+export const IS_READY = "IS_READY";
+
 export const START_WORKOUT = "START_WORKOUT";
 export const PAUSE_WORKOUT = "PAUSE_WORKOUT";
 export const RESET_WORKOUT = "RESET_WORKOUT";
@@ -14,11 +17,18 @@ export const REFRESH_WORKOUT = "REFRESH_WORKOUT";
 
 export interface SetWorkoutAction {
   type: typeof SET_WORKOUT;
-  payload: Routine;
+  payload: {
+    id: string;
+    web5: Web5;
+  };
 }
 
 export interface StartWorkoutAction {
   type: typeof START_WORKOUT;
+}
+
+export interface IsReadyAction {
+  type: typeof IS_READY;
 }
 
 export interface RefreshTimerAction {
@@ -56,11 +66,15 @@ export type WorkoutActionTypes =
   | SetStepAction
   | RefreshTimerAction
   | RefreshWorkoutAction
+  | IsReadyAction
   | SetRemainingTime;
 
-export const setWorkout = (routine: Routine): SetWorkoutAction => ({
+export const setWorkout = (id: string, web5: Web5): SetWorkoutAction => ({
   type: SET_WORKOUT,
-  payload: routine,
+  payload: {
+    id: id,
+    web5: web5,
+  },
 });
 
 export const startWorkout = (): StartWorkoutAction => {
@@ -93,4 +107,8 @@ export const refreshTimer = (state: TimerState): RefreshTimerAction => ({
 
 export const refreshWorkout = (): RefreshWorkoutAction => ({
   type: REFRESH_WORKOUT,
+});
+
+export const isReady = (): IsReadyAction => ({
+  type: IS_READY,
 });
