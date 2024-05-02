@@ -27,7 +27,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
   const dispatch = useDispatch();
   const selectWorkoutSession = (state: RootState) => state.workout;
   const workoutSession = useSelector(selectWorkoutSession);
-  const web5state = useSelector((state: Web5State) => state.web5);
+  const web5state = useSelector((state: Web5State) => state);
   const workoutManager = WorkoutManagerSingleton.getInstance();
   workoutManager.setDispatcher(dispatch);
 
@@ -56,7 +56,6 @@ export default function PlayView({ params }: { params: { id: string } }) {
   useEffect(() => {
     console.log("web5 state");
     console.log(web5state);
-    // @ts-ignore
     if (
       web5state.loaded &&
       params.id &&

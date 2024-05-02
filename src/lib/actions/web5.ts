@@ -52,6 +52,9 @@ export type Web5ActionTypes =
 
 export const initWeb5 = async (dispatch: Dispatch) => {
   dispatch({ type: INIT_WEB5_START });
+  // @ts-ignore
+  const { Web5 } = await import("@web5/api/browser");
+
   try {
     const { web5, did } = await Web5.connect({ password: "asdf" });
     await configureProtocol(web5);
