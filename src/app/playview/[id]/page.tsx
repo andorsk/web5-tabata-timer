@@ -8,8 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/reducers";
 import { setWorkout, startWorkout, pauseWorkout } from "@/lib/actions/workout"; // Import the setWorkout action creator
 import { formatDuration } from "@/lib/time";
-import { initWeb5 } from "@/lib/actions/web5";
-import { Web5State } from "@/lib/actions/web5";
+import { initWeb5, Web5State } from "@/lib/actions/web5";
 
 import {
   incrementCounter,
@@ -26,8 +25,11 @@ export default function PlayView({ params }: { params: { id: string } }) {
 
   const dispatch = useDispatch();
   const selectWorkoutSession = (state: RootState) => state.workout;
+  const selectWeb5 = (state: RootState) => state.web5;
+
   const workoutSession = useSelector(selectWorkoutSession);
-  const web5state = useSelector((state: Web5State) => state);
+  const web5state = useSelector(selectWeb5);
+
   const workoutManager = WorkoutManagerSingleton.getInstance();
   workoutManager.setDispatcher(dispatch);
 
@@ -54,19 +56,14 @@ export default function PlayView({ params }: { params: { id: string } }) {
   };
 
   useEffect(() => {
-    console.log("web5 state");
-    console.log(web5state);
-    if (
-      web5state.loaded &&
-      params.id &&
-      web5state.web5 &&
-      !workoutSession.set
-    ) {
+    if (web5state.loaded && params.id && !workoutSession.set) {
       const loadWorkout = async () => {
         console.log("loading workout");
+        if (!web5state.web5) {
+          return;
+        }
         await workoutManager.manager.setWorkout({
           id: params.id,
-          // @ts-ignore
           web5: web5state.web5,
           dispatch: dispatch,
         });
