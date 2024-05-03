@@ -53,8 +53,8 @@ bun dev
 - [x] Configure Routine View
 - [x] Sound
 - [x] PWA
+- [x] Run in background
 - [ ] Launch on Google Play store <- IN PROGRESS
-- [ ] Run in background <- IN PROGRESS
 - [ ] Edit Routines
 - [ ] Delete Routines
 - [ ] Record Sessions
