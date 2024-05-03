@@ -12,7 +12,7 @@ import { Dispatch } from "redux";
 import {
   refreshTimer,
   startWorkout as STW,
-  endWorkout as EW,
+  refreshWorkout,
   setWorkout as SW,
   isReady,
 } from "@/lib/actions/workout";
@@ -21,7 +21,9 @@ export type WorkoutManagerI = {
   workout: WorkoutSession | null;
   isWorkoutActive: boolean;
   currentStep: number;
-  startWorkout: (dispatch: Dispatch) => void;
+  startWorkout: () => void;
+  setDispatcher(dispatch: Dispatch);
+  totalTime: number;
   pauseWorkout: () => void;
   previousStep: () => void;
   nextStep: () => void;
@@ -30,6 +32,7 @@ export type WorkoutManagerI = {
   setStep: (step: number) => void;
   timer: Timer | null;
   timeLeft: number;
+  ready: boolean;
   started: boolean;
   setWorkout: (params: {
     id: string;
@@ -49,6 +52,7 @@ export class WorkoutManager implements WorkoutManagerI {
   playedThreeSecondSound: boolean = false; // To ensure sound plays only once
   started: boolean = false;
   set: boolean = false;
+  ready: boolean = false;
 
   constructor() {
     this.isWorkoutActive = false;
@@ -59,15 +63,16 @@ export class WorkoutManager implements WorkoutManagerI {
     this.timeFromBegginingOfSet = 0;
     this.playedThreeSecondSound = false;
     this.started = false;
+    this.totalTime = 0;
     this.set = false;
+    this.ready = false;
   }
 
-  startWorkout(dispatch: Dispatch<any>) {
-    if (this.isWorkoutActive) return;
-    this.setStep(0);
-    this.isWorkoutActive = true;
+  startWorkout() {
+    if (this.started) return;
     this.started = true;
-    dispatch(STW());
+    this.unpauseWorkout();
+    this.dispatch(STW());
   }
 
   setDispatcher(dispatch: Dispatch) {
@@ -80,9 +85,10 @@ export class WorkoutManager implements WorkoutManagerI {
 
   pauseWorkout() {
     if (!this.isWorkoutActive || !this.timer) return;
-    console.log("pausing wokrout");
     this.isWorkoutActive = false;
     this.timer.pause();
+    const state = this.timer.state();
+    this.dispatch(refreshTimer(state));
   }
 
   unpauseWorkout() {
@@ -122,17 +128,21 @@ export class WorkoutManager implements WorkoutManagerI {
     if (!this.workout || step < 0 || step > this.workout.steps.length) {
       throw new Error("Invalid step set. Must be valid and session created.");
     }
-
-    console.log("setting step", step);
+    this.set = true;
+    this.currentStep = step;
     if (this.timer) {
-      this.currentStep = step;
-      this.timer.reset();
-      this.timer.start(this.workout?.steps[step].duration);
+      // this.timer.reset();
+      this.timer.setTime(this.workout?.steps[step].duration);
     }
+
     this.timeFromBegginningOfSet = computeTotalTimeFromSteps(
       this.workout.steps.slice(this.currentStep, this.workout.steps.length),
     );
+
+    this.timeLeft = this.timeFromBegginningOfSet;
     this.playedThreeSecondSound = false;
+    console.log("set is updated");
+    this.dispatch(refreshWorkout(this));
   }
 
   nextStep() {
@@ -142,9 +152,11 @@ export class WorkoutManager implements WorkoutManagerI {
       this.currentStep >= this.workout.steps.length
     ) {
       this.endWorkout();
+      console.log("ending workout");
       this.isCompleted = true;
       return;
     }
+    console.log("setting step", this.currentStep + 1);
     this.setStep(this.currentStep + 1);
   }
 
@@ -156,15 +168,15 @@ export class WorkoutManager implements WorkoutManagerI {
   }
 
   onTimerTick() {
-    if (this.timer && this.dispatch && this.started) {
+    if (this.timer && this.dispatch) {
       const state = this.timer.state();
-      //console.log("timer state", state);
       this.timeLeft =
         this.timeFromBegginningOfSet -
         (this.timer.totalTime - this.timer.remainingTime);
-      if (state.remainingTime === 3000 && !this.playedThreeSecondSound) {
+      if (state.remainingTime <= 4000 && !this.playedThreeSecondSound) {
         if (soundPlayer) {
           soundPlayer.play();
+          this.playedThreeSecondSound = true;
         }
       }
       if (state.remainingTime <= 0) {
@@ -178,23 +190,29 @@ export class WorkoutManager implements WorkoutManagerI {
     }
   }
 
-  // @ts-ignore
-  async setWorkout(params: { routine: Routine; dispatch: Dispatch<any> }) {
-    console.log(params.routine);
-    const steps = createSteps(params.routine.routine);
+  setDispatch(dispatch: Dispatch) {
+    this.dispatch = dispatch;
+  }
+
+  setWorkout(params: { routine: Routine }) {
+    console.log("setting workout....", params);
+    const steps = createSteps(params.routine.config);
     const totalTime = computeTotalTimeFromSteps(steps);
     this.workout = {
-      routine: params.routine,
+      routine: params.routine.routine,
       steps,
       totalTime,
+      timeLeft: totalTime,
       startTime: new Date().toISOString(),
-      isWorkoutActive: true,
+      isWorkoutActive: false,
       completed: false,
     };
-    console.log("Settting timer");
     this.timer = new Timer(() => this.onTimerTick());
     this.set = true;
-    params.dispatch(isReady());
+    this.setStep(0);
+    this.dispatch(refreshWorkout(this));
+    this.ready = true;
+    console.log("set workout ", this.workout);
   }
 }
 

@@ -11,15 +11,21 @@ export const RESET_WORKOUT = "RESET_WORKOUT";
 export const END_WORKOUT = "END_WORKOUT";
 export const SET_STEP = "SET_STEP";
 export const REFRESH_TIMER = "REFRESH_TIMER";
-export const REFRESH_WORKOUT = "REFRESH_WORKOUT";
 export const SET_ROUTINES = "SET_ROUTINES";
+export const REFRESH_WORKOUT = "REFRESH_WORKOUT";
+
+import { WorkoutManagerI } from "@/components/workout/WorkoutManager";
 
 export interface SetWorkoutAction {
   type: typeof SET_WORKOUT;
   payload: {
-    id: string;
-    web5: Web5;
+    routine: Routine;
   };
+}
+
+export interface RefreshWorkoutAction {
+  type: typeof REFRESH_WORKOUT;
+  payload: WorkoutManagerI;
 }
 
 export interface SetRoutinesAction {
@@ -73,11 +79,10 @@ export type WorkoutActionTypes =
   | SetRoutinesAction
   | IsReadyAction;
 
-export const setWorkout = (id: string, web5: Web5): SetWorkoutAction => ({
+export const setWorkout = (routine: Routine): SetWorkoutAction => ({
   type: SET_WORKOUT,
   payload: {
-    id: id,
-    web5: web5,
+    routine: routine,
   },
 });
 
@@ -109,8 +114,9 @@ export const refreshTimer = (state: TimerState): RefreshTimerAction => ({
   payload: state,
 });
 
-export const refreshWorkout = (): RefreshWorkoutAction => ({
+export const refreshWorkout = (w: WorkoutManagerI): RefreshWorkoutAction => ({
   type: REFRESH_WORKOUT,
+  payload: w,
 });
 
 export const isReady = (): IsReadyAction => ({

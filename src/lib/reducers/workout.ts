@@ -5,37 +5,38 @@ import { Routine } from "@/models/workout";
 
 import {
   WorkoutActionTypes,
-  SET_WORKOUT,
-  START_WORKOUT,
-  PAUSE_WORKOUT,
-  REFRESH_TIMER,
-  RESET_WORKOUT,
-  END_WORKOUT,
-  SET_STEP,
   IS_READY,
+  REFRESH_WORKOUT,
+  REFRESH_TIMER,
   SET_ROUTINES,
 } from "@/lib/actions/workout";
 
-import { WorkoutManager, WorkoutManagerImpl } from "@/components/workout";
+import { useWorkoutManager } from "@/hooks/useWorkoutManager";
+import { type WorkoutManagerI } from "@/components/workout/WorkoutManager";
+import { WorkoutManager } from "@/components/workout/WorkoutManager";
+
+function useInitialState(): WorkoutState {
+  const manager = new WorkoutManager();
+  const initialState: WorkoutState = {
+    manager: manager,
+    ready: false,
+    routines: [] as Routine[],
+  };
+  return initialState;
+}
 
 type WorkoutState = {
-  manager: WorkoutManager;
-  set: boolean;
+  manager: WorkoutManagerI;
   routines: Routine[];
+  ready: boolean;
 };
 
-const initialState: WorkoutState = {
-  // @ts-ignore
-  manager: {},
-  set: false,
-  routines: [] as Routine[],
-};
+const initialState = useInitialState();
 
 export const workoutReducer = (
   state = initialState,
   action: WorkoutActionTypes,
 ): WorkoutState => {
-  const wm = WorkoutManagerSingleton.getInstance();
   switch (action.type) {
     case SET_ROUTINES:
       return {
@@ -45,39 +46,16 @@ export const workoutReducer = (
     case IS_READY:
       return {
         ...state,
-        manager: wm.manager,
-        set: true,
-      };
-    case SET_WORKOUT:
-      return {
-        ...state,
-        manager: wm.manager,
-      };
-    case START_WORKOUT:
-      return {
-        ...state,
-        manager: wm.manager,
+        ready: true,
       };
     case REFRESH_TIMER:
       return {
         ...state,
       };
-    case PAUSE_WORKOUT:
+    case REFRESH_WORKOUT:
       return {
         ...state,
-        manager: wm.manager,
-      };
-    case SET_STEP:
-      wm.manager.setStep(action.payload);
-      return {
-        ...state,
-      };
-    case RESET_WORKOUT:
-      wm.manager.resetWorkout();
-    case END_WORKOUT:
-      wm.manager.endWorkout();
-      return {
-        ...state,
+        manager: action.payload,
       };
     default:
       return state;

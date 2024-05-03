@@ -10,7 +10,8 @@ import { Routine } from "@/models/workout";
 import RoutineCard from "@/components/RoutineCard";
 import SettingInfo from "@/components/SettingInfo";
 import RoutineConfigurationForm from "@/components/configureRoutine/ConfigureRoutine";
-import { WorkoutManager } from "@/components/workout/WorkoutManager";
+import { useRouter } from "next/router";
+import { setWorkout } from "@/lib/actions/workout";
 
 const loadRoutines = async (web5: Web5, dispatch: Dispatch) => {
   const routines = await getRoutines(web5);
@@ -31,17 +32,22 @@ function CardGrid() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [chosenId, setChosenId] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    workoutState.manager.setDispatcher(dispatch);
+  }, []);
 
   const createWorkout = (r: Routine) => {
     console.log("creating workout");
     setIsLoading(true);
-    const manager = new WorkoutManager();
-    manager.setWorkout({ routine: r, dispatch });
+    workoutState.manager.setWorkout({ routine: r });
     setIsLoading(false);
   };
 
   const enterPlayMode = () => {
     console.log("entering play mode!");
+    router.push("/play");
   };
 
   const handleSelect = (r: Routine) => {
@@ -53,7 +59,7 @@ function CardGrid() {
       // GO TO EXISTING ROUTINE
       enterPlayMode();
     } else {
-      // LOAD ROUTINE
+      console.log("loading workout", r);
       createWorkout(r);
       enterPlayMode();
     }
@@ -134,7 +140,9 @@ export default function WorkoutSelectionView() {
             {workoutState.routines.length > 0 ? (
               <CardGrid />
             ) : (
-              <div>No routines loaded.</div>
+              <div className="p-4">
+                No routines found. Please add a routine.{" "}
+              </div>
             )}
           </div>
         ) : (

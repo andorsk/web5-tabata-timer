@@ -6,7 +6,7 @@ export type Routine = {
   createdOn: string;
   createdBy: string;
   id: string;
-  routine: RoutineConfiguration;
+  config: RoutineConfiguration;
 };
 
 export type TimedIntervalConfiguration = {

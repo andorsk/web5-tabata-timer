@@ -14,8 +14,8 @@ export const configureProtocol = async (web5: Web5) => {
 };
 
 export const storeRoutine = async (routine: Routine, web5: Web5) => {
-  if (!routine.routine) {
-    throw new Error("routine is missing");
+  if (!routine.config) {
+    throw new Error("routine config is missing");
   }
   const payload = JSON.stringify(routine);
   const replyResponse = await web5.dwn.records.create({

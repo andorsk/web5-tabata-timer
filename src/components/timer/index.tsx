@@ -43,10 +43,8 @@ export class Timer {
     return this._finished;
   }
 
-  start(totalMilliseconds: number) {
-    if (!this._isPlaying) {
-      this._totalTime = totalMilliseconds;
-      this._remainingTime = totalMilliseconds;
+  play() {
+    if (!this._isPlaying && this._remainingTime > 0) {
       this._isPlaying = true;
       this._intervalId = setInterval(() => {
         if (this._remainingTime > 0) {
@@ -67,9 +65,9 @@ export class Timer {
 
   state(): TimerState {
     return {
-      remainingTime: this.remainingTime,
-      isPlaying: this.isPlaying,
-      id: this.timerId,
+      remainingTime: this._remainingTime,
+      isPlaying: this._isPlaying,
+      id: this._timerId,
     };
   }
 
@@ -86,13 +84,14 @@ export class Timer {
       clearInterval(this._intervalId);
       this._intervalId = null;
       this._isPlaying = false;
+
+      console.log("set is playing  to false");
     }
   }
 
-  play() {
-    if (!this.isPlaying && this.remainingTime > 0) {
-      this.start(this.remainingTime);
-    }
+  setTime(n: number) {
+    this._totalTime = n;
+    this._remainingTime = n;
   }
 
   setFinished() {
