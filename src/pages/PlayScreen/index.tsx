@@ -18,6 +18,8 @@ import {
 import { WorkoutManagerSingleton } from "@/components/workout";
 
 export default function PlayView({ params }: { params: { id: string } }) {
+  console.log("play view");
+
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(true);
   const [steps, setSteps] = useState(true);
@@ -59,8 +61,8 @@ export default function PlayView({ params }: { params: { id: string } }) {
   }, [dispatch, web5state, params.id]);
 
   useEffect(() => {
-    if (workoutManager.manager.set) {
-      workoutManager.manager.startWorkout(dispatch);
+    if (workoutSession.manager.set) {
+      workoutSession.manager.startWorkout(dispatch);
     }
 
     setCurrentColor(

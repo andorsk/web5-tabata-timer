@@ -16,8 +16,8 @@ function Web5TabataApp({ Component, pageProps }) {
   const [isPasswordError, setPasswordError] = useState(false);
 
   // check states
-  const selectWeb5 = (state: RootState) => state.web5;
-  const web5state = useSelector(selectWeb5);
+  const web5state = useSelector((state: RootState) => state.web5);
+  const authState = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setIsLoaded(web5state.loaded);
@@ -25,10 +25,10 @@ function Web5TabataApp({ Component, pageProps }) {
 
   return (
     <div>
-      {!isAuthenticated && (
-        <LoginScreen setIsAuthenticated={setIsAuthenticated} />
+      {!authState.isAuthenticated && <LoginScreen />}
+      {authState.isAuthenticated && web5state.loaded && (
+        <Component {...pageProps} />
       )}
-      {isAuthenticated && web5state.loaded && <Component {...pageProps} />}
     </div>
   );
 }

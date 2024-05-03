@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { initWeb5, Web5State } from "@/lib/actions/web5";
+import { loginRequest, loginSuccess, loginFailure } from "@/lib/actions/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/reducers";
 
-const LoginScreen = ({ setIsAuthenticated }) => {
+type LoginScreenProps = {
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  // login
   const web5state = useSelector((state: RootState) => state.web5);
+  const authState = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const load = async () => {
+      dispatch(loginRequest());
       initWeb5(password, dispatch);
     };
     load();
@@ -23,10 +29,11 @@ const LoginScreen = ({ setIsAuthenticated }) => {
     if (web5state.error) {
       console.log("failed to load web5", web5state.error);
       const errorString = `${web5state.error}`;
+      dispatch(loginFailure(errorString));
       setError("failed to load web5: " + errorString);
     }
     if (web5state.loaded) {
-      setIsAuthenticated(true);
+      dispatch(loginSuccess());
     }
   }, [web5state]);
 

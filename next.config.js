@@ -11,6 +11,18 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/login",
+        destination: "/LoginScreen",
+      },
+      {
+        source: "/play",
+        destination: "/PlayScreen",
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
