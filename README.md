@@ -53,27 +53,32 @@ bun dev
 - [x] Configure Routine View
 - [x] Sound
 - [x] PWA
+- [ ] Launch on Google Play store <- IN PROGRESS
+- [ ] Run in background <- IN PROGRESS
+- [ ] Edit Routines
+- [ ] Delete Routines
 - [ ] Record Sessions
 - [ ] Sync 
 - [ ] Share sessions
-- [ ] Launch on Google Play store
-- [ ] Edit
 - [ ] Settings
 
 * Bug Fixes
 
 - [x] Fix Build 
-- [ ] Fix Pause/Play
+- [x] Fix Pause/Play
+- [x] Fix Inputs For Form
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
-- [ ] Fix Inputs For Form
 
 * Code
 
+- [ ] Too many ts-ignores. Cleanup
+- [ ] Remove old files
+
 * Other
 
-- [ ] Major Refactor. Consider not using Next JS. No reason to use it.
-- [ ] Change state mangaement to redux
+- [x] Major Refactor. Consider not using Next JS. No reason to use it.
+- [x] Change state mangaement to redux
 
 ## Disclosures
 

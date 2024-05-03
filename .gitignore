@@ -40,3 +40,14 @@ dist
 public/sw.js*
 public/workbox-*
 public/version.json
+
+.gradle
+android.keystore
+app-release*
+gradle*
+build.gradle
+
+app
+manifest-checksum*
+
+settings.gradle

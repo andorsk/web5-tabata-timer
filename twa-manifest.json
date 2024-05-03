@@ -1,0 +1,43 @@
+{
+  "packageId": "us.andor.tabata.twa",
+  "host": "tabata.andor.us",
+  "name": "Web5 Tabata Timer",
+  "launcherName": "tabata_web5",
+  "display": "standalone",
+  "themeColor": "#2196F3",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#2196F3",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://tabata.andor.us/icons/192x192.png",
+  "maskableIconUrl": "https://tabata.andor.us/icons/192x192.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/Users/andor/workspace/github.com/andorsk/web5-apps/web5-tabata/android.keystore",
+    "alias": "web5-tabata"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://tabata.andor.us/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://tabata.andor.us/",
+  "minSdkVersion": 19,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "1"
+}
