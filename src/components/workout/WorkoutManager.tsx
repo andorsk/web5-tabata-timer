@@ -75,11 +75,6 @@ export class WorkoutManager implements WorkoutManagerI {
     if (this.started) return;
     this.started = true;
     this.unpauseWorkout();
-    /* if (this.dispatch) {
-    //  this.dispatch(STW());
-* } else {
-      console.error("no dispatch set");
-        */
   }
 
   setDispatcher(dispatch: Dispatch) {
@@ -209,7 +204,6 @@ export class WorkoutManager implements WorkoutManagerI {
   }
 
   setWorkout(params: { routine: Routine }) {
-    console.log("setting workout....", params);
     const steps = createSteps(params.routine.config);
     const totalTime = computeTotalTimeFromSteps(steps);
     this.workout = {
