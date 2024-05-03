@@ -9,15 +9,18 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Web5 } from "@web5/api";
 import SettingInfo from "@/components/SettingInfo";
+import { useSelector, useDispatch } from "react-redux";
+const web5state = useSelector((state: RootState) => state.web5);
+import { RootState } from "@/lib/reducers";
 
 import RoutineConfigurationForm from "@/components/configureRoutine/ConfigureRoutine";
 
 export default function WorkoutSelectionView() {
-  const { web5, did } = useWeb5();
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [showModal, setShowModal] = useState(false); // State to control the modal visibility
   const [showInfo, setShowInfo] = useState(false); // State to control the modal visibility
 
+  const web5state = useSelector((state: RootState) => state.web5);
   const router = useRouter();
 
   const handleAddWorkout = () => {
@@ -48,7 +51,7 @@ export default function WorkoutSelectionView() {
   };
 
   useEffect(() => {
-    if (web5) {
+    if (web5state.web5 && web5state.loaded) {
       const handleFormSubmitted = async () => {
         setShowModal(false);
         await handleGetRoutines(web5);
@@ -58,13 +61,13 @@ export default function WorkoutSelectionView() {
         document.removeEventListener("routineSubmitted", handleFormSubmitted);
       };
     }
-  }, [router, web5]);
+  }, [router, web5state.web5]);
 
   useEffect(() => {
-    if (web5) {
-      handleGetRoutines(web5);
+    if (web5state.web5 && web5state.loaded) {
+      handleGetRoutines(web5state.web5);
     }
-  }, [web5]);
+  }, [web5state.web5]);
 
   return (
     <div className="p-4">

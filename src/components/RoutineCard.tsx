@@ -15,13 +15,10 @@ const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
     <div className="bg-white shadow-lg rounded-lg p-4 m-4 relative hover:bg-gray-100">
       <div className="absolute top-4 right-4 flex space-x-2">
         <Link href={`/playview/${routine.id}`}>
-          <button className="text-lg font-semibold p-2 rounded-full bg-green-500 text-white hover:bg-green-600">
+          <button className="text-4xl font-semibold p-4 rounded-full text-black hover:bg-gray-200">
             ▶️
           </button>
         </Link>
-        {/*  <button { className="text-lg font-semibold p-2 rounded-full bg-gray-300 hover:bg-gray-400">
-          ⋮
-        </button> */}
       </div>
       <h4 className="text-md font-bold text-gray-900">{routine.name}</h4>
       <p className="text-gray-600">{routine.description}</p>
