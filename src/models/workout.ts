@@ -6,7 +6,7 @@ export type Routine = {
   createdOn: string;
   createdBy: string;
   id: string;
-  routine: RoutineConfiguration;
+  config: RoutineConfiguration;
 };
 
 export type TimedIntervalConfiguration = {
@@ -38,6 +38,7 @@ export type WorkoutSession = {
   routine: Routine;
   completed: boolean;
   totalTime: number;
+  timeLeft?: number;
   isWorkoutActive: boolean;
   steps: Step[];
 };

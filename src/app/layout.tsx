@@ -130,7 +130,13 @@ export default function RootLayout({
         />
       </Head>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <main className="flex min-h-screen flex-col  bg-green-500">
+            <div className="z-10 w-full items-center justify-between font-mono text-sm  ">
+              {children}
+            </div>
+          </main>
+        </Providers>
       </body>
     </html>
   );
