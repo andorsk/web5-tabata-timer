@@ -13,6 +13,7 @@ import { RootState } from "@/lib/reducers";
 function Web5TabataApp({ Component, pageProps }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isPasswordError, setPasswordError] = useState(false);
 
   // check states
   const selectWeb5 = (state: RootState) => state.web5;
@@ -27,10 +28,7 @@ function Web5TabataApp({ Component, pageProps }) {
       {!isAuthenticated && (
         <LoginScreen setIsAuthenticated={setIsAuthenticated} />
       )}
-      {!isLoaded && isAuthenticated && (
-        <LoadingScreen setIsLoaded={setIsLoaded} />
-      )}
-      {isAuthenticated && isLoaded && <Component {...pageProps} />}
+      {isAuthenticated && web5state.loaded && <Component {...pageProps} />}
     </div>
   );
 }

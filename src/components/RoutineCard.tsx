@@ -7,18 +7,27 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface RoutineCardProps {
+  onSelect?: (routine: Routine) => void; // Optional onSelect callback function
   routine: Routine;
+  children: any;
 }
 
-const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
+const RoutineCard: React.FC<RoutineCardProps> = ({
+  routine,
+  onSelect,
+  children,
+}) => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 m-4 relative hover:bg-gray-100">
       <div className="absolute top-4 right-4 flex space-x-2">
-        <Link href={`/playview/${routine.id}`}>
-          <button className="text-4xl font-semibold p-4 rounded-full text-black hover:bg-gray-200">
-            ▶️
-          </button>
-        </Link>
+        <button
+          onClick={() => {
+            onSelect(routine);
+          }}
+          className="text-4xl font-semibold p-4 rounded-full text-black hover:bg-gray-200"
+        >
+          ▶️
+        </button>
       </div>
       <h4 className="text-md font-bold text-gray-900">{routine.name}</h4>
       <p className="text-gray-600">{routine.description}</p>
@@ -35,6 +44,8 @@ const RoutineCard: React.FC<RoutineCardProps> = ({ routine }) => {
         </p>
         <p>Cool Down: {routine.routine.CoolDown.duration / 1000} seconds</p>
       </div>
+
+      {children}
     </div>
   );
 };

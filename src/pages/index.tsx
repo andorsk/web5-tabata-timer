@@ -1,9 +1,14 @@
-import WorkoutSelectionView from "./HomePage";
+import WorkoutSelectionView from "./WorkoutSelectionPage";
+import PlayView from "./PlayWorkoutPage";
+
+import React, { useState } from "react";
 
 const Home = () => {
+  const [playView, setPlayView] = useState<boolean>(false);
   return (
     <div>
-      <WorkoutSelectionView />
+      {!playView && <WorkoutSelectionView />}
+      {playView && <PlayView />}
     </div>
   );
 };

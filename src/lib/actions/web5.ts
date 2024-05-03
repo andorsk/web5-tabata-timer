@@ -50,20 +50,19 @@ export type Web5ActionTypes =
   | SuccessWeb5Action
   | FailureWeb5Action;
 
-export const initWeb5 = async (dispatch: Dispatch) => {
+export const initWeb5 = async (password: string, dispatch: Dispatch) => {
   dispatch({ type: INIT_WEB5_START });
   // @ts-ignore
   const { Web5 } = await import("@web5/api/browser");
 
   try {
-    const { web5, did } = await Web5.connect({ password: "asdf" });
+    const { web5, did } = await Web5.connect({ password: password });
     await configureProtocol(web5);
     dispatch({
       type: INIT_WEB5_SUCCESS,
       payload: { web5, did },
     });
   } catch (error) {
-    console.error("Failed to connect to Web5:", error);
     dispatch({
       type: INIT_WEB5_FAILURE,
       payload: error,

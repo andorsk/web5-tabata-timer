@@ -5,6 +5,8 @@ import {
 } from "@/models/workout"; // Import your types from the correct location
 import { useWeb5 } from "@/context/Web5Context";
 import { storeRoutine } from "@/lib/store/dwn/routines";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/lib/reducers";
 
 // Validation function
 export const validateRoutineConfiguration = (
@@ -21,8 +23,14 @@ export const validateRoutineConfiguration = (
   );
 };
 
-const RoutineConfigurationForm: React.FC = () => {
-  const { web5, did } = useWeb5();
+type RoutineConfigurationFormProps = {
+  onSubmitted: () => void;
+};
+
+const RoutineConfigurationForm: React.FC<RoutineConfigurationFormProps> = ({
+  onSubmitted,
+}) => {
+  const web5state = useSelector((state: RootState) => state.web5);
 
   const [routineConfig, setRoutineConfig] = useState({
     name: "",
@@ -73,16 +81,17 @@ const RoutineConfigurationForm: React.FC = () => {
   ): value is TimedIntervalConfiguration => {
     return typeof value === "object" && "duration" in value;
   };
+
   const multiplyDurationsBy1000 = (
     config: RoutineConfiguration,
   ): RoutineConfiguration => {
-    const adjustedConfig: RoutineConfiguration = { ...config };
+    const adjustedConfig: RoutineConfiguration = JSON.parse(
+      JSON.stringify(config),
+    );
     for (const key in adjustedConfig) {
       if (adjustedConfig.hasOwnProperty(key)) {
-        // @ts-ignore
         const value = adjustedConfig[key];
         if (isTimedIntervalConfiguration(value)) {
-          // @ts-ignore
           adjustedConfig[key].duration *= 1000;
         }
       }
@@ -95,17 +104,18 @@ const RoutineConfigurationForm: React.FC = () => {
     const adjustedRoutineConfig = multiplyDurationsBy1000(
       routineConfig.routine,
     );
-    routineConfig.routine = adjustedRoutineConfig;
-    await storeRoutine(routineConfig, web5);
-    document.dispatchEvent(new CustomEvent("routineSubmitted"));
+    const configToSave = { ...routineConfig, routine: adjustedRoutineConfig };
+    await storeRoutine(configToSave, web5);
+    onSubmitted();
   };
+
   // Function to handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid = validateRoutineConfiguration(routineConfig.routine);
     if (isValid) {
       setErrors([]);
-      storeRoutineWrapper(routineConfig, web5);
+      storeRoutineWrapper(routineConfig, web5state.web5);
     } else {
       setErrors(["Invalid routine configuration. Please check your inputs."]);
     }

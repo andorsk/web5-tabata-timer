@@ -1,6 +1,6 @@
-// actions.ts
 import TimerState from "@/components/timer";
 import { Web5 } from "@web5/api";
+import { Routine } from "@/models/workout";
 
 export const SET_WORKOUT = "SET_WORKOUT";
 export const IS_READY = "IS_READY";
@@ -12,6 +12,7 @@ export const END_WORKOUT = "END_WORKOUT";
 export const SET_STEP = "SET_STEP";
 export const REFRESH_TIMER = "REFRESH_TIMER";
 export const REFRESH_WORKOUT = "REFRESH_WORKOUT";
+export const SET_ROUTINES = "SET_ROUTINES";
 
 export interface SetWorkoutAction {
   type: typeof SET_WORKOUT;
@@ -19,6 +20,11 @@ export interface SetWorkoutAction {
     id: string;
     web5: Web5;
   };
+}
+
+export interface SetRoutinesAction {
+  type: typeof SET_ROUTINES;
+  payload: Routine[];
 }
 
 export interface StartWorkoutAction {
@@ -64,6 +70,7 @@ export type WorkoutActionTypes =
   | SetStepAction
   | RefreshTimerAction
   | RefreshWorkoutAction
+  | SetRoutinesAction
   | IsReadyAction;
 
 export const setWorkout = (id: string, web5: Web5): SetWorkoutAction => ({
@@ -108,4 +115,9 @@ export const refreshWorkout = (): RefreshWorkoutAction => ({
 
 export const isReady = (): IsReadyAction => ({
   type: IS_READY,
+});
+
+export const setRoutines = (routines: Routine[]): SetRoutinesAction => ({
+  type: SET_ROUTINES,
+  payload: routines,
 });

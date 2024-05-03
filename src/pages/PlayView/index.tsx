@@ -30,29 +30,15 @@ export default function PlayView({ params }: { params: { id: string } }) {
   const workoutSession = useSelector(selectWorkoutSession);
   const web5state = useSelector(selectWeb5);
 
-  const workoutManager = WorkoutManagerSingleton.getInstance();
-  workoutManager.setDispatcher(dispatch);
-
-  useEffect(() => {
-    // @ts-ignore
-    if (!web5state.loaded) {
-      const load = async () => {
-        initWeb5(dispatch);
-      };
-      load();
-    }
-  }, []);
-
   const handleToggleWorkout = () => {
-    const workoutManager = WorkoutManagerSingleton.getInstance();
-    workoutManager.manager.toggleWorkout();
+    workoutSession.manager.toggleWorkout();
   };
 
   const handleClickedStep = (index: number) => {
-    if (workoutManager.manager?.workout?.steps.length === 0) {
+    if (workoutSession.manager?.workout?.steps.length === 0) {
       return;
     }
-    workoutManager.manager?.setStep(index);
+    workoutSession.manager?.setStep(index);
   };
 
   useEffect(() => {
@@ -62,7 +48,7 @@ export default function PlayView({ params }: { params: { id: string } }) {
         if (!web5state.web5) {
           return;
         }
-        await workoutManager.manager.setWorkout({
+        await workoutSession.manager.setWorkout({
           id: params.id,
           web5: web5state.web5,
           dispatch: dispatch,

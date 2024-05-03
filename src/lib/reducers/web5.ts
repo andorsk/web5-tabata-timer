@@ -28,7 +28,7 @@ export const web5Reducer = (state = initialState, action: Web5ActionTypes) => {
         loading: false,
       };
     case INIT_WEB5_FAILURE:
-      return { ...state, error: action.payload, loading: false };
+      return { ...state, error: action.payload, loading: false, loaded: false };
     default:
       return state;
   }

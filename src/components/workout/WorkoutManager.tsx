@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Timer from "@/components/timer";
-import { WorkoutSession } from "@/models/workout";
+import { WorkoutSession, Routine } from "@/models/workout";
 import { createSteps, computeTotalTimeFromSteps } from "@/lib/workout";
 import { soundPlayer } from "@/components/sound/SoundLibrary"; // Ensure this is correctly set up to play sounds
 import { getRoutine } from "@/lib/store/dwn/routines";
@@ -17,7 +17,7 @@ import {
   isReady,
 } from "@/lib/actions/workout";
 
-export type WorkoutManager = {
+export type WorkoutManagerI = {
   workout: WorkoutSession | null;
   isWorkoutActive: boolean;
   currentStep: number;
@@ -38,7 +38,7 @@ export type WorkoutManager = {
   }) => void;
 };
 
-export class WorkoutManagerImpl implements WorkoutManager {
+export class WorkoutManager implements WorkoutManagerI {
   workout: WorkoutSession | null = null;
   isWorkoutActive: boolean = false;
   currentStep: number = 0;
@@ -49,9 +49,18 @@ export class WorkoutManagerImpl implements WorkoutManager {
   playedThreeSecondSound: boolean = false; // To ensure sound plays only once
   started: boolean = false;
   set: boolean = false;
-  dispatch?: Dispatch;
 
-  constructor() {}
+  constructor() {
+    this.isWorkoutActive = false;
+    this.currentStep = 0;
+    this.isCompleted = false;
+    this.timer = null;
+    this.timeLeft = 0;
+    this.timeFromBegginingOfSet = 0;
+    this.playedThreeSecondSound = false;
+    this.started = false;
+    this.set = false;
+  }
 
   startWorkout(dispatch: Dispatch<any>) {
     if (this.isWorkoutActive) return;
@@ -170,20 +179,12 @@ export class WorkoutManagerImpl implements WorkoutManager {
   }
 
   // @ts-ignore
-  async setWorkout(params: {
-    id: string;
-    web5: Web5;
-    dispatch: Dispatch<any>;
-  }) {
-    if (!params.web5) {
-      console.log(params.web5);
-      throw new Error("no web5 provided. can't get workout");
-    }
-    const routine = await getRoutine(params.id, params.web5);
-    const steps = createSteps(routine.routine);
+  async setWorkout(params: { routine: Routine; dispatch: Dispatch<any> }) {
+    console.log(params.routine);
+    const steps = createSteps(params.routine.routine);
     const totalTime = computeTotalTimeFromSteps(steps);
     this.workout = {
-      routine: routine,
+      routine: params.routine,
       steps,
       totalTime,
       startTime: new Date().toISOString(),
@@ -201,11 +202,11 @@ export class WorkoutManagerImpl implements WorkoutManager {
 // Probably a better way to do this, but still learning redux.
 export class WorkoutManagerSingleton {
   private static instance: WorkoutManagerSingleton;
-  public manager: WorkoutManagerImpl; // Assuming WorkoutManagerImpl is correctly defined elsewhere
+  public manager: WorkoutManagerI; // Assuming WorkoutManagerImpl is correctly defined elsewhere
   private dispatch: Dispatch | null = null;
 
   private constructor() {
-    this.manager = new WorkoutManagerImpl();
+    this.manager = new WorkoutManager();
   }
 
   public static getInstance(): WorkoutManagerSingleton {

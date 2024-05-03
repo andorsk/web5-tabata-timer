@@ -1,6 +1,7 @@
 // workout.ts
 import { combineReducers } from "redux";
 import { WorkoutManagerSingleton } from "@/components/workout";
+import { Routine } from "@/models/workout";
 
 import {
   WorkoutActionTypes,
@@ -12,6 +13,7 @@ import {
   END_WORKOUT,
   SET_STEP,
   IS_READY,
+  SET_ROUTINES,
 } from "@/lib/actions/workout";
 
 import { WorkoutManager, WorkoutManagerImpl } from "@/components/workout";
@@ -19,12 +21,14 @@ import { WorkoutManager, WorkoutManagerImpl } from "@/components/workout";
 type WorkoutState = {
   manager: WorkoutManager;
   set: boolean;
+  routines: Routine[];
 };
 
 const initialState: WorkoutState = {
   // @ts-ignore
   manager: {},
   set: false,
+  routines: [] as Routine[],
 };
 
 export const workoutReducer = (
@@ -33,6 +37,11 @@ export const workoutReducer = (
 ): WorkoutState => {
   const wm = WorkoutManagerSingleton.getInstance();
   switch (action.type) {
+    case SET_ROUTINES:
+      return {
+        ...state,
+        routines: action.payload,
+      };
     case IS_READY:
       return {
         ...state,
