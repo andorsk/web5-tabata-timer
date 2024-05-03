@@ -67,6 +67,7 @@ bun dev
 - [x] Fix Build 
 - [x] Fix Pause/Play
 - [x] Fix Inputs For Form
+- [ ] Fix component size for steps on Play View
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
 
