@@ -15,6 +15,8 @@ import "@/styles/globals.css";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/reducers";
 
+import ServiceWorkerRegistration from "@/components/workers/ServiceWorkerRegistration";
+
 // @ts-ignore
 function Web5TabataApp({ Component, pageProps }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -38,7 +40,6 @@ function Web5TabataApp({ Component, pageProps }) {
     </div>
   );
 }
-
 // @ts-ignore
 function App({ Component, pageProps }) {
   return (
@@ -114,6 +115,7 @@ function App({ Component, pageProps }) {
         />
       </Head>
       <RootLayout>
+        <ServiceWorkerRegistration />
         <Web5TabataApp Component={Component} pageProps={pageProps} />
       </RootLayout>
     </>

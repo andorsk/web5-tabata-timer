@@ -140,6 +140,9 @@ function Header({ handleToggleWorkout, router }) {
             (workoutState?.manager.timer?.remainingTime ?? 0) / 1000,
           ).toString()}
         </h1>
+        <p className="text-1xl font-bold">
+          Set: {currentStep?.set + 1} Cycle: {currentStep?.cycle + 1}
+        </p>
       </div>
     </div>
   );
@@ -157,6 +160,10 @@ export default function PlayScreen() {
     setCurrentStep(
       workoutState?.manager.workout?.steps[workoutState?.manager.currentStep],
     );
+    if (!workoutState.manager.ready) {
+      alert("no workout set. routing you to select first");
+      router.push("/");
+    }
   }, [workoutState]);
 
   const toggleWorkout = () => {

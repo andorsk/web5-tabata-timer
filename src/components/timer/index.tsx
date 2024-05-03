@@ -53,11 +53,13 @@ class Timer {
         } else {
           this.setFinished();
         }
-      }, 10);
+      }, 10); // Tick every 10 milliseconds
 
+      // Start a background sync to update timer state
       if ("serviceWorker" in navigator && "SyncManager" in window) {
         navigator.serviceWorker.ready
           .then((registration) => {
+            console.log("registering sync");
             return registration.sync.register("timerSync");
           })
           .catch((err) => {
@@ -95,7 +97,6 @@ class Timer {
       this._intervalId = null;
       this._isPlaying = false;
 
-      // Start a background sync to update timer state
       if ("serviceWorker" in navigator && "SyncManager" in window) {
         navigator.serviceWorker.ready
           .then((registration) => {
@@ -106,10 +107,6 @@ class Timer {
           });
       }
     }
-  }
-
-  private persistState() {
-    localStorage.setItem("timerState", JSON.stringify(this.state()));
   }
 
   setTime(n: number) {
