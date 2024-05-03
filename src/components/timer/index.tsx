@@ -53,7 +53,17 @@ class Timer {
         } else {
           this.setFinished();
         }
-      }, 10); // Tick every 10 milliseconds
+      }, 10);
+
+      if ("serviceWorker" in navigator && "SyncManager" in window) {
+        navigator.serviceWorker.ready
+          .then((registration) => {
+            return registration.sync.register("timerSync");
+          })
+          .catch((err) => {
+            console.error("Background sync registration failed:", err);
+          });
+      }
     }
   }
 
@@ -85,8 +95,21 @@ class Timer {
       this._intervalId = null;
       this._isPlaying = false;
 
-      console.log("set is playing  to false");
+      // Start a background sync to update timer state
+      if ("serviceWorker" in navigator && "SyncManager" in window) {
+        navigator.serviceWorker.ready
+          .then((registration) => {
+            return registration.sync.register("timerSync");
+          })
+          .catch((err) => {
+            console.error("Background sync registration failed:", err);
+          });
+      }
     }
+  }
+
+  private persistState() {
+    localStorage.setItem("timerState", JSON.stringify(this.state()));
   }
 
   setTime(n: number) {
