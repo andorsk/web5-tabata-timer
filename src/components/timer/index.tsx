@@ -60,6 +60,8 @@ class Timer {
         navigator.serviceWorker.ready
           .then((registration) => {
             console.log("registering sync");
+            // TODO: Remove
+            // @ts-ignore
             return registration.sync.register("timerSync");
           })
           .catch((err) => {
@@ -100,6 +102,8 @@ class Timer {
       if ("serviceWorker" in navigator && "SyncManager" in window) {
         navigator.serviceWorker.ready
           .then((registration) => {
+            // TODO: Remove
+            // @ts-ignore
             return registration.sync.register("timerSync");
           })
           .catch((err) => {

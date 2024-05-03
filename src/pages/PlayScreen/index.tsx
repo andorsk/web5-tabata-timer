@@ -141,7 +141,8 @@ function Header({ handleToggleWorkout, router }) {
           ).toString()}
         </h1>
         <p className="text-1xl font-bold">
-          Set: {currentStep?.set + 1} Cycle: {currentStep?.cycle + 1}
+          Set: {(currentStep?.set || 0) + 1} Cycle:{" "}
+          {(currentStep?.cycle || 0) + 1}
         </p>
       </div>
     </div>
