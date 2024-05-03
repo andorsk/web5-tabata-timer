@@ -38,6 +38,7 @@ export type WorkoutSession = {
   routine: Routine;
   completed: boolean;
   totalTime: number;
+  timeLeft?: number;
   isWorkoutActive: boolean;
   steps: Step[];
 };

@@ -6,11 +6,12 @@ import { WorkoutState } from "@/lib/reducers/workout";
 import { Step } from "@/models/workout";
 import { useRouter } from "next/router";
 import { formatDuration } from "@/lib/time";
+import { RootState } from "@/lib/reducers";
 
 function StepView() {
   const workoutState = useSelector((state: RootState) => state.workout);
   const [currentStep, setCurrentStep] = useState<Step>();
-  const [currentStepIndex, setCurrentStepIndex] = useState<Step>();
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>();
 
   const handleClickedStep = (index: number) => {
     if (workoutState.manager?.workout?.steps.length === 0) {
@@ -21,7 +22,9 @@ function StepView() {
 
   useEffect(() => {
     setCurrentStepIndex(workoutState?.manager.currentStep);
-    setCurrentStep(workoutState?.manager.workout?.steps[currentStep]);
+    setCurrentStep(
+      workoutState?.manager.workout?.steps[workoutState?.manager.currentStep],
+    );
   }, [workoutState]);
 
   return (
@@ -93,6 +96,8 @@ function Footer() {
     </div>
   );
 }
+
+// @ts-ignore
 function Header({ handleToggleWorkout, router }) {
   const [currentStep, setCurrentStep] = useState<Step>();
   const workoutState = useSelector((state: RootState) => state.workout);
@@ -157,7 +162,7 @@ export default function PlayScreen() {
   const toggleWorkout = () => {
     if (!workoutState.manager.started) {
       console.log("starting workout");
-      workoutState.manager.startWorkout(dispatch);
+      workoutState.manager.startWorkout();
     } else {
       console.log("toggling workout");
       workoutState.manager.toggleWorkout();
@@ -172,11 +177,7 @@ export default function PlayScreen() {
         <div
           className={`play-container ${currentStep?.color || "bg-blue-500"}`}
         >
-          <Header
-            router={router}
-            workoutState={workoutState}
-            handleToggleWorkout={toggleWorkout}
-          />
+          <Header router={router} handleToggleWorkout={toggleWorkout} />
           <StepView />
           <Footer />
         </div>

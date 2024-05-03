@@ -4,7 +4,7 @@ export type TimerState = {
   id: string;
 };
 
-export class Timer {
+class Timer {
   private _totalTime: number = 0;
   private _remainingTime: number = 0;
   private _isPlaying: boolean;

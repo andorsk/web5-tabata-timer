@@ -7,5 +7,5 @@ export function useWorkoutManager() {
 
   useEffect(() => {}, [dispatch]);
 
-  return new WorkoutManager(dispatch);
+  return new WorkoutManager();
 }

@@ -22,23 +22,21 @@ export type WorkoutManagerI = {
   isWorkoutActive: boolean;
   currentStep: number;
   startWorkout: () => void;
-  setDispatcher(dispatch: Dispatch);
+  setDispatcher: (dispatch: Dispatch) => void;
   totalTime: number;
   pauseWorkout: () => void;
   previousStep: () => void;
   nextStep: () => void;
   resetWorkout: () => void;
+  timeFromBeginningOfSet: number;
   endWorkout: () => void;
   setStep: (step: number) => void;
+  toggleWorkout: () => void;
   timer: Timer | null;
   timeLeft: number;
   ready: boolean;
   started: boolean;
-  setWorkout: (params: {
-    id: string;
-    web5: Web5;
-    dispatch: Dispatch<any>;
-  }) => void;
+  setWorkout: (params: { routine: Routine }) => void;
 };
 
 export class WorkoutManager implements WorkoutManagerI {
@@ -47,11 +45,14 @@ export class WorkoutManager implements WorkoutManagerI {
   currentStep: number = 0;
   isCompleted: boolean = false;
   timer: Timer | null = null;
+  totalTime: number;
   timeLeft: number = 0;
-  timeFromBegginningOfSet: number = 0;
+  timeFromBeginningOfSet: number;
+  ti: number = 0;
   playedThreeSecondSound: boolean = false; // To ensure sound plays only once
   started: boolean = false;
   set: boolean = false;
+  dispatch: Dispatch | null;
   ready: boolean = false;
 
   constructor() {
@@ -60,19 +61,25 @@ export class WorkoutManager implements WorkoutManagerI {
     this.isCompleted = false;
     this.timer = null;
     this.timeLeft = 0;
-    this.timeFromBegginingOfSet = 0;
+    this.ti = 0;
     this.playedThreeSecondSound = false;
     this.started = false;
     this.totalTime = 0;
     this.set = false;
     this.ready = false;
+    this.timeFromBeginningOfSet = 0;
+    this.dispatch = null;
   }
 
   startWorkout() {
     if (this.started) return;
     this.started = true;
     this.unpauseWorkout();
-    this.dispatch(STW());
+    /* if (this.dispatch) {
+    //  this.dispatch(STW());
+* } else {
+      console.error("no dispatch set");
+        */
   }
 
   setDispatcher(dispatch: Dispatch) {
@@ -88,7 +95,11 @@ export class WorkoutManager implements WorkoutManagerI {
     this.isWorkoutActive = false;
     this.timer.pause();
     const state = this.timer.state();
-    this.dispatch(refreshTimer(state));
+    if (this.dispatch) {
+      // TODO: fix action
+      //@ts-ignore
+      this.dispatch(refreshTimer(state));
+    }
   }
 
   unpauseWorkout() {
@@ -135,14 +146,17 @@ export class WorkoutManager implements WorkoutManagerI {
       this.timer.setTime(this.workout?.steps[step].duration);
     }
 
-    this.timeFromBegginningOfSet = computeTotalTimeFromSteps(
+    this.timeFromBeginningOfSet = computeTotalTimeFromSteps(
       this.workout.steps.slice(this.currentStep, this.workout.steps.length),
     );
 
-    this.timeLeft = this.timeFromBegginningOfSet;
+    this.timeLeft = this.timeFromBeginningOfSet;
     this.playedThreeSecondSound = false;
     console.log("set is updated");
-    this.dispatch(refreshWorkout(this));
+    if (this.dispatch) {
+      // @ts-ignore
+      this.dispatch(refreshWorkout(this));
+    }
   }
 
   nextStep() {
@@ -171,7 +185,7 @@ export class WorkoutManager implements WorkoutManagerI {
     if (this.timer && this.dispatch) {
       const state = this.timer.state();
       this.timeLeft =
-        this.timeFromBegginningOfSet -
+        this.timeFromBeginningOfSet -
         (this.timer.totalTime - this.timer.remainingTime);
       if (state.remainingTime <= 4000 && !this.playedThreeSecondSound) {
         if (soundPlayer) {
@@ -199,7 +213,7 @@ export class WorkoutManager implements WorkoutManagerI {
     const steps = createSteps(params.routine.config);
     const totalTime = computeTotalTimeFromSteps(steps);
     this.workout = {
-      routine: params.routine.routine,
+      routine: params.routine,
       steps,
       totalTime,
       timeLeft: totalTime,
@@ -210,7 +224,10 @@ export class WorkoutManager implements WorkoutManagerI {
     this.timer = new Timer(() => this.onTimerTick());
     this.set = true;
     this.setStep(0);
-    this.dispatch(refreshWorkout(this));
+    if (this.dispatch) {
+      // @ts-ignore
+      this.dispatch(refreshWorkout(this));
+    }
     this.ready = true;
     console.log("set workout ", this.workout);
   }

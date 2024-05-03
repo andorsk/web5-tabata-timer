@@ -3,7 +3,11 @@ import { initWeb5, Web5State } from "@/lib/actions/web5";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/reducers";
 
-const LoadingScreen = ({ setIsLoaded }) => {
+type LoadingScreenProps = {
+  setIsLoaded: () => void;
+};
+
+const LoadingScreen: React.FC<LoadingScreenProps> = () => {
   const [error, setError] = useState("");
   const [password, setPassword] = useState("asdf");
 

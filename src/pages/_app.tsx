@@ -10,6 +10,7 @@ import "@/styles/globals.css";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/reducers";
 
+// @ts-ignore
 function Web5TabataApp({ Component, pageProps }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -33,6 +34,7 @@ function Web5TabataApp({ Component, pageProps }) {
   );
 }
 
+// @ts-ignore
 function App({ Component, pageProps }) {
   return (
     <RootLayout>

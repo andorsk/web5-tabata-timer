@@ -3,6 +3,7 @@
 import { store } from "@/lib/store";
 import { Provider } from "react-redux";
 
+// @ts-ignore
 export default function RootLayout({ children }) {
   return (
     <Provider store={store}>

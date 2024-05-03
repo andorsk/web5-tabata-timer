@@ -4,9 +4,7 @@ import { loginRequest, loginSuccess, loginFailure } from "@/lib/actions/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/reducers";
 
-type LoginScreenProps = {
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-};
+type LoginScreenProps = {};
 
 const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [password, setPassword] = useState("");
@@ -16,7 +14,7 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   const web5state = useSelector((state: RootState) => state.web5);
   const authState = useSelector((state: RootState) => state.auth);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     const load = async () => {
       dispatch(loginRequest());

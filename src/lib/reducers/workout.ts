@@ -20,15 +20,17 @@ function useInitialState(): WorkoutState {
   const initialState: WorkoutState = {
     manager: manager,
     ready: false,
+    set: false,
     routines: [] as Routine[],
   };
   return initialState;
 }
 
-type WorkoutState = {
+export type WorkoutState = {
   manager: WorkoutManagerI;
   routines: Routine[];
   ready: boolean;
+  set: boolean;
 };
 
 const initialState = useInitialState();

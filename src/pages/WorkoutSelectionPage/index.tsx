@@ -1,6 +1,6 @@
 "use client";
 
-import { useSelector, useDispatch, Dispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Web5 } from "@web5/api";
 import { RootState } from "@/lib/reducers";
@@ -13,7 +13,11 @@ import RoutineConfigurationForm from "@/components/configureRoutine/ConfigureRou
 import { useRouter } from "next/router";
 import { setWorkout } from "@/lib/actions/workout";
 
-const loadRoutines = async (web5: Web5, dispatch: Dispatch) => {
+// @ts-ignore
+const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
+  if (!web5) {
+    throw new Error("can't load routines. web5 not loaded");
+  }
   const routines = await getRoutines(web5);
   const data: Routine[] = await Promise.all(
     (routines?.records || []).map(async (v) => {

@@ -23,7 +23,9 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
       <div className="absolute top-4 right-4 flex space-x-2">
         <button
           onClick={() => {
-            onSelect(routine);
+            if (onSelect && routine) {
+              onSelect(routine);
+            }
           }}
           className="text-4xl font-semibold p-4 rounded-full text-black hover:bg-gray-200"
         >

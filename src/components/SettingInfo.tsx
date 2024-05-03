@@ -2,6 +2,7 @@ import React from "react";
 import VersionInfo from "@/components/VersionInfo";
 import { useSelector } from "react-redux";
 import { Web5State } from "@/lib/actions/web5";
+import { RootState } from "@/lib/reducers";
 
 const SettingsInfo = () => {
   const web5state = useSelector((state: RootState) => state.web5);
