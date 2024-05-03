@@ -42,7 +42,7 @@ function Web5TabataApp({ Component, pageProps }) {
 // @ts-ignore
 function App({ Component, pageProps }) {
   return (
-    <html lang="en">
+    <>
       <Head>
         <meta name="application-name" content="Web5 Tabata Timer" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -113,12 +113,10 @@ function App({ Component, pageProps }) {
           content="https://yourdomain.com/icons/apple-touch-icon.png"
         />
       </Head>
-      <body className={inter.className}>
-        <RootLayout>
-          <Web5TabataApp Component={Component} pageProps={pageProps} />
-        </RootLayout>
-      </body>
-    </html>
+      <RootLayout>
+        <Web5TabataApp Component={Component} pageProps={pageProps} />
+      </RootLayout>
+    </>
   );
 }
 
