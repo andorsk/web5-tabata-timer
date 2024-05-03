@@ -2,11 +2,12 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+// @ts-ignore
 const CustomRouter = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const handleRouteChange = (url) => {
+    const handleRouteChange = (url: string) => {
       if (url !== "/") {
         router.push("/");
       }
