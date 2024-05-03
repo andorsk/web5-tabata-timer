@@ -29,7 +29,7 @@ function ServiceWorkerRegistration() {
       message = "Registering service worker...";
       break;
     case "success":
-      message = "Service worker registered successfully!";
+      message = "";
       break;
     case "error":
       message = "Failed to register service worker.";
