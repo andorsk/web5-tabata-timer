@@ -19,6 +19,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { TimerBar } from "@/components/timer";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+
 // @ts-ignore
 const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
   if (!web5) {
@@ -213,9 +215,11 @@ export default function WorkoutSelectionView() {
       <div className="flex justify-between items-center m-4">
         <button
           onClick={() => setShowModal(true)}
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center"
+          className="h-10 w-10 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
         >
-          <span>Add Workout</span>
+          <span>
+            <AddCircleOutlineIcon />
+          </span>
         </button>
         <div className="rounded-lg">
           <button
