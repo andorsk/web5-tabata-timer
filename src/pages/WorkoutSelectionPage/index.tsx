@@ -48,6 +48,8 @@ function CardGrid() {
     console.log("creating workout");
     setIsLoading(true);
     workoutState.manager.setWorkout({ routine: r });
+    workoutState.manager?.startWorkout();
+    console.log("started workout");
     setIsLoading(false);
   };
 
