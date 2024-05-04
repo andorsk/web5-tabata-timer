@@ -58,15 +58,15 @@ bun dev
 - [x] Edit Routines
 - [x] Delete Routines
 - [x] Settings
+- [x] Save Sessions
+- [x] Done Screen
 - [ ] Launch on Google Play store <- IN PROGRESS
 - [ ] Lock Screen Preview
 - [ ] Notifications
-- [ ] Save Sessions
 - [ ] Sync 
 - [ ] Share sessions
 - [ ] Better password management
 - [ ] Vibrate on 3 seconds
-- [ ] Done Screen
 - [ ] Activity Screen
 
 * Bug Fixes
