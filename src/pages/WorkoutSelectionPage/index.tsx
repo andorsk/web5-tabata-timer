@@ -12,6 +12,8 @@ import SettingInfo from "@/components/SettingInfo";
 import RoutineConfigurationForm from "@/components/configureRoutine/ConfigureRoutine";
 import { useRouter } from "next/router";
 import { setWorkout } from "@/lib/actions/workout";
+import SettingsIcon from "@mui/icons-material/Settings";
+import CloseIcon from "@mui/icons-material/Close";
 
 // @ts-ignore
 const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
@@ -127,11 +129,11 @@ export default function WorkoutSelectionView() {
                 aria-label="Close"
                 style={{ color: "black" }}
               >
-                ❌
+                <CloseIcon />
               </span>
             ) : (
               <span className="mr-2" role="img" aria-label="Settings">
-                ⚙️
+                <SettingsIcon />
               </span>
             )}
           </button>
