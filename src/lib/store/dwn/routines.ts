@@ -13,6 +13,19 @@ export const configureProtocol = async (web5: Web5) => {
   }
 };
 
+export const deleteRoutine = async (id: string, web5: Web5) => {
+  console.log("deleting routine", id);
+  const deleteResult = await web5.dwn.records.delete({
+    message: {
+      recordId: id,
+    },
+  });
+  if (deleteResult.status.code !== 202) {
+    throw new Error("failed to delete routine", deleteResult.status);
+  }
+  console.log("deleted routine", id);
+};
+
 export const storeRoutine = async (routine: Routine, web5: Web5) => {
   if (!routine.config) {
     throw new Error("routine config is missing");

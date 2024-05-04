@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Web5 } from "@web5/api";
 import { RootState } from "@/lib/reducers";
 import { setRoutines } from "@/lib/actions/workout";
-import { getRoutines } from "@/lib/store/dwn/routines";
+import { getRoutines, deleteRoutine } from "@/lib/store/dwn/routines";
 import { Routine } from "@/models/workout";
 import RoutineCard from "@/components/RoutineCard";
 import SettingInfo from "@/components/SettingInfo";
@@ -43,6 +43,7 @@ const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
 function CardGrid() {
   const workoutState = useSelector((state: RootState) => state.workout);
   const dispatch = useDispatch();
+  const web5state = useSelector((state: RootState) => state.web5);
   const [isLoading, setIsLoading] = useState(false);
   const [chosenId, setChosenId] = useState("");
   const router = useRouter();
@@ -69,7 +70,6 @@ function CardGrid() {
     // get current routine
     const curRoutineId = workoutState.manager?.workout?.routine?.id;
     setChosenId(r.id);
-
     if (r.id === curRoutineId) {
       // GO TO EXISTING ROUTINE
       enterPlayMode();
@@ -79,9 +79,18 @@ function CardGrid() {
       enterPlayMode();
     }
     setChosenId("");
-
-    // if play id is not the same as the existing id, update the workout
   };
+
+  const deleteRoutineHandler = (r: Routine) => {
+    if (web5state.web5 && web5state.loaded) {
+      deleteRoutine(r.id, web5state.web5).then(() => {
+        setIsLoading(true);
+        loadRoutines(web5state.web5, dispatch);
+        setIsLoading(false);
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
       {workoutState.routines.map((routine) => (
@@ -89,6 +98,7 @@ function CardGrid() {
           key={routine.id}
           routine={routine}
           onSelect={handleSelect}
+          onDelete={deleteRoutineHandler}
           children={
             isLoading &&
             chosenId === routine.id && <div className="p-4">Loading</div>
