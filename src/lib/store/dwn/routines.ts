@@ -21,7 +21,7 @@ export const deleteRoutine = async (id: string, web5: Web5) => {
     },
   });
   if (deleteResult.status.code !== 202) {
-    throw new Error("failed to delete routine", deleteResult.status);
+    throw new Error("failed to delete routine");
   }
   console.log("deleted routine", id);
 };
