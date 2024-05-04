@@ -125,53 +125,55 @@ function CurrentWorkoutCard() {
     <div
       className={`shadow-lg bg-white rounded-lg p-4 m-4 relative hover:bg-gray-100`}
     >
-      <div className="flex justify-between items-center">
-        <div>
-          {formattedTimeLeft} {totalTimeLeft}
-          <br />
-          {name} Step: {currentStep?.cycle} Set: {currentStep?.set}
-        </div>
-      </div>
-
-      <TimerBar
-        currentTime={(currentStep?.duration || 0) - (timeLeft || 0)}
-        totalTime={currentStep?.duration || 0}
-        color={currentStep?.color || ""}
-      />
-      <div className="absolute top-0 right-0 m-2">
-        <button className="text-black rounded-md py-1 px-2 text-sm">
-          {workoutState.manager?.isWorkoutActive ? "active" : "inactive"}
-        </button>
+      <div className="mainStep">
         <button
           className={`${currentStep?.color} text-white rounded-md py-1 px-2 text-sm`}
         >
           {currentStep?.name}
         </button>
-        <button
-          onClick={() => {
-            router.push("/play");
-          }}
-          className="text-4xl font-semibold hover:bg-gray-200"
-        >
-          <PlayArrowIcon />
+        <button className="text-black rounded-md py-1 px-2 text-sm">
+          {workoutState.manager?.isWorkoutActive ? "active" : "inactive"}
         </button>
-
-        <button
-          onClick={() => {
-            workoutState?.manager?.previousStep();
-          }}
-          className="text-4xl font-semibold hover:bg-gray-200"
-        >
-          <SkipPreviousIcon />
-        </button>
-        <button
-          onClick={() => {
-            workoutState?.manager?.nextStep();
-          }}
-          className="text-4xl font-semibold hover:bg-gray-200"
-        >
-          <SkipNextIcon />
-        </button>
+      </div>
+      <div>
+        <div className="flex justify-between items-center">
+          <div>
+            {formattedTimeLeft} {totalTimeLeft}
+            <br />
+            {name} Step: {currentStep?.cycle} Set: {currentStep?.set}
+          </div>
+        </div>
+        <TimerBar
+          currentTime={(currentStep?.duration || 0) - (timeLeft || 0)}
+          totalTime={currentStep?.duration || 0}
+          color={currentStep?.color || ""}
+        />
+        <div className="absolute top-0 right-0 m-2">
+          <button
+            onClick={() => {
+              router.push("/play");
+            }}
+            className="text-4xl font-semibold hover:bg-gray-200"
+          >
+            <PlayArrowIcon />
+          </button>
+          <button
+            onClick={() => {
+              workoutState?.manager?.previousStep();
+            }}
+            className="text-4xl font-semibold hover:bg-gray-200"
+          >
+            <SkipPreviousIcon />
+          </button>
+          <button
+            onClick={() => {
+              workoutState?.manager?.nextStep();
+            }}
+            className="text-4xl font-semibold hover:bg-gray-200"
+          >
+            <SkipNextIcon />
+          </button>
+        </div>
       </div>
     </div>
   );
