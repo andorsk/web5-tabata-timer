@@ -3,8 +3,6 @@ import Timer from "@/components/timer";
 import { WorkoutSession, Routine } from "@/models/workout";
 import { createSteps, computeTotalTimeFromSteps } from "@/lib/workout";
 import { soundPlayer } from "@/components/sound/SoundLibrary"; // Ensure this is correctly set up to play sounds
-import { getRoutine } from "@/lib/store/dwn/routines";
-import { Web5 } from "@web5/api";
 import { Step } from "@/models/workout";
 
 import { Dispatch } from "redux";
@@ -38,6 +36,7 @@ export type WorkoutManagerI = {
   started: boolean;
   getStep: (n: number) => Step | null;
   setWorkout: (params: { routine: Routine }) => void;
+  sessionId?: string;
 };
 
 export class WorkoutManager implements WorkoutManagerI {
@@ -55,6 +54,7 @@ export class WorkoutManager implements WorkoutManagerI {
   set: boolean = false;
   dispatch: Dispatch | null;
   ready: boolean = false;
+  sessionId?: string;
 
   constructor() {
     this.isWorkoutActive = false;
@@ -123,11 +123,15 @@ export class WorkoutManager implements WorkoutManagerI {
 
   endWorkout() {
     this.isWorkoutActive = false;
+    this.isCompleted = true;
+    this.timeLeft = 0;
     if (this.timer) {
+      console.log("resetting timer");
       this.timer.reset();
     }
     if (this.workout) {
       this.workout.endTime = new Date().toISOString();
+      this.workout.completed = true;
     }
   }
 
@@ -138,8 +142,7 @@ export class WorkoutManager implements WorkoutManagerI {
     this.set = true;
     this.currentStep = step;
     if (this.timer) {
-      // this.timer.reset();
-      this.timer.setTime(this.workout?.steps[step].duration);
+      this.timer.setTime(this.workout?.steps[step]?.duration);
     }
 
     this.timeFromBeginningOfSet = computeTotalTimeFromSteps(
@@ -156,14 +159,20 @@ export class WorkoutManager implements WorkoutManagerI {
   }
 
   nextStep() {
+    if (this.workout?.completed) {
+      return;
+    }
     if (
       this.workout &&
       this.workout.steps &&
-      this.currentStep >= this.workout.steps.length
+      this.currentStep >= this.workout.steps.length - 1
     ) {
       this.endWorkout();
       console.log("ending workout");
-      this.isCompleted = true;
+      if (this.workout && this.dispatch) {
+        // @ts-ignore
+        this.dispatch(refreshWorkout(this));
+      }
       return;
     }
     console.log("setting step", this.currentStep + 1);
@@ -216,6 +225,7 @@ export class WorkoutManager implements WorkoutManagerI {
       isWorkoutActive: false,
       completed: false,
     };
+    // Add Start Workout to DWN
     this.timer = new Timer(() => this.onTimerTick());
     this.set = true;
     this.started = false;

@@ -30,6 +30,7 @@ export type RoutineConfiguration = {
 };
 
 export type WorkoutSession = {
+  id?: string;
   startTime: string;
   endTime?: string;
   notes?: string[];

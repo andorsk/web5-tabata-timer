@@ -12,6 +12,19 @@ export const routineProtocol = {
     },
   },
   structure: {
+    session: {
+      $actions: [
+        {
+          who: "anyone",
+          can: ["create"],
+        },
+        {
+          who: "author",
+          of: "session",
+          can: ["create", "update"],
+        },
+      ],
+    },
     routine: {
       $actions: [
         {
@@ -19,19 +32,6 @@ export const routineProtocol = {
           can: ["create", "update"],
         },
       ],
-      session: {
-        $actions: [
-          {
-            who: "anyone",
-            can: ["create"],
-          },
-          {
-            who: "author",
-            of: "session",
-            can: ["create", "update"],
-          },
-        ],
-      },
     },
   },
 };

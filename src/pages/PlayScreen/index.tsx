@@ -8,6 +8,8 @@ import { useRouter } from "next/router";
 import { formatDuration } from "@/lib/time";
 import { RootState } from "@/lib/reducers";
 
+import FinishedDetails from "@/components/play/FinishedDetails";
+
 import HomeIcon from "@mui/icons-material/Home";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -139,6 +141,9 @@ function Header({ handleToggleWorkout, router }) {
 
   return (
     <div className={`flex flex-col w-full`}>
+      <div className="m-2 absolute">
+        Session: {workoutState?.manager?.sessionId}
+      </div>
       <div className="flex justify-between items-center p-4 ">
         <div className="flex">
           <button
@@ -158,6 +163,7 @@ function Header({ handleToggleWorkout, router }) {
             <HomeIcon />
           </button>
         </div>
+
         <div className="p-4 text-center font-bold text-2xl">
           {workoutState?.manager.timeLeft !== undefined
             ? formatDuration(
@@ -220,16 +226,33 @@ export default function PlayScreen() {
         <div className="p-4">Not ready set</div>
       ) : (
         <div className="h-screen">
-          <div className="">
-            <Header router={router} handleToggleWorkout={toggleWorkout} />
-          </div>
-          <div className="h-4/6 overflow-y-auto ">
-            <StepView />
-          </div>
-          <div className="absolute bottom-0 w-full">
-            {" "}
-            <Footer />{" "}
-          </div>
+          {!workoutState?.manager?.workout?.completed ? (
+            <>
+              <div>
+                <Header router={router} handleToggleWorkout={toggleWorkout} />
+              </div>
+              <div className="h-4/6 overflow-y-auto ">
+                <StepView />
+              </div>
+              <div className="absolute bottom-0 w-full">
+                {" "}
+                <Footer />{" "}
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-screen">
+              <div className="text-center">
+                <h1 className="text-4xl mb-4">Finished!</h1>
+                <FinishedDetails workoutState={workoutState} />
+                <button
+                  className="p-2 text-4xl rounded"
+                  onClick={() => router.push("/")}
+                >
+                  <HomeIcon />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
