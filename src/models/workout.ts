@@ -12,7 +12,6 @@ export type Routine = {
 export type TimedIntervalConfiguration = {
   duration: number; // duration in seconds
   name: string;
-  value: number;
 };
 
 export type SetConfiguration = {

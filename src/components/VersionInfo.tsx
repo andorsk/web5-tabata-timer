@@ -16,6 +16,7 @@ const VersionInfo = () => {
           <p>Branch: {version.branch}</p>
           <p>Commit Message: {version.commitMessage}</p>
           <p>Current Date: {version.currentDate}</p>
+          <p>Repository URL: https://github.com/andorsk/web5-tabata-timer </p>
         </div>
       ) : (
         <p>Loading version information...</p>
