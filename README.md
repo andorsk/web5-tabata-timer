@@ -53,14 +53,19 @@ bun dev
 - [x] Configure Routine View
 - [x] Sound
 - [x] PWA
+- [x] Run in background 
 - [ ] Launch on Google Play store <- IN PROGRESS
-- [ ] Run in background <- IN PROGRESS
+- [ ] Header for current workout
+- [ ] Notifications
 - [ ] Edit Routines
 - [ ] Delete Routines
-- [ ] Record Sessions
+- [ ] Save Sessions
 - [ ] Sync 
 - [ ] Share sessions
 - [ ] Settings
+- [ ] Better password management
+- [ ] Vibrate on 3 seconds
+- [ ] Done Screen
 
 * Bug Fixes
 

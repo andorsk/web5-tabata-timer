@@ -14,7 +14,11 @@ import { useRouter } from "next/router";
 import { setWorkout } from "@/lib/actions/workout";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
-
+import { formatDuration } from "@/lib/time";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { TimerBar } from "@/components/timer";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 // @ts-ignore
 const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
   if (!web5) {
@@ -92,6 +96,78 @@ function CardGrid() {
   );
 }
 
+function CurrentWorkoutCard() {
+  const workoutState = useSelector((state: RootState) => state.workout);
+  const name = workoutState?.manager?.workout?.routine?.name;
+  const secs = workoutState?.manager?.timeLeft;
+  const timeLeft = workoutState?.manager?.timer?.remainingTime;
+  const [formattedTimeLeft, setFormattedTimeLeft] = useState("");
+  const [totalTimeLeft, setFormattedTotalTimeLeft] = useState("");
+  const currentStep = workoutState?.manager?.getStep(
+    workoutState?.manager?.currentStep,
+  );
+  const router = useRouter();
+
+  useEffect(() => {
+    setFormattedTimeLeft(formatDuration(Math.floor(timeLeft / 1000 ?? 0)));
+    setFormattedTotalTimeLeft(formatDuration(Math.floor(secs / 1000 ?? 0)));
+  }, [timeLeft]);
+
+  return (
+    <div
+      className={`shadow-lg bg-white rounded-lg p-4 m-4 relative hover:bg-gray-100`}
+    >
+      <div className="flex justify-between items-center">
+        <div>
+          {formattedTimeLeft} {totalTimeLeft}
+          <br />
+          {name} Step: {currentStep.cycle} Set: {currentStep.set}
+        </div>
+      </div>
+
+      <TimerBar
+        currentTime={currentStep.duration - timeLeft}
+        totalTime={currentStep.duration}
+        color={currentStep.color}
+      />
+      <div className="absolute top-0 right-0 m-2">
+        <button className="text-black rounded-md py-1 px-2 text-sm">
+          {workoutState.manager?.isWorkoutActive ? "active" : "inactive"}
+        </button>
+        <button
+          className={`${currentStep.color} text-white rounded-md py-1 px-2 text-sm`}
+        >
+          {currentStep?.name}
+        </button>
+        <button
+          onClick={() => {
+            router.push("/play");
+          }}
+          className="text-4xl font-semibold hover:bg-gray-200"
+        >
+          <PlayArrowIcon />
+        </button>
+
+        <button
+          onClick={() => {
+            workoutState?.manager?.previousStep();
+          }}
+          className="text-4xl font-semibold hover:bg-gray-200"
+        >
+          <SkipPreviousIcon />
+        </button>
+        <button
+          onClick={() => {
+            workoutState?.manager?.nextStep();
+          }}
+          className="text-4xl font-semibold hover:bg-gray-200"
+        >
+          <SkipNextIcon />
+        </button>
+      </div>
+    </div>
+  );
+}
 export default function WorkoutSelectionView() {
   const web5state = useSelector((state: RootState) => state.web5);
   const workoutState = useSelector((state: RootState) => state.workout);
@@ -142,6 +218,7 @@ export default function WorkoutSelectionView() {
         </div>
       </div>
       {showInfo && <SettingInfo />}
+      {workoutState.manager.started && <CurrentWorkoutCard />}
       <div className="routine-cards-container">
         {!isLoading ? (
           <div>
