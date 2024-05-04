@@ -106,7 +106,8 @@ function SessionCard({
       </div>
       <div>
         <div>
-          <span className="font-bold">Session ID: </span> {session?.id}
+          <span className="font-bold">Session ID: </span>{" "}
+          {session?.id?.slice(-6)}
         </div>
         <div>
           <span className="font-bold">Workout Name:</span>{" "}
