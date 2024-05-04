@@ -1,11 +1,11 @@
 export type Routine = {
-  name: string;
-  title: string;
+  id?: string;
+  name?: string;
+  title?: string;
   description?: string;
-  lastUpdated: string;
-  createdOn: string;
-  createdBy: string;
-  id: string;
+  lastUpdated?: string;
+  createdOn?: string;
+  createdBy?: string;
   config: RoutineConfiguration;
 };
 

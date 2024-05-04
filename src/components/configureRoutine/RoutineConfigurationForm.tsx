@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
+import { Routine, RoutineConfiguration } from "@/models/workout";
 import { TimedIntervalConfiguration } from "@/models/workout";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
@@ -85,7 +86,9 @@ const RoutineConfigurationForm: React.FC<RoutineConfigurationFormProps> = ({
       return i * 1000;
     });
     console.log("Form values:", newRoutine);
-    onSubmit(newRoutine);
+    if (onSubmit) {
+      onSubmit(newRoutine);
+    }
   };
 
   const isTimedConfiguration = (
@@ -98,10 +101,21 @@ const RoutineConfigurationForm: React.FC<RoutineConfigurationFormProps> = ({
     routine: Routine,
     f: (dur: number) => number,
   ): Routine => {
-    const adjustedConfig: RoutineConfiguration = {};
+    const adjustedConfig: RoutineConfiguration = {
+      Prepare: { duration: 0, name: "" },
+      Work: { duration: 0, name: "" },
+      Rest: { duration: 0, name: "" },
+      Cycles: { value: 0, name: "" },
+      Sets: { value: 0, name: "" },
+      RestBetweenSteps: { duration: 0, name: "" },
+      CoolDown: { duration: 0, name: "" },
+    };
+
     for (const key in routine.config) {
       if (Object.prototype.hasOwnProperty.call(routine.config, key)) {
+        // @ts-ignore
         const configValue = routine.config[key];
+        // @ts-ignore
         adjustedConfig[key] = {
           ...configValue,
           duration: f(configValue.duration),
@@ -134,16 +148,9 @@ const RoutineConfigurationForm: React.FC<RoutineConfigurationFormProps> = ({
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ errors }) => (
+          {() => (
             <Form className="grid grid-cols-2 gap-4">
               {/* Form inputs */}
-              {errors.length > 0 && (
-                <div className="text-red-600 col-span-2">
-                  {errors.map((error, index) => (
-                    <p key={index}>{error}</p>
-                  ))}
-                </div>
-              )}
               <div>
                 <label>
                   <span>{"Name"} </span>
@@ -178,22 +185,32 @@ const RoutineConfigurationForm: React.FC<RoutineConfigurationFormProps> = ({
                   className="text-red-500"
                 />
               </div>
+              // @ts-ignore
               {Object.keys(defaultValues.config).map((key) => (
                 <React.Fragment key={key}>
                   <div>
                     <label>
-                      <span>{defaultValues.config[key].name} </span>
-                      {isTimedConfiguration(defaultValues.config[key]) ? (
-                        <span>(seconds)</span>
-                      ) : (
-                        <span> Count </span>
-                      )}
+                      <span>
+                        {
+                          // @ts-ignore
+                          defaultValues.config[key].name
+                        }{" "}
+                      </span>
+                      {
+                        // @ts-ignore
+                        isTimedConfiguration(defaultValues.config[key]) ? (
+                          <span>(seconds)</span>
+                        ) : (
+                          <span> Count </span>
+                        )
+                      }
                     </label>
                   </div>
                   <div>
                     <Field
                       type="number"
                       name={
+                        // @ts-ignore
                         isTimedConfiguration(defaultValues.config[key])
                           ? `config.${key}.duration`
                           : `config.${key}.value`

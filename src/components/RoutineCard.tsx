@@ -63,7 +63,7 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
       </div>
       <h4 className="text-md font-bold text-gray-900">{routine.name}</h4>
       <p className="text-gray-600">{routine.description}</p>
-      <p className="text-gray-600">{routine.id.slice(-6)}</p>
+      <p className="text-gray-600">{routine?.id?.slice(-6)}</p>
       <div className="mt-2 text-gray-400">
         <p>Prepare: {config.Prepare.duration / 1000} seconds</p>
         <p>Work: {config.Work.duration / 1000} seconds</p>
