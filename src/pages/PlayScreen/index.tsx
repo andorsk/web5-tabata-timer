@@ -142,7 +142,7 @@ function Header({ handleToggleWorkout, router }) {
   return (
     <div className={`flex flex-col w-full`}>
       <div className="m-2 absolute">
-        Session: {workoutState?.manager?.sessionId}
+        Session: {workoutState?.manager?.sessionId?.slice(-6)}
       </div>
       <div className="flex justify-between items-center p-4 ">
         <div className="flex">
