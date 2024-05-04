@@ -69,5 +69,21 @@ export const getRoutine = async (id: string, web5: Web5): Promise<Routine> => {
     },
   });
   const r = await record.data.json();
+  // TODO: add better handlign for failed message
   return r as Routine;
+};
+
+export const updateRoutine = async (routine: Routine, web5: Web5) => {
+  let { record } = await web5.dwn.records.read({
+    message: {
+      filter: {
+        recordId: routine.id,
+      },
+    },
+  });
+  const { status } = await record.update({ data: JSON.stringify(routine) });
+  if (status.code !== 202) {
+    throw new Error("failed to store routine");
+  }
+  console.log("routine updated");
 };
