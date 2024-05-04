@@ -11,7 +11,9 @@ import {
   deleteRoutine,
   storeRoutine,
 } from "@/lib/store/dwn/routines";
-import { Routine } from "@/models/workout";
+import { storeSession } from "@/lib/store/dwn/session";
+
+import { Routine, WorkoutSession } from "@/models/workout";
 import RoutineCard from "@/components/RoutineCard";
 import SettingInfo from "@/components/SettingInfo";
 import RoutineConfigurationForm from "@/components/configureRoutine/RoutineConfigurationForm";
@@ -26,6 +28,7 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
+import { WorkoutState } from "@/lib/reducers/workout";
 
 // @ts-ignore
 const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
@@ -65,9 +68,26 @@ function CardGrid() {
     setIsLoading(true);
     workoutState.manager.setWorkout({ routine: r });
     workoutState.manager?.startWorkout();
+    // store the state of the session
     console.log("started workout");
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    const sessionHandler = async (workoutState: WorkoutState, web5: Web5) => {
+      if (workoutState?.manager?.workout) {
+        const sessionId = await storeSession(
+          workoutState.manager.workout,
+          web5,
+        );
+        workoutState.manager.sessionId = sessionId;
+        console.log("current session id", sessionId);
+      }
+    };
+    if (web5state.web5) {
+      sessionHandler(workoutState, web5state.web5);
+    }
+  }, [workoutState.manager.workout]);
 
   const enterPlayMode = () => {
     console.log("entering play mode!");

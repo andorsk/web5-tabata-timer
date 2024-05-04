@@ -58,7 +58,6 @@ const WorkoutChart = () => {
           return `color-github-${value.count}`;
         }}
       />
-      // @ts-ignore
       <Tooltip position="bottom" />
     </div>
   );
