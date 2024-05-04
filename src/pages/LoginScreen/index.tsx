@@ -58,7 +58,7 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Enter your password. If this is your first time, set your password now..."
             />
           </div>
           <button
