@@ -44,8 +44,8 @@ function FinishedDetails({ workoutState }: FinishedDetailsProps) {
         {workoutState?.manager?.workout?.routine?.name}
       </div>
       <div>
-        <span className="font-bold">Workout ID:</span>{" "}
-        {workoutState?.manager?.workout?.routine?.id}
+        <span className="font-bold">Routine ID:</span>{" "}
+        {workoutState?.manager?.workout?.routine?.id?.slice(-6)}
       </div>
       <div>
         <span className="font-bold">Start Time:</span>{" "}
