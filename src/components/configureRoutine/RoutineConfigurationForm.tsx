@@ -191,7 +191,12 @@ const RoutineConfigurationForm: React.FC<RoutineConfigurationFormProps> = ({
                   <React.Fragment key={key}>
                     <div>
                       <label>
-                        <span>{defaultValues.config[key].name} </span>
+                        <span>
+                          {
+                            // @ts-ignore
+                            defaultValues.config[key].name
+                          }{" "}
+                        </span>
                         {
                           // @ts-ignore
                           isTimedConfiguration(defaultValues.config[key]) ? (
