@@ -37,7 +37,7 @@ function FinishedDetails({ workoutState }: FinishedDetailsProps) {
     <div className="text-left space-y-2">
       <div>
         <span className="font-bold">Session ID: </span>{" "}
-        {workoutState?.manager?.sessionId}
+        {workoutState?.manager?.sessionId?.slice(-6)}
       </div>
       <div>
         <span className="font-bold">Workout Name:</span>{" "}
