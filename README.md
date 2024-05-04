@@ -54,19 +54,20 @@ bun dev
 - [x] Sound
 - [x] PWA
 - [x] Run in background 
+- [x] Header for current workout
+- [x] Edit Routines
+- [x] Delete Routines
+- [x] Settings
 - [ ] Launch on Google Play store <- IN PROGRESS
-- [ ] Header for current workout
-- [ ] Notifications
 - [ ] Lock Screen Preview
-- [ ] Edit Routines
-- [ ] Delete Routines
+- [ ] Notifications
 - [ ] Save Sessions
 - [ ] Sync 
 - [ ] Share sessions
-- [ ] Settings
 - [ ] Better password management
 - [ ] Vibrate on 3 seconds
 - [ ] Done Screen
+- [ ] Activity Screen
 
 * Bug Fixes
 
@@ -79,13 +80,11 @@ bun dev
 
 * Code
 
+- [x] Change state mangaement to redux
+- [x] First Major Refactor.
 - [ ] Too many ts-ignores. Cleanup
 - [ ] Remove old files
-
-* Other
-
-- [x] Major Refactor. Consider not using Next JS. No reason to use it.
-- [x] Change state mangaement to redux
+- [ ] Second Major Refactor
 
 ## Disclosures
 
