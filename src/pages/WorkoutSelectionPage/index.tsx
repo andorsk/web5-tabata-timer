@@ -99,7 +99,7 @@ function CardGrid() {
 function CurrentWorkoutCard() {
   const workoutState = useSelector((state: RootState) => state.workout);
   const name = workoutState?.manager?.workout?.routine?.name;
-  const secs = workoutState?.manager?.timeLeft;
+  const totalWorkoutTimeLeft = workoutState?.manager?.timeLeft;
   const timeLeft = workoutState?.manager?.timer?.remainingTime;
   const [formattedTimeLeft, setFormattedTimeLeft] = useState("");
   const [totalTimeLeft, setFormattedTotalTimeLeft] = useState("");
@@ -109,8 +109,14 @@ function CurrentWorkoutCard() {
   const router = useRouter();
 
   useEffect(() => {
-    setFormattedTimeLeft(formatDuration(Math.floor(timeLeft / 1000 ?? 0)));
-    setFormattedTotalTimeLeft(formatDuration(Math.floor(secs / 1000 ?? 0)));
+    if (timeLeft) {
+      setFormattedTimeLeft(formatDuration(Math.floor(timeLeft / 1000 ?? 0)));
+    }
+    if (totalWorkoutTimeLeft) {
+      setFormattedTotalTimeLeft(
+        formatDuration(Math.floor(totalWorkoutTimeLeft / 1000 ?? 0)),
+      );
+    }
   }, [timeLeft]);
 
   return (
@@ -121,21 +127,21 @@ function CurrentWorkoutCard() {
         <div>
           {formattedTimeLeft} {totalTimeLeft}
           <br />
-          {name} Step: {currentStep.cycle} Set: {currentStep.set}
+          {name} Step: {currentStep?.cycle} Set: {currentStep?.set}
         </div>
       </div>
 
       <TimerBar
-        currentTime={currentStep.duration - timeLeft}
-        totalTime={currentStep.duration}
-        color={currentStep.color}
+        currentTime={(currentStep?.duration || 0) - (timeLeft || 0)}
+        totalTime={currentStep?.duration || 0}
+        color={currentStep?.color || ""}
       />
       <div className="absolute top-0 right-0 m-2">
         <button className="text-black rounded-md py-1 px-2 text-sm">
           {workoutState.manager?.isWorkoutActive ? "active" : "inactive"}
         </button>
         <button
-          className={`${currentStep.color} text-white rounded-md py-1 px-2 text-sm`}
+          className={`${currentStep?.color} text-white rounded-md py-1 px-2 text-sm`}
         >
           {currentStep?.name}
         </button>
