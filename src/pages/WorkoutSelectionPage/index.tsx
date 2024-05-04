@@ -77,7 +77,7 @@ function CardGrid() {
   const handleSelect = (r: Routine) => {
     // get current routine
     const curRoutineId = workoutState.manager?.workout?.routine?.id;
-    setChosenId(r.id);
+    setChosenId(r.id || "");
     if (r.id === curRoutineId) {
       // GO TO EXISTING ROUTINE
       enterPlayMode();
@@ -91,7 +91,7 @@ function CardGrid() {
 
   const deleteRoutineHandler = (r: Routine) => {
     if (web5state.web5 && web5state.loaded) {
-      deleteRoutine(r.id, web5state.web5).then(() => {
+      deleteRoutine(r?.id || "", web5state.web5).then(() => {
         setIsLoading(true);
         loadRoutines(web5state.web5, dispatch);
         setIsLoading(false);
@@ -142,7 +142,7 @@ function CardGrid() {
                 onClose={() => {
                   setShowEditModal(false);
                 }}
-                defaultValues={selectedRoutine}
+                defaultValues={selectedRoutine || undefined}
               />
             </div>
           </div>
