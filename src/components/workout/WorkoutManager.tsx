@@ -217,7 +217,9 @@ export class WorkoutManager implements WorkoutManagerI {
     };
     this.timer = new Timer(() => this.onTimerTick());
     this.set = true;
+    this.started = false;
     this.setStep(0);
+    this.isWorkoutActive = false;
     if (this.dispatch) {
       // @ts-ignore
       this.dispatch(refreshWorkout(this));
