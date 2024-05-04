@@ -1,3 +1,7 @@
+import TimerBar from "./TimerBar";
+
+export { TimerBar };
+
 export type TimerState = {
   isPlaying: boolean;
   remainingTime: number;
