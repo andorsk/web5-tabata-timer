@@ -54,8 +54,8 @@ bun dev
 - [x] Sound
 - [x] PWA
 - [x] Run in background 
+- [x] Header for current workout
 - [ ] Launch on Google Play store <- IN PROGRESS
-- [ ] Header for current workout
 - [ ] Notifications
 - [ ] Edit Routines
 - [ ] Delete Routines
@@ -72,6 +72,7 @@ bun dev
 - [x] Fix Build 
 - [x] Fix Pause/Play
 - [x] Fix Inputs For Form
+- [ ] Fix component size for steps on Play View
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
 
