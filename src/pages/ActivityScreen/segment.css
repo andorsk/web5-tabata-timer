@@ -1,0 +1,20 @@
+.progress-bar {
+  display: flex;
+}
+
+.segment {
+  height: 20px; /* Adjust as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Text color for segment names */
+}
+
+.session-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 20px; /* Adjust gap as needed */
+}
+.progress-bar-container {
+  position: relative; /* For absolute positioning of progress bar */
+}
