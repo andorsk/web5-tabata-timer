@@ -8,20 +8,31 @@ type LoginScreenProps = {};
 
 const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
+
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
   const web5state = useSelector((state: RootState) => state.web5);
   const authState = useSelector((state: RootState) => state.auth);
 
+  const load = async () => {
+    dispatch(loginRequest());
+    initWeb5(password, dispatch);
+  };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    const load = async () => {
-      dispatch(loginRequest());
-      initWeb5(password, dispatch);
-    };
     load();
   };
+
+  useEffect(() => {
+    const savedPassword = localStorage.getItem("password");
+    if (savedPassword) {
+      setPassword(savedPassword);
+      load();
+    }
+  }, [password]);
 
   useEffect(() => {
     if (web5state.error) {
@@ -32,6 +43,9 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
     }
     if (web5state.loaded) {
       dispatch(loginSuccess());
+      if (rememberMe) {
+        localStorage.setItem("password", password);
+      }
     }
   }, [web5state]);
 
@@ -48,18 +62,27 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
             >
-              Password:
+              Enter your password. If this is your first time, set your password
+              now..
             </label>
             {web5state.loading && <p className="text-red-500 mb-4">Loading</p>}
 
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 mb-4 mt-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password. If this is your first time, set your password now..."
             />
+            <label className="">
+              <input
+                type="checkbox"
+                onChange={() => setRememberMe(!rememberMe)}
+                checked={rememberMe}
+              />{" "}
+              Remember Me?
+            </label>
           </div>
           <button
             type="submit"
