@@ -8,6 +8,12 @@ import { useRouter } from "next/router";
 import { formatDuration } from "@/lib/time";
 import { RootState } from "@/lib/reducers";
 
+import HomeIcon from "@mui/icons-material/Home";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+
 function StepView() {
   const workoutState = useSelector((state: RootState) => state.workout);
   const [currentStep, setCurrentStep] = useState<Step>();
@@ -88,9 +94,9 @@ function Footer() {
     >
       <button
         onClick={() => workoutState?.manager.previousStep()}
-        className="p-2 rounded text-white"
+        className="rounded text-black"
       >
-        ⬅️
+        <ArrowLeftIcon fontSize="large" />
       </button>
       <div>
         <span>
@@ -111,9 +117,9 @@ function Footer() {
       </div>
       <button
         onClick={() => workoutState?.manager?.nextStep()}
-        className="p-2 rounded text-white"
+        className="p-2 rounded text-black"
       >
-        ➡️
+        <ArrowRightIcon fontSize="large" />
       </button>
     </div>
   );
@@ -138,13 +144,17 @@ function Header({ handleToggleWorkout, router }) {
             className="p-2 text-4xl rounded"
             onClick={handleToggleWorkout}
           >
-            {workoutState?.manager.timer?.isPlaying ? "⏸️" : "▶️"}
+            {workoutState?.manager.timer?.isPlaying ? (
+              <PauseIcon />
+            ) : (
+              <PlayArrowIcon />
+            )}
           </button>
           <button
             className="p-2 text-4xl rounded"
             onClick={() => router.push("/")}
           >
-            🏠
+            <HomeIcon />
           </button>
         </div>
         <div className="p-4 text-center font-bold text-2xl">

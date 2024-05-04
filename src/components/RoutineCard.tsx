@@ -5,6 +5,7 @@ import { Routine } from "../models/workout"; // Assume types are defined in this
 // import { useRoutine } from "@/context/RoutineContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 interface RoutineCardProps {
   onSelect?: (routine: Routine) => void; // Optional onSelect callback function
@@ -29,7 +30,7 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
           }}
           className="text-4xl font-semibold p-4 rounded-full text-black hover:bg-gray-200"
         >
-          ▶️
+          <PlayArrowIcon />
         </button>
       </div>
       <h4 className="text-md font-bold text-gray-900">{routine.name}</h4>
