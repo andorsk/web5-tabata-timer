@@ -6,6 +6,7 @@ import { RootState } from "@/lib/reducers";
 
 type LoginScreenProps = {};
 
+// TODO: Remember me needs to be implemented better.
 const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
