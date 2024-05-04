@@ -77,6 +77,7 @@ function StepView() {
 function Footer() {
   const workoutState = useSelector((state: RootState) => state.workout);
   const [currentStep, setCurrentStep] = useState<Step>();
+  const router = useRouter();
 
   useEffect(() => {
     setCurrentStep(

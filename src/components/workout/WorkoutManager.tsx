@@ -36,6 +36,7 @@ export type WorkoutManagerI = {
   timeLeft: number;
   ready: boolean;
   started: boolean;
+  getStep: (n: number) => Step | null;
   setWorkout: (params: { routine: Routine }) => void;
 };
 
