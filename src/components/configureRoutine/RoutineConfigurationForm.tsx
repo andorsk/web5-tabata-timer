@@ -185,41 +185,38 @@ const RoutineConfigurationForm: React.FC<RoutineConfigurationFormProps> = ({
                   className="text-red-500"
                 />
               </div>
-              // @ts-ignore
-              {Object.keys(defaultValues.config).map((key) => (
-                <React.Fragment key={key}>
-                  <div>
-                    <label>
-                      <span>
+              {
+                // @ts-ignore
+                Object.keys(defaultValues.config).map((key) => (
+                  <React.Fragment key={key}>
+                    <div>
+                      <label>
+                        <span>{defaultValues.config[key].name} </span>
                         {
                           // @ts-ignore
-                          defaultValues.config[key].name
-                        }{" "}
-                      </span>
-                      {
-                        // @ts-ignore
-                        isTimedConfiguration(defaultValues.config[key]) ? (
-                          <span>(seconds)</span>
-                        ) : (
-                          <span> Count </span>
-                        )
-                      }
-                    </label>
-                  </div>
-                  <div>
-                    <Field
-                      type="number"
-                      name={
-                        // @ts-ignore
-                        isTimedConfiguration(defaultValues.config[key])
-                          ? `config.${key}.duration`
-                          : `config.${key}.value`
-                      }
-                      className="py-2 px-3 border border-gray-300 rounded-md w-full"
-                    />
-                  </div>
-                </React.Fragment>
-              ))}
+                          isTimedConfiguration(defaultValues.config[key]) ? (
+                            <span>(seconds)</span>
+                          ) : (
+                            <span> Count </span>
+                          )
+                        }
+                      </label>
+                    </div>
+                    <div>
+                      <Field
+                        type="number"
+                        name={
+                          // @ts-ignore
+                          isTimedConfiguration(defaultValues.config[key])
+                            ? `config.${key}.duration`
+                            : `config.${key}.value`
+                        }
+                        className="py-2 px-3 border border-gray-300 rounded-md w-full"
+                      />
+                    </div>
+                  </React.Fragment>
+                ))
+              }
               <div className="col-span-2 text-center">
                 <button
                   type="submit"
