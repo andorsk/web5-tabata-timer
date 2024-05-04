@@ -2,13 +2,16 @@
 
 import React from "react";
 import { Routine } from "../models/workout"; // Assume types are defined in this file or import from the correct location
-// import { useRoutine } from "@/context/RoutineContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ShareIcon from "@mui/icons-material/Share";
 
 interface RoutineCardProps {
   onSelect?: (routine: Routine) => void; // Optional onSelect callback function
+  onDelete?: (routine: Routine) => void;
   routine: Routine;
   children: any;
 }
@@ -16,22 +19,39 @@ interface RoutineCardProps {
 const RoutineCard: React.FC<RoutineCardProps> = ({
   routine,
   onSelect,
+  onDelete,
   children,
 }) => {
   const config = routine.config;
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 m-4 relative hover:bg-gray-100">
       <div className="absolute top-4 right-4 flex space-x-2">
-        <button
-          onClick={() => {
-            if (onSelect && routine) {
-              onSelect(routine);
-            }
-          }}
-          className="text-4xl font-semibold p-4 rounded-full text-black hover:bg-gray-200"
-        >
-          <PlayArrowIcon />
-        </button>
+        <div>
+          <button
+            onClick={() => {
+              if (onSelect && routine) {
+                onSelect(routine);
+              }
+            }}
+          >
+            <PlayArrowIcon />
+          </button>
+          <button>
+            <EditIcon />
+          </button>
+          <button
+            onClick={() => {
+              if (onDelete && routine) {
+                onDelete(routine);
+              }
+            }}
+          >
+            <DeleteIcon />
+          </button>
+          <button>
+            <ShareIcon />
+          </button>
+        </div>
       </div>
       <h4 className="text-md font-bold text-gray-900">{routine.name}</h4>
       <p className="text-gray-600">{routine.description}</p>
