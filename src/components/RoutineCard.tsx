@@ -12,6 +12,7 @@ import ShareIcon from "@mui/icons-material/Share";
 interface RoutineCardProps {
   onSelect?: (routine: Routine) => void; // Optional onSelect callback function
   onDelete?: (routine: Routine) => void;
+  onEdit?: (routine: Routine) => void;
   routine: Routine;
   children: any;
 }
@@ -21,6 +22,7 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
   onSelect,
   onDelete,
   children,
+  onEdit,
 }) => {
   const config = routine.config;
   return (
@@ -36,7 +38,13 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
           >
             <PlayArrowIcon />
           </button>
-          <button>
+          <button
+            onClick={() => {
+              if (onEdit && routine) {
+                onEdit(routine);
+              }
+            }}
+          >
             <EditIcon />
           </button>
           <button
