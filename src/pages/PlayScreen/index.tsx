@@ -27,17 +27,19 @@ function StepView() {
     );
   }, [workoutState]);
 
+  const whiteListedNames = ["Rest Between Cycles", "Cool Down", "Preparation"];
+
   return (
-    <div className="flex-grow overflow-y-auto max-h-1/2">
-      <div className="flex flex-col justify-center items-center">
+    <div className="overflow-y-auto">
+      <div className="justify-center items-center">
         {workoutState?.manager.workout?.steps.map((step, index) => (
           <button
             key={index}
             onClick={() => handleClickedStep(index)}
-            className={`w-full  rounded ${
+            className={`w-full rounded ${
               index === currentStepIndex
                 ? "bg-blue-500 text-white p-5"
-                : "bg-transparent"
+                : "bg-transparent p-1"
             }`}
             style={{
               minHeight: "40px", // Set a fixed height for each button
@@ -51,6 +53,13 @@ function StepView() {
                   : "transparent", // Semi-transparent overlay
             }}
           >
+            {!whiteListedNames.includes(step.name) && (
+              <>
+                <span>
+                  {step.set + 1}.{step.cycle + 1}{" "}
+                </span>
+              </>
+            )}
             {step.name}
           </button>
         ))}
@@ -61,9 +70,22 @@ function StepView() {
 
 function Footer() {
   const workoutState = useSelector((state: RootState) => state.workout);
+  const [currentStep, setCurrentStep] = useState<Step>();
+
+  useEffect(() => {
+    setCurrentStep(
+      workoutState?.manager.workout?.steps[workoutState?.manager.currentStep],
+    );
+    if (!workoutState.manager.ready) {
+      alert("no workout set. routing you to select first");
+      router.push("/");
+    }
+  }, [workoutState]);
 
   return (
-    <div className="flex justify-between items-center p-4 border-2 border-black border-solid">
+    <div
+      className={`flex justify-between items-center p-4 border-2 border-black border-solid ${currentStep?.color}`}
+    >
       <button
         onClick={() => workoutState?.manager.previousStep()}
         className="p-2 rounded text-white"
@@ -110,7 +132,7 @@ function Header({ handleToggleWorkout, router }) {
 
   return (
     <div className={`flex flex-col w-full`}>
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-between items-center p-4 ">
         <div className="flex">
           <button
             className="p-2 text-4xl rounded"
@@ -133,9 +155,9 @@ function Header({ handleToggleWorkout, router }) {
             : "00:00"}
         </div>
       </div>
-      <div className="text-center">
+      <div className="text-center mb-4">
         <h1 className="text-3xl font-bold">{currentStep?.name}</h1>
-        <h1 className="text-4xl pb-10 font-bold">
+        <h1 className="text-9xl pb-10 font-bold">
           {Math.floor(
             (workoutState?.manager.timer?.remainingTime ?? 0) / 1000,
           ).toString()}
@@ -178,16 +200,25 @@ export default function PlayScreen() {
   };
 
   return (
-    <div>
+    <div
+      className={`play-container ${
+        currentStep?.color || "bg-blue-500"
+      } h-screen`}
+    >
       {!workoutState.manager.ready ? (
         <div className="p-4">Not ready set</div>
       ) : (
-        <div
-          className={`play-container ${currentStep?.color || "bg-blue-500"}`}
-        >
-          <Header router={router} handleToggleWorkout={toggleWorkout} />
-          <StepView />
-          <Footer />
+        <div className="h-screen">
+          <div className="">
+            <Header router={router} handleToggleWorkout={toggleWorkout} />
+          </div>
+          <div className="h-4/6 overflow-y-auto ">
+            <StepView />
+          </div>
+          <div className="absolute bottom-0 w-full">
+            {" "}
+            <Footer />{" "}
+          </div>
         </div>
       )}
     </div>
