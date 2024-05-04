@@ -57,6 +57,7 @@ bun dev
 - [ ] Launch on Google Play store <- IN PROGRESS
 - [ ] Header for current workout
 - [ ] Notifications
+- [ ] Lock Screen Preview
 - [ ] Edit Routines
 - [ ] Delete Routines
 - [ ] Save Sessions
