@@ -13,6 +13,7 @@ interface RoutineCardProps {
   onSelect?: (routine: Routine) => void; // Optional onSelect callback function
   onDelete?: (routine: Routine) => void;
   onEdit?: (routine: Routine) => void;
+  onShare?: (routine: Routine) => void;
   routine: Routine;
   children: any;
 }
