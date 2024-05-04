@@ -20,6 +20,7 @@ import { TimerBar } from "@/components/timer";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import InsertChartIcon from "@mui/icons-material/InsertChart";
 
 // @ts-ignore
 const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
@@ -185,6 +186,7 @@ export default function WorkoutSelectionView() {
   const [isLoading, setIsLoading] = useState(false);
   const [showInfo, setShowInfo] = useState(false); // State to control the modal visibility
   const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+  const router = useRouter();
 
   useEffect(() => {
     if (web5state.web5 && web5state.loaded) {
@@ -223,10 +225,16 @@ export default function WorkoutSelectionView() {
             <AddCircleOutlineIcon />
           </span>
         </button>
-        <div className="rounded-lg">
+        <div className="flex rounded-lg text-4xl text-white">
+          <button
+            onClick={() => router.push("/activity")}
+            className="text-white "
+          >
+            <InsertChartIcon />
+          </button>
           <button
             onClick={() => setShowInfo(!showInfo)}
-            className="text-4xl text-white py-2 px-4 rounded-md flex items-center"
+            className="text-4xl rounded-md flex items-center"
           >
             {showInfo ? (
               <span

@@ -21,6 +21,10 @@ const nextConfig = {
         source: "/play",
         destination: "/PlayScreen",
       },
+      {
+        source: "/activity",
+        destination: "/ActivityScreen",
+      },
     ];
   },
   webpack: (config, { isServer }) => {
