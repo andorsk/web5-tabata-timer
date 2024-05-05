@@ -1,6 +1,5 @@
 // workout.ts
 import { combineReducers } from "redux";
-import { WorkoutManagerSingleton } from "@/components/workout";
 import { Routine } from "@/models/workout";
 
 import {

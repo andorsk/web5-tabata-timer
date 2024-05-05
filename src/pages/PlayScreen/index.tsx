@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { WorkoutState } from "@/lib/reducers/workout";
-import { Step } from "@/models/workout";
-import { useRouter } from "next/router";
-import { formatDuration } from "@/lib/time";
-import { RootState } from "@/lib/reducers";
 import FinishedDetails from "@/components/play/FinishedDetails";
+import { RootState } from "@/lib/reducers";
+import { WorkoutState } from "@/lib/reducers/workout";
+import { formatDuration } from "@/lib/time";
+import { Step } from "@/models/workout";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import HomeIcon from "@mui/icons-material/Home";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PauseIcon from "@mui/icons-material/Pause";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-import "./styles.css";
 import { updateSession } from "@/lib/store/dwn/session";
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import HomeIcon from "@mui/icons-material/Home";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import "./styles.css";
+import { Web5State } from "@/lib/actions/web5";
 
 function StepView() {
   const workoutState = useSelector((state: RootState) => state.workout);
@@ -51,24 +52,32 @@ function StepView() {
     );
   }, [workoutState]);
 
-  useEffect(() => {
-    const h = async (workoutState, web5state) => {
-      if (workoutState?.manager?.started && web5state?.loaded && !isUpdating) {
-        try {
-          await updateSession(workoutState?.manager?.workout, web5state.web5);
-        } catch (e) {
-          console.error("failed to get session", e);
-        }
-      }
-    };
-    h(workoutState, web5state);
-  }, [
-    workoutState.manager.currentStep,
-    workoutState.manager.isWorkoutActive,
-    workoutState.manager.workout._completed,
-    workoutState.manager.started,
-    workoutState.manager.ready,
-  ]);
+  // useEffect(() => {
+  //   const h = async (workoutState: WorkoutState, web5state: Web5State) => {
+  //     if (
+  //       workoutState?.manager?.started &&
+  //       web5state?.loaded &&
+  //       !isUpdating &&
+  //       workoutState.manager.workout &&
+  //       web5state.web5
+  //     ) {
+  //       try {
+  //         await updateSession(workoutState?.manager?.workout, web5state.web5);
+  //       } catch (e) {
+  //         console.error("failed to get session", e);
+  //       }
+  //     }
+  //   };
+  //   // TODO. Fix
+  //   // @ts-ignore
+  //   h(workoutState, web5state);
+  // }, [
+  //   workoutState.manager.currentStep,
+  //   workoutState.manager.isWorkoutActive,
+  //   workoutState.manager.workout._completed,
+  //   workoutState.manager.started,
+  //   workoutState.manager.ready,
+  // ]);
 
   const whiteListedNames = ["Rest Between Sets", "Cool Down", "Preparation"];
 
@@ -293,7 +302,7 @@ export default function PlayScreen() {
                     onClick={() => {
                       workoutState?.manager?.resetWorkout();
                       console.log("starting workout on refresh");
-                      workoutState?.manager?.startWorkout(web5state.web5);
+                      workoutState?.manager?.startWorkout();
                       workoutState?.manager?.unpauseWorkout();
                     }}
                   >
