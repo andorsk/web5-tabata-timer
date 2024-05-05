@@ -10,6 +10,7 @@ export const deleteSession = async (id: string, web5: Web5) => {
     },
   });
   if (deleteResult.status.code !== 202) {
+    console.log(deleteResult);
     throw new Error("failed to delete session");
   }
   console.log("deleted session", id);
