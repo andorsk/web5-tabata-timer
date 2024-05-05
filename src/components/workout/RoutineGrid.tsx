@@ -67,7 +67,6 @@ function RoutineGrid() {
           workoutState.manager.workout,
           web5,
         );
-        workoutState.manager.sessionId = sessionId;
         console.log("current session id", sessionId);
       }
     };
