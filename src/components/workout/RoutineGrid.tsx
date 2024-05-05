@@ -48,14 +48,16 @@ function RoutineGrid() {
 
   useEffect(() => {
     workoutState.manager.setDispatcher(dispatch);
-    workoutState.manager.setWeb5(web5state.web5);
+    if (web5state.web5) {
+      workoutState.manager.setWeb5(web5state.web5);
+    }
   }, []);
 
   const createWorkout = async (r: Routine) => {
     const h = async (r: Routine) => {
       setIsLoading(true);
       await workoutState.manager.setWorkout({ routine: r });
-      await workoutState.manager?.startWorkout(web5state.web5);
+      await workoutState.manager?.startWorkout();
       setIsLoading(false);
     };
     await h(r);

@@ -1,8 +1,4 @@
-import {
-  WorkoutManager,
-  type WorkoutManagerI,
-  WorkoutManagerSingleton,
-} from "./WorkoutManager";
+import { WorkoutManager, type WorkoutManagerI } from "./WorkoutManager";
 
-export { WorkoutManager, WorkoutManagerSingleton };
+export { WorkoutManager };
 export type { WorkoutManagerI };

@@ -139,13 +139,16 @@ export class WorkoutManager implements WorkoutManagerI {
     return this._sessionId;
   }
 
-  async startWorkout(web5: Web5) {
+  async startWorkout() {
     if (this.started) return;
     if (!this.ready) return;
-    if (!web5) {
+    if (!this._web5) {
       throw new Error("no web5");
     }
-    const sessionId = await storeSession(this.workout, web5);
+    if (!this.workout) {
+      throw new Error("workout not set");
+    }
+    const sessionId = await storeSession(this._workout!, this._web5);
     this.workout.id = sessionId;
     this._started = true;
     await this.refresh();
@@ -206,7 +209,7 @@ export class WorkoutManager implements WorkoutManagerI {
     if (this._timer) {
       this._timer.reset();
     }
-    if (this.workout) {
+    if (this._workout) {
       this._workout.endTime = new Date().toISOString();
       this._workout.completed = true;
     }
@@ -219,9 +222,9 @@ export class WorkoutManager implements WorkoutManagerI {
       // @ts-ignore
       this.dispatch(refreshWorkout(this));
     }
-    if (this._web5 && this._started) {
+    if (this._web5 && this._started && this._workout) {
       try {
-        await updateSession(this.workout, this._web5);
+        await updateSession(this._workout, this._web5);
       } catch (e) {
         console.error(e);
       }
@@ -234,8 +237,8 @@ export class WorkoutManager implements WorkoutManagerI {
     }
     this._set = true;
     this._currentStep = step;
-    if (this._timer) {
-      this.timer.setTime(this.workout?.steps[step]?.duration);
+    if (this._timer && this._workout) {
+      this._timer.setTime(this._workout?.steps[step]?.duration);
     }
 
     this._timeFromBeginningOfSet = computeTotalTimeFromSteps(
@@ -283,9 +286,9 @@ export class WorkoutManager implements WorkoutManagerI {
         // TODO: fix. this isn't robust. Make it more robust
         if (
           vibrationPlayer &&
-          (state._remainingTime === 2000 ||
-            state._remainingTime === 1000 ||
-            state._remainingTime === 3000)
+          (state.remainingTime === 2000 ||
+            state.remainingTime === 1000 ||
+            state.remainingTime === 3000)
         ) {
           vibrationPlayer.shortVibrate(); // Vibrate at 1 second
         }

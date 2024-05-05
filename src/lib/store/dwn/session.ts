@@ -53,7 +53,7 @@ export const updateSession = async (session: WorkoutSession, web5: Web5) => {
   });
   if (!record) {
     const sessions = await getSessions(web5);
-    const filteredSessions = sessions.records.filter(
+    const filteredSessions = sessions?.records?.filter(
       (s) => s.id === session.id,
     );
     console.error(record);
