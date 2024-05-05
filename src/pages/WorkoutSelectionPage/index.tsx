@@ -45,10 +45,8 @@ const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
       return { ...vv, id: v.id } as Routine;
     }),
   );
-  console.log("got routines", data);
   const msg = setRoutines(data);
   dispatch(setRoutines(data));
-  console.log("routines loaded", msg);
 };
 
 export default function WorkoutSelectionView() {
@@ -156,7 +154,6 @@ export default function WorkoutSelectionView() {
                       if (!web5state.web5) {
                         throw new Error("web5 not ready");
                       }
-                      console.log("storing routine");
                       await storeRoutine(r, web5state.web5);
                       setShowModal(false);
                       loadRoutines(web5state.web5, dispatch);

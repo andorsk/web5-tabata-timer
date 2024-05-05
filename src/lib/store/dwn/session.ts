@@ -3,21 +3,17 @@ import { Web5 } from "@web5/api";
 import { routineProtocol } from "@/lib/protocols/routine";
 
 export const deleteSession = async (id: string, web5: Web5) => {
-  console.log("deleting session", id);
   const deleteResult = await web5.dwn.records.delete({
     message: {
       recordId: id,
     },
   });
   if (deleteResult.status.code !== 202) {
-    console.log(deleteResult);
     throw new Error("failed to delete session");
   }
-  console.log("deleted session", id);
 };
 
 export const getSessions = async (web5: Web5) => {
-  console.log("getting sessions");
   const records = await web5.dwn.records.query({
     message: {
       filter: {
@@ -28,7 +24,6 @@ export const getSessions = async (web5: Web5) => {
       },
     },
   });
-  console.log("returning records", records);
   return records;
 };
 
@@ -56,16 +51,22 @@ export const updateSession = async (session: WorkoutSession, web5: Web5) => {
       },
     },
   });
+  if (!record) {
+    const sessions = await getSessions(web5);
+    const filteredSessions = sessions.records.filter(
+      (s) => s.id === session.id,
+    );
+    console.error(record);
+    throw new Error(`${session.id} session not found`);
+  }
   const { status } = await record.update({ data: JSON.stringify(session) });
   if (status.code !== 202) {
     throw new Error("failed to update session");
   }
-  console.log("session updated");
 };
 
 export const storeSession = async (session: WorkoutSession, web5: Web5) => {
   const payload = JSON.stringify(session);
-  console.log("storeSession", payload);
   const replyResponse = await web5.dwn.records.create({
     store: true,
     data: payload,
@@ -80,6 +81,20 @@ export const storeSession = async (session: WorkoutSession, web5: Web5) => {
     console.log(replyResponse);
     throw new Error("failed to store session");
   }
-  console.log("session stored", replyResponse);
+  console.log("session stored,", replyResponse.record?.id);
+  let { record } = await web5.dwn.records.read({
+    message: {
+      filter: {
+        recordId: replyResponse.record?.id,
+      },
+    },
+  });
+  console.log("refound", record);
+  const { status } = await record.update({ data: JSON.stringify(session) });
+  if (status.code !== 202) {
+    throw new Error("failed to update session");
+  }
+  console.log(status);
+
   return replyResponse.record?.id;
 };

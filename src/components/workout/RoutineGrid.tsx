@@ -48,39 +48,27 @@ function RoutineGrid() {
 
   useEffect(() => {
     workoutState.manager.setDispatcher(dispatch);
+    workoutState.manager.setWeb5(web5state.web5);
   }, []);
 
-  const createWorkout = (r: Routine) => {
-    console.log("creating workout");
-    setIsLoading(true);
-    workoutState.manager.setWorkout({ routine: r });
-    workoutState.manager?.startWorkout();
-    // store the state of the session
-    console.log("started workout");
-    setIsLoading(false);
+  const createWorkout = async (r: Routine) => {
+    const h = async (r: Routine) => {
+      setIsLoading(true);
+      await workoutState.manager.setWorkout({ routine: r });
+      await workoutState.manager?.startWorkout(web5state.web5);
+      setIsLoading(false);
+    };
+    await h(r);
   };
 
-  useEffect(() => {
-    const sessionHandler = async (workoutState: WorkoutState, web5: Web5) => {
-      if (workoutState?.manager?.workout) {
-        const sessionId = await storeSession(
-          workoutState.manager.workout,
-          web5,
-        );
-        console.log("current session id", sessionId);
-      }
-    };
-    if (web5state.web5) {
-      sessionHandler(workoutState, web5state.web5);
-    }
-  }, [workoutState.manager.workout]);
-
   const enterPlayMode = () => {
-    console.log("entering play mode!");
     router.push("/play");
   };
 
-  const handleSelect = (r: Routine) => {
+  const handleSelect = async (r: Routine) => {
+    if (!r) {
+      throw new Error("no routine specified");
+    }
     // get current routine
     const curRoutineId = workoutState.manager?.workout?.routine?.id;
     setChosenId(r.id || "");
@@ -88,8 +76,7 @@ function RoutineGrid() {
       // GO TO EXISTING ROUTINE
       enterPlayMode();
     } else {
-      console.log("loading workout", r);
-      createWorkout(r);
+      await createWorkout(r);
       enterPlayMode();
     }
     setChosenId("");
@@ -111,7 +98,9 @@ function RoutineGrid() {
         <RoutineCard
           key={routine.id}
           routine={routine}
-          onSelect={handleSelect}
+          onSelect={(r: Routine) => {
+            handleSelect(r);
+          }}
           onDelete={deleteRoutineHandler}
           onEdit={() => {
             setSelectedRoutine(routine);
