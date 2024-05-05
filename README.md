@@ -75,11 +75,12 @@ bun dev
 - [x] Fix Build 
 - [x] Fix Pause/Play
 - [x] Fix Inputs For Form
+- [x] Maskable Logo
 - [ ] Fix component size for steps on Play View
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
 - [ ] Do not show updated records on activiy
-- [ ] Maskable Logo
+- [ ] Timer stops on sleep 
   
 * Code
 
@@ -88,6 +89,11 @@ bun dev
 - [ ] Too many ts-ignores. Cleanup
 - [ ] Remove old files
 - [ ] Second Major Refactor
+
+* Integrations
+
+- [ ] Google Fit
+- [ ] Strava
 
 ## Disclosures
 
