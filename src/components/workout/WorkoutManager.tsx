@@ -4,6 +4,8 @@ import { WorkoutSession, Routine } from "@/models/workout";
 import { createSteps, computeTotalTimeFromSteps } from "@/lib/workout";
 import { soundPlayer } from "@/components/sound/SoundLibrary"; // Ensure this is correctly set up to play sounds
 import { vibrationPlayer } from "@/components/timer/VibrationPlayer"; // Ensure this is correctly set up to play sounds
+import { storeSession, updateSession } from "@/lib/store/dwn/session";
+import { Web5 } from "@web5/api";
 
 import { Step } from "@/models/workout";
 
@@ -11,7 +13,6 @@ import { Dispatch } from "redux";
 
 import {
   refreshTimer,
-  startWorkout as STW,
   refreshWorkout,
   setWorkout as SW,
   isReady,
@@ -23,6 +24,7 @@ export type WorkoutManagerI = {
   currentStep: number;
   startWorkout: () => void;
   setDispatcher: (dispatch: Dispatch) => void;
+  setWeb5: (web5: Web5) => void;
   totalTime: number;
   pauseWorkout: () => void;
   unpauseWorkout: () => void;
@@ -58,6 +60,7 @@ export class WorkoutManager implements WorkoutManagerI {
   private _dispatch: Dispatch | null;
   private _ready: boolean = false;
   private _sessionId?: string;
+  private _web5?: Web5 | null = null;
 
   constructor() {
     this._isWorkoutActive = false;
@@ -73,6 +76,7 @@ export class WorkoutManager implements WorkoutManagerI {
     this._ready = false;
     this._timeFromBeginningOfSet = 0;
     this._dispatch = null;
+    this._web5 = null;
   }
 
   get workout(): WorkoutSession | null {
@@ -135,75 +139,96 @@ export class WorkoutManager implements WorkoutManagerI {
     return this._sessionId;
   }
 
-  startWorkout() {
+  async startWorkout(web5: Web5) {
     if (this.started) return;
-    console.log("starting workout");
+    if (!this.ready) return;
+    if (!web5) {
+      throw new Error("no web5");
+    }
+    const sessionId = await storeSession(this.workout, web5);
+    this.workout.id = sessionId;
     this._started = true;
-    this.unpauseWorkout();
+    await this.refresh();
+    await this.unpauseWorkout();
   }
 
   setDispatcher(dispatch: Dispatch) {
     this._dispatch = dispatch;
   }
 
+  setWeb5(web5: Web5) {
+    this._web5 = web5;
+  }
+
   getStep(i: number): Step | null {
     return this.workout?.steps[i] || null;
   }
 
-  pauseWorkout() {
+  async pauseWorkout() {
     if (!this._isWorkoutActive || !this._timer) return;
     this._isWorkoutActive = false;
     this._timer.pause();
     const state = this._timer.state();
-    if (this.dispatch) {
-      // TODO: fix action
-      //@ts-ignore
-      this.dispatch(refreshTimer(state));
-    }
+    await this.refresh();
   }
 
-  unpauseWorkout() {
+  async unpauseWorkout() {
     if (this._isWorkoutActive || !this._timer) return;
-    console.log("unpausing");
     this._isWorkoutActive = true;
     this._timer.play();
+    this.refresh();
   }
 
-  toggleWorkout() {
+  async toggleWorkout() {
     if (!this._isWorkoutActive) {
-      this.unpauseWorkout();
+      await this.unpauseWorkout();
     } else {
-      this.pauseWorkout();
+      await this.pauseWorkout();
     }
   }
 
-  resetWorkout() {
+  async resetWorkout() {
     this._isWorkoutActive = false;
-    this.started = false;
+    this._started = false;
     if (this?.workout?.routine) {
-      this._setWorkout({ routine: this?.workout?.routine });
+      await this.setWorkout({ routine: this?.workout?.routine });
     }
     if (this._timer) {
       this._timer.reset();
     }
-    console.log("Workout reset");
+    await this.refresh();
   }
 
-  endWorkout() {
+  async endWorkout() {
     this._isWorkoutActive = false;
     this._isCompleted = true;
     this._timeLeft = 0;
     if (this._timer) {
-      console.log("resetting timer");
       this._timer.reset();
     }
     if (this.workout) {
       this._workout.endTime = new Date().toISOString();
       this._workout.completed = true;
     }
+    await this.refresh();
   }
 
-  setStep(step: number) {
+  async refresh() {
+    console.log("refreshing");
+    if (this.dispatch) {
+      // @ts-ignore
+      this.dispatch(refreshWorkout(this));
+    }
+    if (this._web5 && this._started) {
+      try {
+        await updateSession(this.workout, this._web5);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
+  async setStep(step: number) {
     if (!this.workout || step < 0 || step > this.workout.steps.length) {
       throw new Error("Invalid step set. Must be valid and session created.");
     }
@@ -219,14 +244,10 @@ export class WorkoutManager implements WorkoutManagerI {
 
     this._timeLeft = this._timeFromBeginningOfSet;
     this._playedThreeSecondSound = false;
-    console.log("set is updated");
-    if (this.dispatch) {
-      // @ts-ignore
-      this.dispatch(refreshWorkout(this));
-    }
+    await this.refresh();
   }
 
-  nextStep() {
+  async nextStep() {
     if (this.workout?.completed) {
       return;
     }
@@ -235,23 +256,17 @@ export class WorkoutManager implements WorkoutManagerI {
       this.workout.steps &&
       this._currentStep >= this.workout.steps.length - 1
     ) {
-      this.endWorkout();
-      console.log("ending workout");
-      if (this.workout && this.dispatch) {
-        // @ts-ignore
-        this.dispatch(refreshWorkout(this));
-      }
+      await this.endWorkout();
       return;
     }
-    console.log("setting step", this._currentStep + 1);
-    this.setStep(this._currentStep + 1);
+    await this.setStep(this._currentStep + 1);
   }
 
-  previousStep() {
+  async previousStep() {
     if (this._currentStep <= 0) {
       return;
     }
-    this.setStep(this._currentStep - 1);
+    await this.setStep(this._currentStep - 1);
   }
 
   onTimerTick() {
@@ -263,20 +278,19 @@ export class WorkoutManager implements WorkoutManagerI {
       if (state.remainingTime <= 4000 && !this.playedThreeSecondSound) {
         if (soundPlayer) {
           soundPlayer.play();
-          this.playedThreeSecondSound = true;
+          this._playedThreeSecondSound = true;
         }
         // TODO: fix. this isn't robust. Make it more robust
         if (
           vibrationPlayer &&
-          (state.remainingTime === 2000 ||
-            state.remainingTime === 1000 ||
-            state.remainingTime === 3000)
+          (state._remainingTime === 2000 ||
+            state._remainingTime === 1000 ||
+            state._remainingTime === 3000)
         ) {
           vibrationPlayer.shortVibrate(); // Vibrate at 1 second
         }
       }
       if (state.remainingTime <= 0) {
-        console.log("calling next step because time ran out");
         this.nextStep();
       }
       // @ts-ignore
@@ -290,7 +304,7 @@ export class WorkoutManager implements WorkoutManagerI {
     this._dispatch = dispatch;
   }
 
-  setWorkout(params: { routine: Routine }) {
+  async setWorkout(params: { routine: Routine }) {
     const steps = createSteps(params.routine.config);
     const totalTime = computeTotalTimeFromSteps(steps);
     this._workout = {
@@ -308,11 +322,7 @@ export class WorkoutManager implements WorkoutManagerI {
     this._started = false;
     this.setStep(0);
     this._isWorkoutActive = false;
-    if (this._dispatch) {
-      // @ts-ignore
-      this.dispatch(refreshWorkout(this));
-    }
+    await this.refresh();
     this._ready = true;
-    console.log("set workout ", this.workout);
   }
 }

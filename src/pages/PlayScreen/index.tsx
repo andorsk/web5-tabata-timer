@@ -16,9 +16,13 @@ import PauseIcon from "@mui/icons-material/Pause";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import "./styles.css";
+import { updateSession } from "@/lib/store/dwn/session";
 
 function StepView() {
   const workoutState = useSelector((state: RootState) => state.workout);
+  const web5state = useSelector((state: RootState) => state.web5);
+  const [updating, isUpdating] = useState(false);
+
   const [currentStep, setCurrentStep] = useState<Step>();
   const [currentStepIndex, setCurrentStepIndex] = useState<number>();
   const selectedStepRef = useRef<HTMLButtonElement>(null);
@@ -46,6 +50,25 @@ function StepView() {
       workoutState?.manager.workout?.steps[workoutState?.manager.currentStep],
     );
   }, [workoutState]);
+
+  useEffect(() => {
+    const h = async (workoutState, web5state) => {
+      if (workoutState?.manager?.started && web5state?.loaded && !isUpdating) {
+        try {
+          await updateSession(workoutState?.manager?.workout, web5state.web5);
+        } catch (e) {
+          console.error("failed to get session", e);
+        }
+      }
+    };
+    h(workoutState, web5state);
+  }, [
+    workoutState.manager.currentStep,
+    workoutState.manager.isWorkoutActive,
+    workoutState.manager.workout._completed,
+    workoutState.manager.started,
+    workoutState.manager.ready,
+  ]);
 
   const whiteListedNames = ["Rest Between Sets", "Cool Down", "Preparation"];
 
@@ -155,7 +178,7 @@ function Header({ handleToggleWorkout, router }) {
   return (
     <div className={`flex flex-col w-full`}>
       <div className="m-2 absolute">
-        Session: {workoutState?.manager?.sessionId?.slice(-6)}
+        Session: {workoutState?.manager?.workout?.id?.slice(-6)}
       </div>
       <div className="flex justify-between items-center p-4 ">
         <div className="flex">
@@ -218,12 +241,11 @@ export default function PlayScreen() {
     }
   }, [workoutState]);
 
-  const toggleWorkout = () => {
+  const toggleWorkout = async () => {
     if (!workoutState.manager.started) {
-      console.log("starting workout");
-      workoutState.manager.startWorkout();
+      console.log("starting workout for the first time");
+      //await workoutState.manager.startWorkout(web5state.web5);
     } else {
-      console.log("toggling workout");
       workoutState.manager.toggleWorkout();
     }
   };
@@ -253,7 +275,7 @@ export default function PlayScreen() {
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center h-screen overflow-hidden">
+            <div className="flex items-center bg-blue-500 justify-center h-screen overflow-hidden">
               <div className="text-center rounded p-4 border-gray-500 shadow-lg border m-4">
                 <h1 className="text-3xl mb-4 rounded border-gray-500">
                   Finished!
@@ -270,7 +292,8 @@ export default function PlayScreen() {
                     className="p-2 text-4xl rounded"
                     onClick={() => {
                       workoutState?.manager?.resetWorkout();
-                      workoutState?.manager?.startWorkout();
+                      console.log("starting workout on refresh");
+                      workoutState?.manager?.startWorkout(web5state.web5);
                       workoutState?.manager?.unpauseWorkout();
                     }}
                   >
