@@ -7,8 +7,8 @@ import { Step } from "@/models/workout";
 import { useRouter } from "next/router";
 import { formatDuration } from "@/lib/time";
 import { RootState } from "@/lib/reducers";
-
 import FinishedDetails from "@/components/play/FinishedDetails";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 import HomeIcon from "@mui/icons-material/Home";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -240,16 +240,30 @@ export default function PlayScreen() {
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center h-screen">
-              <div className="text-center">
-                <h1 className="text-4xl mb-4">Finished!</h1>
-                <FinishedDetails workoutState={workoutState} />
-                <button
-                  className="p-2 text-4xl rounded"
-                  onClick={() => router.push("/")}
-                >
-                  <HomeIcon />
-                </button>
+            <div class="flex items-center justify-center h-screen overflow-hidden">
+              <div className="text-center rounded p-4 border-gray-500 shadow-lg border m-4">
+                <h1 className="text-3xl mb-4  rounded border-gray-500">
+                  Finished!
+                </h1>
+                <div className="m-4">
+                  <FinishedDetails workoutState={workoutState} />
+                  <button
+                    className="p-2 text-4xl rounded"
+                    onClick={() => router.push("/")}
+                  >
+                    <HomeIcon />
+                  </button>
+                  <button
+                    className="p-2 text-4xl rounded"
+                    onClick={() => {
+                      workoutState?.manager?.resetWorkout();
+                      workoutState?.manager?.startWorkout();
+                      workoutState?.manager?.unpauseWorkout();
+                    }}
+                  >
+                    <RefreshIcon />
+                  </button>
+                </div>
               </div>
             </div>
           )}
