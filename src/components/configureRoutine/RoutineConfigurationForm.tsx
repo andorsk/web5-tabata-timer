@@ -25,7 +25,7 @@ const defaultConfig = {
     Sets: { value: 4, name: "Sets" },
     RestBetweenSteps: {
       duration: 120000,
-      name: "Rest Between Cycles",
+      name: "Rest Between Sets",
     },
     CoolDown: { duration: 300000, name: "Cool Down" },
   },

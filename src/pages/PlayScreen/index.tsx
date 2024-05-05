@@ -47,7 +47,7 @@ function StepView() {
     );
   }, [workoutState]);
 
-  const whiteListedNames = ["Rest Between Cycles", "Cool Down", "Preparation"];
+  const whiteListedNames = ["Rest Between Sets", "Cool Down", "Preparation"];
 
   return (
     <div className="overflow-y-auto">
