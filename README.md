@@ -68,6 +68,7 @@ bun dev
 - [ ] Better password management
 - [ ] Vibrate on 3 seconds
 - [ ] Activity Screen
+  - [ ] CRUD Operations
 
 * Bug Fixes
 
@@ -77,7 +78,9 @@ bun dev
 - [ ] Fix component size for steps on Play View
 - [ ] Show running workout on top of home and allow you to re-enter it. 
 - [ ] Backup/Sync
-
+- [ ] Do not show updated records on activiy
+- [ ] Maskable Logo
+  
 * Code
 
 - [x] Change state mangaement to redux
