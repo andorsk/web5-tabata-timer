@@ -23,7 +23,7 @@ export const createSteps = (config: RoutineConfiguration): Step[] => {
         totalSets: config.Sets.value,
         totalCycles: config.Cycles.value,
       });
-      if (j <= config.Cycles.value - 1) {
+      if (j <= config.Cycles.value - 1 && i <= config.Sets.value) {
         steps.push({
           name: config.Rest.name,
           duration: config.Rest.duration,
@@ -38,7 +38,7 @@ export const createSteps = (config: RoutineConfiguration): Step[] => {
     steps.push({
       name: config.RestBetweenSteps.name,
       duration: config.RestBetweenSteps.duration,
-      color: "bg-green-200",
+      color: "bg-teal-500",
       cycle: 0,
       totalSets: config.Sets.value,
       totalCycles: config.Cycles.value,

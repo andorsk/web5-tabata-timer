@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { WorkoutState } from "@/lib/reducers/workout";
 import { Step } from "@/models/workout";
@@ -15,11 +15,13 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import "./styles.css";
 
 function StepView() {
   const workoutState = useSelector((state: RootState) => state.workout);
   const [currentStep, setCurrentStep] = useState<Step>();
   const [currentStepIndex, setCurrentStepIndex] = useState<number>();
+  const selectedStepRef = useRef<HTMLButtonElement>(null);
 
   const handleClickedStep = (index: number) => {
     if (workoutState.manager?.workout?.steps.length === 0) {
@@ -27,6 +29,16 @@ function StepView() {
     }
     workoutState.manager?.setStep(index);
   };
+
+  useEffect(() => {
+    // Scroll to the selected step when it changes
+    if (selectedStepRef.current) {
+      selectedStepRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [currentStepIndex]);
 
   useEffect(() => {
     setCurrentStepIndex(workoutState?.manager.currentStep);
@@ -42,6 +54,7 @@ function StepView() {
       <div className="justify-center items-center">
         {workoutState?.manager.workout?.steps.map((step, index) => (
           <button
+            ref={index === currentStepIndex ? selectedStepRef : null}
             key={index}
             onClick={() => handleClickedStep(index)}
             className={`w-full rounded ${
@@ -230,11 +243,11 @@ export default function PlayScreen() {
               <div>
                 <Header router={router} handleToggleWorkout={toggleWorkout} />
               </div>
-              <div className="h-4/6 overflow-y-auto">
+              <div className="h-3/6 overflow-y-auto">
                 <StepView />
                 <div className="h-3/6"></div>
               </div>
-              <div className="absolute bottom-0 w-full">
+              <div className="footer">
                 {" "}
                 <Footer />{" "}
               </div>
@@ -242,7 +255,7 @@ export default function PlayScreen() {
           ) : (
             <div className="flex items-center justify-center h-screen overflow-hidden">
               <div className="text-center rounded p-4 border-gray-500 shadow-lg border m-4">
-                <h1 className="text-3xl mb-4  rounded border-gray-500">
+                <h1 className="text-3xl mb-4 rounded border-gray-500">
                   Finished!
                 </h1>
                 <div className="m-4">
