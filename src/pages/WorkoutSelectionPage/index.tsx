@@ -11,14 +11,12 @@ import {
   deleteRoutine,
   storeRoutine,
 } from "@/lib/store/dwn/routines";
-import { storeSession } from "@/lib/store/dwn/session";
 
 import { Routine, WorkoutSession } from "@/models/workout";
 import RoutineCard from "@/components/RoutineCard";
 import SettingInfo from "@/components/SettingInfo";
 import RoutineConfigurationForm from "@/components/configureRoutine/RoutineConfigurationForm";
 import { useRouter } from "next/router";
-import { setWorkout } from "@/lib/actions/workout";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
 import { formatDuration } from "@/lib/time";

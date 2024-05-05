@@ -28,7 +28,7 @@ export const getSessions = async (web5: Web5) => {
       },
     },
   });
-  console.log("returning records", records);
+  console.log("^^^^^^ returning records", records);
   return records;
 };
 
@@ -49,23 +49,28 @@ export const getSession = async (
 };
 
 export const updateSession = async (session: WorkoutSession, web5: Web5) => {
+  if (session.id === undefined) {
+    throw new Error("session id is missing");
+  }
+
+  return;
+  const sessionCopy = { ...session };
   let { record } = await web5.dwn.records.read({
     message: {
       filter: {
-        recordId: session.id,
+        recordId: sessionCopy.id,
       },
     },
   });
-  const { status } = await record.update({ data: JSON.stringify(session) });
+  sessionCopy.id = undefined;
+  const { status } = await record.update({ data: JSON.stringify(sessionCopy) });
   if (status.code !== 202) {
     throw new Error("failed to update session");
   }
-  console.log("session updated");
 };
 
 export const storeSession = async (session: WorkoutSession, web5: Web5) => {
   const payload = JSON.stringify(session);
-  console.log("storeSession", payload);
   const replyResponse = await web5.dwn.records.create({
     store: true,
     data: payload,
@@ -77,9 +82,7 @@ export const storeSession = async (session: WorkoutSession, web5: Web5) => {
     },
   });
   if (replyResponse.status.code !== 202) {
-    console.log(replyResponse);
-    throw new Error("failed to store session");
+    throw new Error("failed to store routine");
   }
-  console.log("session stored", replyResponse);
   return replyResponse.record?.id;
 };

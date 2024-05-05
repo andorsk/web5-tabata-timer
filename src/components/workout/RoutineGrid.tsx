@@ -4,7 +4,7 @@ import { RootState } from "@/lib/reducers";
 import { Routine, WorkoutSession } from "@/models/workout";
 import { useSelector, useDispatch } from "react-redux";
 import RoutineCard from "@/components/RoutineCard";
-import { storeSession } from "@/lib/store/dwn/session";
+import { updateSession } from "@/lib/store/dwn/session";
 import RoutineConfigurationForm from "@/components/configureRoutine/RoutineConfigurationForm";
 import { setRoutines } from "@/lib/actions/workout";
 import { WorkoutState } from "@/lib/reducers/workout";
@@ -53,17 +53,30 @@ function RoutineGrid() {
   const createWorkout = (r: Routine) => {
     console.log("creating workout");
     setIsLoading(true);
-    workoutState.manager.setWorkout({ routine: r });
-    workoutState.manager?.startWorkout();
-    // store the state of the session
-    console.log("started workout");
-    setIsLoading(false);
+    if (web5state.web5) {
+      const startWorkout = async () => {
+        await workoutState.manager.setWorkout({
+          routine: r,
+          web5: web5state.web5,
+        });
+        workoutState.manager?.startWorkout();
+        console.log("started workout");
+        setIsLoading(false);
+      };
+      startWorkout();
+    } else {
+      alert("failed to load. web5 not ready");
+    }
   };
 
   useEffect(() => {
     const sessionHandler = async (workoutState: WorkoutState, web5: Web5) => {
-      if (workoutState?.manager?.workout) {
-        const sessionId = await storeSession(
+      if (
+        workoutState?.manager?.workout &&
+        workoutState?.manager?.workout?.id
+      ) {
+        console.log("updating session");
+        const sessionId = await updateSession(
           workoutState.manager.workout,
           web5,
         );

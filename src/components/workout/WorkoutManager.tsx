@@ -3,7 +3,9 @@ import Timer from "@/components/timer";
 import { WorkoutSession, Routine } from "@/models/workout";
 import { createSteps, computeTotalTimeFromSteps } from "@/lib/workout";
 import { soundPlayer } from "@/components/sound/SoundLibrary"; // Ensure this is correctly set up to play sounds
+import { storeSession } from "@/lib/store/dwn/session";
 import { vibrationPlayer } from "@/components/timer/VibrationPlayer"; // Ensure this is correctly set up to play sounds
+import { Web5 } from "@web5/api";
 
 import { Step } from "@/models/workout";
 
@@ -43,7 +45,7 @@ export type WorkoutManagerI = {
 };
 
 export class WorkoutManager implements WorkoutManagerI {
-  workout: WorkoutSession | null = null;
+  _workout: WorkoutSession | null = null;
   isWorkoutActive: boolean = false;
   currentStep: number = 0;
   isCompleted: boolean = false;
@@ -75,9 +77,12 @@ export class WorkoutManager implements WorkoutManagerI {
     this.dispatch = null;
   }
 
-  startWorkout() {
+  get workout() {
+    return this._workout;
+  }
+
+  startWorkout(web5: Web5) {
     if (this.started) return;
-    console.log("starting workout");
     this.started = true;
     this.unpauseWorkout();
   }
@@ -117,11 +122,11 @@ export class WorkoutManager implements WorkoutManagerI {
     }
   }
 
-  resetWorkout() {
+  resetWorkout(web5: Web5) {
     this.isWorkoutActive = false;
     this.started = false;
     if (this?.workout?.routine) {
-      this.setWorkout({ routine: this?.workout?.routine });
+      this.setWorkout({ routine: this?.workout?.routine, web5: Web5 });
     }
     if (this.timer) {
       this.timer.reset();
@@ -160,10 +165,6 @@ export class WorkoutManager implements WorkoutManagerI {
     this.timeLeft = this.timeFromBeginningOfSet;
     this.playedThreeSecondSound = false;
     console.log("set is updated");
-    if (this.dispatch) {
-      // @ts-ignore
-      this.dispatch(refreshWorkout(this));
-    }
   }
 
   nextStep() {
@@ -177,10 +178,6 @@ export class WorkoutManager implements WorkoutManagerI {
     ) {
       this.endWorkout();
       console.log("ending workout");
-      if (this.workout && this.dispatch) {
-        // @ts-ignore
-        this.dispatch(refreshWorkout(this));
-      }
       return;
     }
     console.log("setting step", this.currentStep + 1);
@@ -230,10 +227,10 @@ export class WorkoutManager implements WorkoutManagerI {
     this.dispatch = dispatch;
   }
 
-  setWorkout(params: { routine: Routine }) {
+  async setWorkout(params: { routine: Routine; web5: Web5 }) {
     const steps = createSteps(params.routine.config);
     const totalTime = computeTotalTimeFromSteps(steps);
-    this.workout = {
+    let workout = {
       routine: params.routine,
       steps,
       totalTime,
@@ -242,18 +239,20 @@ export class WorkoutManager implements WorkoutManagerI {
       isWorkoutActive: false,
       completed: false,
     };
+    if (params.web5) {
+      const sessionId = await storeSession(workout, params.web5);
+      workout.id = sessionId;
+      this.sessionId = "asdf";
+    }
+    this._workout = workout;
     // Add Start Workout to DWN
     this.timer = new Timer(() => this.onTimerTick());
     this.set = true;
     this.started = false;
     this.setStep(0);
     this.isWorkoutActive = false;
-    if (this.dispatch) {
-      // @ts-ignore
-      this.dispatch(refreshWorkout(this));
-    }
     this.ready = true;
-    console.log("set workout ", this.workout);
+    this.dispatch(refreshWorkout(this));
   }
 }
 

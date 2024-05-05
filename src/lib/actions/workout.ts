@@ -114,10 +114,13 @@ export const refreshTimer = (state: TimerState): RefreshTimerAction => ({
   payload: state,
 });
 
-export const refreshWorkout = (w: WorkoutManagerI): RefreshWorkoutAction => ({
-  type: REFRESH_WORKOUT,
-  payload: w,
-});
+export const refreshWorkout = (w: WorkoutManagerI): RefreshWorkoutAction => {
+  console.log("refreshing workout ", w?.workout?.id);
+  return {
+    type: REFRESH_WORKOUT,
+    payload: w,
+  };
+};
 
 export const isReady = (): IsReadyAction => ({
   type: IS_READY,

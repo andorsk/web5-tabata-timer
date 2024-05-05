@@ -155,7 +155,7 @@ function Header({ handleToggleWorkout, router }) {
   return (
     <div className={`flex flex-col w-full`}>
       <div className="m-2 absolute">
-        Session: {workoutState?.manager?.sessionId?.slice(-6)}
+        Session: {workoutState?.manager?.workout?.id?.slice(-6)}
       </div>
       <div className="flex justify-between items-center p-4 ">
         <div className="flex">
@@ -221,7 +221,7 @@ export default function PlayScreen() {
   const toggleWorkout = () => {
     if (!workoutState.manager.started) {
       console.log("starting workout");
-      workoutState.manager.startWorkout();
+      workoutState.manager.startWorkout(web5state.web5);
     } else {
       console.log("toggling workout");
       workoutState.manager.toggleWorkout();
@@ -269,7 +269,7 @@ export default function PlayScreen() {
                   <button
                     className="p-2 text-4xl rounded"
                     onClick={() => {
-                      workoutState?.manager?.resetWorkout();
+                      workoutState?.manager?.resetWorkout(web5state.web5);
                       workoutState?.manager?.startWorkout();
                       workoutState?.manager?.unpauseWorkout();
                     }}

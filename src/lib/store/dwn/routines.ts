@@ -74,6 +74,9 @@ export const getRoutine = async (id: string, web5: Web5): Promise<Routine> => {
 };
 
 export const updateRoutine = async (routine: Routine, web5: Web5) => {
+  if (routine.id === undefined) {
+    throw new Error("routine id is missing");
+  }
   let { record } = await web5.dwn.records.read({
     message: {
       filter: {
@@ -85,5 +88,4 @@ export const updateRoutine = async (routine: Routine, web5: Web5) => {
   if (status.code !== 202) {
     throw new Error("failed to store routine");
   }
-  console.log("routine updated");
 };
