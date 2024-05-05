@@ -23,6 +23,7 @@ export type WorkoutManagerI = {
   setDispatcher: (dispatch: Dispatch) => void;
   totalTime: number;
   pauseWorkout: () => void;
+  unpauseWorkout: () => void;
   previousStep: () => void;
   nextStep: () => void;
   resetWorkout: () => void;
@@ -101,6 +102,7 @@ export class WorkoutManager implements WorkoutManagerI {
 
   unpauseWorkout() {
     if (this.isWorkoutActive || !this.timer) return;
+    console.log("unpausing");
     this.isWorkoutActive = true;
     this.timer.play();
   }
@@ -116,7 +118,9 @@ export class WorkoutManager implements WorkoutManagerI {
   resetWorkout() {
     this.isWorkoutActive = false;
     this.started = false;
-    this.setWorkout({ routine: this.workout.routine });
+    if (this?.workout?.routine) {
+      this.setWorkout({ routine: this?.workout?.routine });
+    }
     if (this.timer) {
       this.timer.reset();
     }

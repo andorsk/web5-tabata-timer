@@ -23,12 +23,15 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
 import { formatDuration } from "@/lib/time";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import { TimerBar } from "@/components/timer";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import { WorkoutState } from "@/lib/reducers/workout";
+import WorkoutNotificationToolbar from "@/components/play/WorkoutNotificationToolbar";
+import RoutineGrid from "@/components/workout/RoutineGrid";
 
 // @ts-ignore
 const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
@@ -48,210 +51,6 @@ const loadRoutines = async (web5?: Web5 | null, dispatch: Dispatch) => {
   console.log("routines loaded", msg);
 };
 
-function CardGrid() {
-  const workoutState = useSelector((state: RootState) => state.workout);
-  const dispatch = useDispatch();
-  const web5state = useSelector((state: RootState) => state.web5);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedRoutine, setSelectedRoutine] = useState<Routine | null>(null);
-
-  const [chosenId, setChosenId] = useState("");
-  const router = useRouter();
-
-  useEffect(() => {
-    workoutState.manager.setDispatcher(dispatch);
-  }, []);
-
-  const createWorkout = (r: Routine) => {
-    console.log("creating workout");
-    setIsLoading(true);
-    workoutState.manager.setWorkout({ routine: r });
-    workoutState.manager?.startWorkout();
-    // store the state of the session
-    console.log("started workout");
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    const sessionHandler = async (workoutState: WorkoutState, web5: Web5) => {
-      if (workoutState?.manager?.workout) {
-        const sessionId = await storeSession(
-          workoutState.manager.workout,
-          web5,
-        );
-        workoutState.manager.sessionId = sessionId;
-        console.log("current session id", sessionId);
-      }
-    };
-    if (web5state.web5) {
-      sessionHandler(workoutState, web5state.web5);
-    }
-  }, [workoutState.manager.workout]);
-
-  const enterPlayMode = () => {
-    console.log("entering play mode!");
-    router.push("/play");
-  };
-
-  const handleSelect = (r: Routine) => {
-    // get current routine
-    const curRoutineId = workoutState.manager?.workout?.routine?.id;
-    setChosenId(r.id || "");
-    if (r.id === curRoutineId) {
-      // GO TO EXISTING ROUTINE
-      enterPlayMode();
-    } else {
-      console.log("loading workout", r);
-      createWorkout(r);
-      enterPlayMode();
-    }
-    setChosenId("");
-  };
-
-  const deleteRoutineHandler = (r: Routine) => {
-    if (web5state.web5 && web5state.loaded) {
-      deleteRoutine(r?.id || "", web5state.web5).then(() => {
-        setIsLoading(true);
-        loadRoutines(web5state.web5, dispatch);
-        setIsLoading(false);
-      });
-    }
-  };
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-      {workoutState.routines.map((routine) => (
-        <RoutineCard
-          key={routine.id}
-          routine={routine}
-          onSelect={handleSelect}
-          onDelete={deleteRoutineHandler}
-          onEdit={() => {
-            setSelectedRoutine(routine);
-            setShowEditModal(true);
-          }}
-          children={
-            isLoading &&
-            chosenId === routine.id && <div className="p-4">Loading</div>
-          }
-        />
-      ))}
-      {showEditModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
-            <div className="modal-container w-full bg-white text-black fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  max-w-screen-md p-6 rounded-lg shadow-lg overflow-y-auto">
-              <RoutineConfigurationForm
-                title="Edit Routine"
-                onSubmit={(r: Routine) => {
-                  const handle = async (r: Routine) => {
-                    try {
-                      if (!web5state.web5) {
-                        throw new Error("web5 not ready");
-                      }
-                      await updateRoutine(r, web5state.web5);
-                      setShowEditModal(false);
-                      loadRoutines(web5state.web5, dispatch);
-                    } catch (e) {
-                      console.error(e);
-                    }
-                  };
-                  handle(r);
-                }}
-                onClose={() => {
-                  setShowEditModal(false);
-                }}
-                defaultValues={selectedRoutine || undefined}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CurrentWorkoutCard() {
-  const workoutState = useSelector((state: RootState) => state.workout);
-  const name = workoutState?.manager?.workout?.routine?.name;
-  const totalWorkoutTimeLeft = workoutState?.manager?.timeLeft;
-  const timeLeft = workoutState?.manager?.timer?.remainingTime;
-  const [formattedTimeLeft, setFormattedTimeLeft] = useState("");
-  const [totalTimeLeft, setFormattedTotalTimeLeft] = useState("");
-  const currentStep = workoutState?.manager?.getStep(
-    workoutState?.manager?.currentStep,
-  );
-  const router = useRouter();
-
-  useEffect(() => {
-    if (timeLeft) {
-      setFormattedTimeLeft(formatDuration(Math.floor(timeLeft / 1000 ?? 0)));
-    }
-    if (totalWorkoutTimeLeft) {
-      setFormattedTotalTimeLeft(
-        formatDuration(Math.floor(totalWorkoutTimeLeft / 1000 ?? 0)),
-      );
-    }
-  }, [timeLeft]);
-
-  return (
-    <div
-      className={`shadow-lg bg-white rounded-lg p-4 m-4 relative hover:bg-gray-100`}
-    >
-      <div className="mainStep">
-        <button
-          className={`${currentStep?.color} text-white rounded-md py-1 px-2 text-sm`}
-        >
-          {currentStep?.name}
-        </button>
-        <button className="text-black rounded-md py-1 px-2 text-sm">
-          {workoutState.manager?.isWorkoutActive ? "active" : "inactive"}
-        </button>
-      </div>
-      <div>
-        <div className="flex justify-between items-center">
-          <div>
-            {formattedTimeLeft} {totalTimeLeft}
-            <br />
-            {name} Step: {currentStep?.cycle} Set: {currentStep?.set}
-          </div>
-        </div>
-        <TimerBar
-          currentTime={(currentStep?.duration || 0) - (timeLeft || 0)}
-          totalTime={currentStep?.duration || 0}
-          color={currentStep?.color || ""}
-        />
-        <div className="absolute top-0 right-0 m-2">
-          <button
-            onClick={() => {
-              router.push("/play");
-            }}
-            className="text-4xl font-semibold hover:bg-gray-200"
-          >
-            <PlayArrowIcon />
-          </button>
-          <button
-            onClick={() => {
-              workoutState?.manager?.previousStep();
-            }}
-            className="text-4xl font-semibold hover:bg-gray-200"
-          >
-            <SkipPreviousIcon />
-          </button>
-          <button
-            onClick={() => {
-              workoutState?.manager?.nextStep();
-            }}
-            className="text-4xl font-semibold hover:bg-gray-200"
-          >
-            <SkipNextIcon />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 export default function WorkoutSelectionView() {
   const web5state = useSelector((state: RootState) => state.web5);
   const workoutState = useSelector((state: RootState) => state.workout);
@@ -301,7 +100,7 @@ export default function WorkoutSelectionView() {
         <div className="flex rounded-lg text-4xl text-white">
           <button
             onClick={() => router.push("/activity")}
-            className="text-white "
+            className="text-white"
           >
             <InsertChartIcon />
           </button>
@@ -327,12 +126,13 @@ export default function WorkoutSelectionView() {
         </div>
       </div>
       {showInfo && <SettingInfo />}
-      {workoutState.manager.started && <CurrentWorkoutCard />}
+      {workoutState.manager.started && <WorkoutNotificationToolbar />}
+
       <div className="routine-cards-container">
         {!isLoading ? (
           <div>
             {workoutState.routines.length > 0 ? (
-              <CardGrid />
+              <RoutineGrid />
             ) : (
               <div className="p-4">
                 No routines found. Please add a routine.{" "}
