@@ -1,8 +1,8 @@
 {
   "name": "Web5 Tabata Timer",
-  "short_name": "web5_tabata_timer",
-  "theme_color": "#2196f3",
-  "background_color": "#2196f3",
+  "short_name": "web5tabata",
+  "theme_color": "#22c55e",
+  "background_color": "#22c55e",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
@@ -39,12 +39,6 @@
       "purpose": "maskable any"
     },
     {
-      "src": "icons/152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
       "src": "icons/192x192.png",
       "sizes": "192x192",
       "type": "image/png",
@@ -57,7 +51,7 @@
       "purpose": "maskable any"
     },
     {
-      "src": "icons/512x512.png",
+      "src": "icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
