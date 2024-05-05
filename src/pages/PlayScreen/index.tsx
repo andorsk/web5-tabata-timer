@@ -163,7 +163,6 @@ function Header({ handleToggleWorkout, router }) {
             <HomeIcon />
           </button>
         </div>
-
         <div className="p-4 text-center font-bold text-2xl">
           {workoutState?.manager.timeLeft !== undefined
             ? formatDuration(
@@ -231,8 +230,9 @@ export default function PlayScreen() {
               <div>
                 <Header router={router} handleToggleWorkout={toggleWorkout} />
               </div>
-              <div className="h-4/6 overflow-y-auto ">
+              <div className="h-4/6 overflow-y-auto">
                 <StepView />
+                <div className="h-3/6"></div>
               </div>
               <div className="absolute bottom-0 w-full">
                 {" "}
