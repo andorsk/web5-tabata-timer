@@ -1,7 +1,7 @@
 {
   "name": "Web5 Tabata Timer",
-  "short_name": "web5_tabata_timer",
-  "theme_color": "#22c55e"
+  "short_name": "web5tabata",
+  "theme_color": "#22c55e",
   "background_color": "#22c55e",
   "display": "standalone",
   "orientation": "portrait",
