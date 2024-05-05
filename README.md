@@ -60,25 +60,27 @@ bun dev
 - [x] Settings
 - [x] Save Sessions
 - [x] Done Screen
+- [x] Vibrate on 3 seconds
+- [x] Activity Screen
+  - [x] Delete Session
+  - [ ] Edit Session
+  - [ ] Search
+  - [ ] Overview / Heatmap
 - [ ] Launch on Google Play store <- IN PROGRESS
 - [ ] Lock Screen Preview
 - [ ] Notifications
 - [ ] Sync 
 - [ ] Share sessions
+ - [ ] Add friends
 - [ ] Better password management
-- [ ] Vibrate on 3 seconds
-- [ ] Activity Screen
-  - [ ] CRUD Operations
 
 * Bug Fixes
 
 - [x] Fix Build 
 - [x] Fix Pause/Play
 - [x] Fix Inputs For Form
+- [x] Fix component size for steps on Play View
 - [x] Maskable Logo
-- [ ] Fix component size for steps on Play View
-- [ ] Show running workout on top of home and allow you to re-enter it. 
-- [ ] Backup/Sync
 - [ ] Do not show updated records on activiy
 - [ ] Timer stops on sleep 
   

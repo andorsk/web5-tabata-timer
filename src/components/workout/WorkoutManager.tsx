@@ -3,6 +3,8 @@ import Timer from "@/components/timer";
 import { WorkoutSession, Routine } from "@/models/workout";
 import { createSteps, computeTotalTimeFromSteps } from "@/lib/workout";
 import { soundPlayer } from "@/components/sound/SoundLibrary"; // Ensure this is correctly set up to play sounds
+import { vibrationPlayer } from "@/components/timer/VibrationPlayer"; // Ensure this is correctly set up to play sounds
+
 import { Step } from "@/models/workout";
 
 import { Dispatch } from "redux";
@@ -202,6 +204,15 @@ export class WorkoutManager implements WorkoutManagerI {
         if (soundPlayer) {
           soundPlayer.play();
           this.playedThreeSecondSound = true;
+        }
+        // TODO: fix. this isn't robust. Make it more robust
+        if (
+          vibrationPlayer &&
+          (state.remainingTime === 2000 ||
+            state.remainingTime === 1000 ||
+            state.remainingTime === 3000)
+        ) {
+          vibrationPlayer.shortVibrate(); // Vibrate at 1 second
         }
       }
       if (state.remainingTime <= 0) {
