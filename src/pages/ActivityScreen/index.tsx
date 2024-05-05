@@ -111,7 +111,7 @@ function SessionCard({
         </div>
         <div>
           <span className="font-bold">Workout Name:</span>{" "}
-          {session?.routine.name}
+          {session?.routine?.name}
         </div>
         <div>
           <span className="font-bold">Start Time:</span> {session?.startTime}
@@ -175,7 +175,7 @@ export default function ActivityPage() {
 
   return (
     <div>
-      <div className="absolute top-0 right-0 p-2 text-4xl rounded">
+      <div className="absolute top-0 left-4 p-2 text-4xl rounded">
         <HomeButton />
       </div>
       <div className="flex justify-center items-center">
