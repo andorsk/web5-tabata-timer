@@ -74,6 +74,7 @@ export class WorkoutManager implements WorkoutManagerI {
 
   startWorkout() {
     if (this.started) return;
+    console.log("starting workout");
     this.started = true;
     this.unpauseWorkout();
   }
@@ -114,7 +115,8 @@ export class WorkoutManager implements WorkoutManagerI {
 
   resetWorkout() {
     this.isWorkoutActive = false;
-    this.workout = null;
+    this.started = false;
+    this.setWorkout({ routine: this.workout.routine });
     if (this.timer) {
       this.timer.reset();
     }

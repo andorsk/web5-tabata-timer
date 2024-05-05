@@ -56,7 +56,7 @@ function FinishedDetails({ workoutState }: FinishedDetailsProps) {
         {workoutState?.manager?.workout?.endTime}
       </div>
       <div>
-        <span className="font-bold">Time Required to Complete:</span>{" "}
+        <span className="font-bold">Time Required to Complete:</span> <br />
         {computedDuration}
       </div>
       <div>
