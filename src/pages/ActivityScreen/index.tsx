@@ -2,7 +2,7 @@ import WorkoutChart from "@/components/workout/WorkoutChart";
 import HomeButton from "@/components/buttons/navigation/HomeButton";
 
 import { useRouter } from "next/router";
-import { getSessions } from "@/lib/store/dwn/session";
+import { getSessions, deleteSession } from "@/lib/store/dwn/session";
 import { WorkoutSession, Step } from "@/models/workout";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -170,6 +170,7 @@ export default function ActivityPage() {
         return { ...vv, id: v.id } as WorkoutSession;
       }),
     );
+    console.log("setting new sessions");
     setSessions(data);
   };
 
@@ -194,8 +195,15 @@ export default function ActivityPage() {
               onEdit={(w: WorkoutSession) => {
                 alert("not supported yet");
               }}
-              onDelete={(w: WorkoutSession) => {
-                alert("not supported yet");
+              onDelete={async (w: WorkoutSession) => {
+                try {
+                  if (web5state.web5 && w.id) {
+                    await deleteSession(w.id, web5state.web5);
+                    await loadSessions(web5state.web5);
+                  }
+                } catch (e) {
+                  alert(e);
+                }
               }}
               onShare={(w: WorkoutSession) => {
                 alert("not supported yet");
