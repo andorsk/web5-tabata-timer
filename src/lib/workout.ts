@@ -35,15 +35,17 @@ export const createSteps = (config: RoutineConfiguration): Step[] => {
         });
       }
     }
-    steps.push({
-      name: config.RestBetweenSteps.name,
-      duration: config.RestBetweenSteps.duration,
-      color: "bg-teal-500",
-      cycle: 0,
-      totalSets: config.Sets.value,
-      totalCycles: config.Cycles.value,
-      set: j,
-    });
+    if (j < config.Sets.value - 1) {
+      steps.push({
+        name: config.RestBetweenSteps.name,
+        duration: config.RestBetweenSteps.duration,
+        color: "bg-teal-500",
+        cycle: 0,
+        totalSets: config.Sets.value,
+        totalCycles: config.Cycles.value,
+        set: j,
+      });
+    }
   }
 
   steps.push({
