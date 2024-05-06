@@ -51,7 +51,7 @@ export const createSteps = (config: RoutineConfiguration): Step[] => {
   steps.push({
     name: config.CoolDown.name,
     duration: config.CoolDown.duration,
-    color: "bg-teal-500",
+    color: "bg-cyan-500",
     cycle: 0,
     totalSets: 1,
     totalCycles: config.Cycles.value,
@@ -61,7 +61,7 @@ export const createSteps = (config: RoutineConfiguration): Step[] => {
   steps.push({
     name: "Finish",
     duration: 0,
-    color: "bg-blue-500",
+    color: "bg-violet-500",
     cycle: 0,
     totalSets: 0,
     totalCycles: 0,
