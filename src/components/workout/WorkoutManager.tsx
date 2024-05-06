@@ -232,9 +232,15 @@ export class WorkoutManager implements WorkoutManagerI {
   }
 
   async setStep(step: number) {
-    if (!this.workout || step < 0 || step > this.workout.steps.length) {
+    if (!this.workout || step < 0) {
       throw new Error("Invalid step set. Must be valid and session created.");
     }
+
+    if (this._currentStep >= this.workout.steps.length - 1) {
+      await this.endWorkout();
+      return;
+    }
+
     this._set = true;
     this._currentStep = step;
     if (this._timer && this._workout) {
@@ -252,14 +258,6 @@ export class WorkoutManager implements WorkoutManagerI {
 
   async nextStep() {
     if (this.workout?.completed) {
-      return;
-    }
-    if (
-      this.workout &&
-      this.workout.steps &&
-      this._currentStep >= this.workout.steps.length - 1
-    ) {
-      await this.endWorkout();
       return;
     }
     await this.setStep(this._currentStep + 1);
