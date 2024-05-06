@@ -32,6 +32,23 @@ function WorkoutNotificationToolbar() {
     }
   }, [timeLeft]);
 
+  const showNotification = (title: string, body: string) => {
+    if ("Notification" in window) {
+      Notification.requestPermission().then(function (permission) {
+        if (permission === "granted") {
+          new Notification(title, { body });
+        } else {
+          console.error("Permission denied for Notification");
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log("showing notification");
+    showNotification("Workout", "HI");
+  }, [workoutState, workoutState.manager.timer]);
+
   return (
     <div
       onClick={() => {

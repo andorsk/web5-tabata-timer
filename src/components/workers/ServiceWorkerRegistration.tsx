@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import WakeLock from "./WakeLock";
 
 function ServiceWorkerRegistration() {
   const [registrationStatus, setRegistrationStatus] = useState("pending");
@@ -41,7 +42,12 @@ function ServiceWorkerRegistration() {
       message = "";
   }
 
-  return <div>{message}</div>;
+  return (
+    <div>
+      {message}
+      <WakeLock />
+    </div>
+  );
 }
 
 export default ServiceWorkerRegistration;
