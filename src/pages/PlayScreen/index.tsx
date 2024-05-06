@@ -79,7 +79,12 @@ function StepView() {
   //   workoutState.manager.ready,
   // ]);
 
-  const whiteListedNames = ["Rest Between Sets", "Cool Down", "Preparation"];
+  const whiteListedNames = [
+    "Rest Between Sets",
+    "Cool Down",
+    "Preparation",
+    "Finish",
+  ];
 
   return (
     <div className="overflow-y-auto">
