@@ -262,7 +262,7 @@ export default function PlayScreen() {
               </div>
             </>
           ) : (
-            <div className="flex items-center bg-blue-500 justify-center h-screen overflow-hidden">
+            <div className="flex items-center justify-center h-screen overflow-hidden">
               <div className="text-center rounded p-4 border-gray-500 shadow-lg border m-4">
                 <h1 className="text-3xl mb-4 rounded border-gray-500">
                   Finished!
