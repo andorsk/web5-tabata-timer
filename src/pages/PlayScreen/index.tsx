@@ -32,6 +32,7 @@ function StepView() {
     if (workoutState.manager?.workout?.steps.length === 0) {
       return;
     }
+    console.log("setting step to", index);
     workoutState.manager?.setStep(index);
   };
 
@@ -51,33 +52,6 @@ function StepView() {
       workoutState?.manager.workout?.steps[workoutState?.manager.currentStep],
     );
   }, [workoutState]);
-
-  // useEffect(() => {
-  //   const h = async (workoutState: WorkoutState, web5state: Web5State) => {
-  //     if (
-  //       workoutState?.manager?.started &&
-  //       web5state?.loaded &&
-  //       !isUpdating &&
-  //       workoutState.manager.workout &&
-  //       web5state.web5
-  //     ) {
-  //       try {
-  //         await updateSession(workoutState?.manager?.workout, web5state.web5);
-  //       } catch (e) {
-  //         console.error("failed to get session", e);
-  //       }
-  //     }
-  //   };
-  //   // TODO. Fix
-  //   // @ts-ignore
-  //   h(workoutState, web5state);
-  // }, [
-  //   workoutState.manager.currentStep,
-  //   workoutState.manager.isWorkoutActive,
-  //   workoutState.manager.workout._completed,
-  //   workoutState.manager.started,
-  //   workoutState.manager.ready,
-  // ]);
 
   const whiteListedNames = [
     "Rest Between Sets",
@@ -136,7 +110,6 @@ function Footer() {
       workoutState?.manager.workout?.steps[workoutState?.manager.currentStep],
     );
     if (!workoutState.manager.ready) {
-      alert("no workout set. routing you to select first");
       router.push("/");
     }
   }, [workoutState]);
