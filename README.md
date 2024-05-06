@@ -82,7 +82,6 @@ bun dev
 - [x] Fix component size for steps on Play View
 - [x] Maskable Logo
 - [x] Multiple sessions for a single workout
-- [ ] Do not show updated records on activiy
 - [ ] Timer stops on sleep 
   
 * Code
