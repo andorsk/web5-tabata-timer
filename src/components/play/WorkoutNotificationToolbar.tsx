@@ -35,7 +35,9 @@ function WorkoutNotificationToolbar() {
   const showNotification = (title: string, body: string) => {
     if ("Notification" in window) {
       Notification.requestPermission().then(function (permission) {
+        alert("notification requested");
         if (permission === "granted") {
+          alert("notification granted");
           new Notification(title, { body });
         } else {
           console.error("Permission denied for Notification");
@@ -46,7 +48,7 @@ function WorkoutNotificationToolbar() {
 
   useEffect(() => {
     console.log("showing notification");
-    showNotification("Workout", "HI");
+    showNotification("Web Tabata Timer Workout ", "<div>adsf</div>");
   }, [workoutState, workoutState.manager.timer]);
 
   return (
