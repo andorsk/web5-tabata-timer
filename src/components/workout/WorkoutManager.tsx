@@ -236,13 +236,12 @@ export class WorkoutManager implements WorkoutManagerI {
       throw new Error("Invalid step set. Must be valid and session created.");
     }
 
-    if (this._currentStep >= this.workout.steps.length - 1) {
+    this._set = true;
+    this._currentStep = step;
+    if (step >= this.workout.steps.length - 1) {
       await this.endWorkout();
       return;
     }
-
-    this._set = true;
-    this._currentStep = step;
     if (this._timer && this._workout) {
       this._timer.setTime(this._workout?.steps[step]?.duration);
     }
