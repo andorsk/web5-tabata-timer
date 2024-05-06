@@ -66,24 +66,6 @@ export default function WorkoutSelectionView() {
     }
   }, [web5state]);
 
-  useEffect(() => {
-    if (workoutState) {
-      showNotification(workoutState);
-    }
-  }, [workoutState]);
-
-  // TODO: fix typing
-  // @ts-ignore
-  const showNotification = (workoutState: any) => {
-    const name = workoutState?.manager?.workout?.routine?.name;
-    if ("Notification" in window && Notification.permission === "granted") {
-      const notificationOptions = {
-        body: `Current Workout: ${name}`,
-      };
-      new Notification("Workout", notificationOptions);
-    }
-  };
-
   return (
     <div>
       <div className="flex justify-between items-center m-4">
