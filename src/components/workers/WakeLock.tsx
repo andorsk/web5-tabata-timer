@@ -5,7 +5,7 @@ const WakeLock: React.FC = () => {
 
   const requestWakeLock = async () => {
     try {
-      console.log("requestign wakelock");
+      console.log("requesting wakelock");
       const newWakeLock = await navigator.wakeLock.request("screen");
       newWakeLock.addEventListener("release", () => {
         console.log("Wake Lock was released");

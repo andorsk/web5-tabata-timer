@@ -32,23 +32,40 @@ function WorkoutNotificationToolbar() {
     }
   }, [timeLeft]);
 
-  const showNotification = (title: string, body: string) => {
+  const requestNotificationPermission = () => {
     if ("Notification" in window) {
-      Notification.requestPermission().then(function (permission) {
-        alert("notification requested");
-        if (permission === "granted") {
-          alert("notification granted");
-          new Notification(title, { body });
+      Notification.requestPermission((result) => {
+        if (result === "granted") {
+          console.log("Acess granted! :)");
+          showServerTimeNotification();
+        } else if (result === "denied") {
+          console.log("Access denied :(");
         } else {
-          console.error("Permission denied for Notification");
+          console.log("Request ignored :/");
         }
       });
     }
   };
 
+  function showServerTimeNotification() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        console.log("sending notification");
+        setInterval(() => {
+          registration.showNotification("Server time", {
+            body: "Exercise",
+          });
+          console.log("done showing notification");
+        }, 30000);
+      });
+    }
+  }
+
+  // requestNotificationPermission();
+
   useEffect(() => {
     console.log("showing notification");
-    showNotification("Web Tabata Timer Workout ", "<div>adsf</div>");
+    //showNotification("Web Tabata Timer Workout ", "<div>adsf</div>");
   }, [workoutState, workoutState.manager.timer]);
 
   return (
