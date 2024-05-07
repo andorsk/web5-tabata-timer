@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const runtimeCaching = require("next-pwa/cache");
 
 const withPWA = require("next-pwa")({
   dest: "public",
@@ -27,6 +28,10 @@ const nextConfig = {
         destination: "/ActivityScreen",
       },
     ];
+  },
+  pwa: {
+    runtimeCaching,
+    buildExcludes: [/middleware-manifest.json$/],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
