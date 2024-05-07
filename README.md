@@ -103,6 +103,10 @@ This was also a project for me to get to learn more about how front end works. T
 
 I'm sure that those more comfortable with front end might gouge out their eyes at some of the patterns. I will try to fix them.
 
+## Limitations 
+
+If you check out existing solutions, some of them have some toolbar that sits on the lockscreen. Unfortunately, due to the limits of a pwa, that's not possible for this app. We might be using the MediaSession API or I can toss notifications/push events, but that's where it falls short. I could make this react-native, but maybe another time.
+
 ## Alternatives
 
 - [Tabata Timer: Interval Timer ](https://play.google.com/store/apps/details?id=com.evgeniysharafan.tabatatimer&hl=en&gl=US&google_abuse=GOOGLE_ABUSE_EXEMPTION%3DID%3Db350816d64fae8f3:TM%3D1714433385:C%3D%3E:IP%3D49.37.163.25-:S%3DnDI4qYnhbHEdeM3q0kSbaw%3B+path%3D/%3B+domain%3Dgoogle.com%3B+expires%3DTue,+30-Apr-2024+02:29:45+GMT) -- The main app on the app store. 5M+ downloads. This is hidden behind a paywall, has ads, is not open source. We can do better. It's farther along, and has been worked on longer, but I hope that in time this app is going to clearly be better than that app. 
