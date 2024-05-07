@@ -66,9 +66,12 @@ bun dev
   - [ ] Edit Session
   - [ ] Search
   - [ ] Overview / Heatmap
-- [ ] Launch on Google Play store <- IN PROGRESS
+- [ ] Launch on Google Play store <- Internal Testing
+- [ ] Service Workers
+  - [x] Wake Lock
+  - [ ] Background Workout
+  - [ ] Notifications
 - [ ] Lock Screen Preview
-- [ ] Notifications
 - [ ] Sync 
 - [ ] Share sessions
  - [ ] Add friends
