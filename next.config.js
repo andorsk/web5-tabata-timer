@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const runtimeCaching = require("next-pwa/cache");
+const path = require("path");
 
 const withPWA = require("next-pwa")({
   dest: "public",
