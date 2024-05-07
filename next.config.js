@@ -2,6 +2,7 @@ const webpack = require("webpack");
 
 const withPWA = require("next-pwa")({
   dest: "public",
+  customWorkerDir: "src/workers",
 });
 
 /** @type {import('next').NextConfig} */

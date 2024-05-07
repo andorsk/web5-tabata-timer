@@ -25,6 +25,20 @@ class Timer {
     this._timerId = crypto.randomUUID();
     this.tickHandler = tickHandler;
     this._intervalId = null;
+
+    // Start a background sync to update timer state
+  }
+
+  async sendTimerMessage() {
+    if ("serviceWorker" in navigator && "SyncManager" in window) {
+      const registration = await navigator.serviceWorker.ready;
+      try {
+        // @ts-ignore
+        await registration.sync.register("timer-sync");
+      } catch {
+        console.log("Background Sync could not be registered!");
+      }
+    }
   }
 
   get totalTime() {
@@ -51,6 +65,7 @@ class Timer {
     if (!this._isPlaying && this._remainingTime > 0) {
       this._isPlaying = true;
       this._intervalId = setInterval(() => {
+        this.sendTimerMessage();
         if (this._remainingTime > 0) {
           this._remainingTime -= 10; // Decrease by 10 milliseconds each tick
           this.update();
@@ -58,20 +73,6 @@ class Timer {
           this.setFinished();
         }
       }, 10); // Tick every 10 milliseconds
-
-      // Start a background sync to update timer state
-      if ("serviceWorker" in navigator && "SyncManager" in window) {
-        navigator.serviceWorker.ready
-          .then((registration) => {
-            console.log("registering sync");
-            // TODO: Remove
-            // @ts-ignore
-            return registration.sync.register("timerSync");
-          })
-          .catch((err) => {
-            console.error("Background sync registration failed:", err);
-          });
-      }
     }
   }
 
