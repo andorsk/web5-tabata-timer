@@ -51,3 +51,7 @@ app
 manifest-checksum*
 
 settings.gradle
+
+**/public/workbox-*.js
+**/public/sw.js
+**/public/worker-*.js
