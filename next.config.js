@@ -5,7 +5,7 @@ const withPWA = require("next-pwa")({
   dest: "public",
   customWorkerDir: "src/workers",
   runtimeCaching,
-  buildExcludes: [/middleware-manifest.json$/],
+  buildExcludes: [/middleware-manifest.json$/, "/app-build-manifest.json$/"],
 });
 
 /** @type {import('next').NextConfig} */
@@ -33,7 +33,7 @@ const nextConfig = {
   },
   pwa: {
     runtimeCaching,
-    buildExcludes: [/middleware-manifest.json$/],
+    buildExcludes: [/middleware-manifest.json$/, "/app-build-manifest.json$/"],
   },
   webpack: (config, { isServer }) => {
     const registerJs = path.join(
