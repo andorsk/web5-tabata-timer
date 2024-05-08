@@ -246,7 +246,6 @@ export class WorkoutManager implements WorkoutManagerI {
     }
     if (this._timer && this._workout) {
       this._timer.setTime(this._workout?.steps[step]?.duration);
-      this._timer.play();
     }
 
     this._timeFromBeginningOfSet = computeTotalTimeFromSteps(

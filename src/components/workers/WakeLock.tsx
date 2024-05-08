@@ -10,7 +10,6 @@ const WakeLock: React.FC = () => {
       newWakeLock.addEventListener("release", () => {
         console.log("Wake Lock was released");
       });
-
       console.log("Wake Lock is active");
       setWakeLock(newWakeLock);
     } catch (err: any) {

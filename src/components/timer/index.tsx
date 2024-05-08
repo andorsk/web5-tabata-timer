@@ -29,19 +29,6 @@ class Timer {
     this._intervalId = null;
     this._timeStarted = 0;
     this._targetTime = 0;
-    // Start a background sync to update timer state
-  }
-
-  async sendTimerMessage() {
-    if ("serviceWorker" in navigator && "SyncManager" in window) {
-      const registration = await navigator.serviceWorker.ready;
-      try {
-        // @ts-ignore
-        await registration.sync.register("timer-sync");
-      } catch {
-        console.log("Background Sync could not be registered!");
-      }
-    }
   }
 
   get totalTime() {
@@ -64,13 +51,17 @@ class Timer {
     return this._finished;
   }
 
+  computeTargetTime(from: Date, n: number) {
+    this._targetTime = from + n; // Set the target time by adding n milliseconds to the current time.
+  }
+
   play() {
     if (!this._isPlaying && this._remainingTime > 0) {
       this._isPlaying = true;
-      this.setTime(this._remainingTime);
+      const now = Date.now();
+      this._startTime = now;
+      this.computeTargetTime(this._startTime, this._remainingTime);
       this._intervalId = setInterval(() => {
-        console.log("playing now", this._isPlaying, this._timerId);
-        // this.sendTimerMessage();
         if (this._remainingTime > 0) {
           const currentTime = Date.now();
           this._remainingTime = this._targetTime - currentTime;
@@ -116,13 +107,11 @@ class Timer {
   }
 
   setTime(n: number) {
-    //  this.reset();
-    const now = Date.now(); // Current time in milliseconds.
-    this._totalTime = n;
-    this._timeStarted = now;
-    this._targetTime = now + n; // Set the target time by adding n milliseconds to the current time.
-    const currentTime = Date.now(); // Get the current time again, if needed.
-    this._remainingTime = this._targetTime - currentTime; // Calculate remaining time.
+    this._remainingTime = n;
+    const now = Date.now();
+
+    this._startTime = now;
+    this.computeTargetTime(this._startTime, this._remainingTime);
   }
 
   setFinished() {
