@@ -249,10 +249,17 @@ export class WorkoutManager implements WorkoutManagerI {
     }
 
     this._timeFromBeginningOfSet = computeTotalTimeFromSteps(
-      this.workout.steps.slice(this._currentStep, this.workout.steps.length),
+      this.workout.steps.slice(
+        this._currentStep + 1,
+        this.workout.steps.length,
+      ),
     );
 
-    this._timeLeft = this._timeFromBeginningOfSet;
+    this._timeLeft =
+      this._timeFromBeginningOfSet -
+      (this._timer.totalTime - this._timer.remainingTime);
+
+    //    this._timeLeft = this._timeFromBeginningOfSet;
     this._playedThreeSecondSound = false;
     await this.refresh();
   }
