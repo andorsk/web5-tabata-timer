@@ -67,14 +67,13 @@ class Timer {
   play() {
     if (!this._isPlaying && this._remainingTime > 0) {
       this._isPlaying = true;
-      this._timeStarted = Date.now();
-      this._targetTime = this._timeStarted + this._remainingTime;
+      this.setTime(this._remainingTime);
+      console.log("setting time");
       this._intervalId = setInterval(() => {
         this.sendTimerMessage();
         if (this._remainingTime > 0) {
           const currentTime = Date.now();
           this._remainingTime = this._targetTime - currentTime;
-          //this._remainingTime -= 10; // Decrease by 10 milliseconds each tick
           this.update();
         } else {
           this.setFinished();
@@ -126,8 +125,16 @@ class Timer {
   }
 
   setTime(n: number) {
+    console.log("setting time to ", n);
+    this.reset();
+
+    const now = Date.now(); // Current time in milliseconds.
     this._totalTime = n;
-    this._remainingTime = n;
+    this._timeStarted = now;
+    this._targetTime = now + n; // Set the target time by adding n milliseconds to the current time.
+
+    const currentTime = Date.now(); // Get the current time again, if needed.
+    this._remainingTime = this._targetTime - currentTime; // Calculate remaining time.
   }
 
   setFinished() {
