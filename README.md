@@ -31,33 +31,40 @@ bun dev
 ```
 
 ## Screenshots
-
-* Encrypt your data with your own DWN
-<div style="height:200px">
-![./docs/screenshots/01.png](./docs/screenshots/01.png)
-</div>
-
-* Create a Routine
-![./docs/screenshots/02.png](./docs/screenshots/02.png)
-
-* Choose your routine
-![./docs/screenshots/07.png](./docs/screenshots/07.png)
-
-* Play Screen. See your cycles. 
-![./docs/screenshots/04.png](./docs/screenshots/04.png)
-
-* Toolbar to see your workout on the home page
-![./docs/screenshots/05.png](./docs/screenshots/05.png)
-
-* See your work history
-![./docs/screenshots/06.png](./docs/screenshots/06.png)
-
+<table>
+<tr>
+  <td valign="top">
+    <p><strong>Encrypt your data with your own DWN</strong></p>
+    <img src="./docs/screenshots/01.png" alt="Encrypt your data" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>Create a Routine</strong></p>
+    <img src="./docs/screenshots/02.png" alt="Create a Routine" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>Choose your routine</strong></p>
+    <img src="./docs/screenshots/07.png" alt="Choose your routine" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>Play Screen. See your cycles.</strong></p>
+    <img src="./docs/screenshots/04.png" alt="Play Screen" height="400">
+  </td>
+</tr>
+<tr>
+  <td valign="top">
+    <p><strong>Toolbar to see your workout on the home page</strong></p>
+    <img src="./docs/screenshots/05.png" alt="Toolbar" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>See your work history</strong></p>
+    <img src="./docs/screenshots/06.png" alt="Work History" height="400">
+  </td>
+</tr>
+</table>
 
 ## Demo
 
-<div class="align-center">
- <img src="./docs/imgs/demo.gif" width=400px />
-</div>
+See demo in [./docs/Web5 Tabata Timer Demo v0.0.2.mp4](./docs/Web5 Tabata Timer Demo v0.0.2.mp4)
 
 ## Work in Progress
 
