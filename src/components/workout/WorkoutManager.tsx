@@ -139,6 +139,14 @@ export class WorkoutManager implements WorkoutManagerI {
     return this._sessionId;
   }
 
+  computeTimeLeft() {
+    if (this._timer?.remainingTime) {
+      this._timeLeft = this._timeFromBeginningOfSet + this._timer.remainingTime;
+    } else {
+      this._timeLeft = this.timeFromBeginningOfSet;
+    }
+  }
+
   async startWorkout() {
     if (this.started) return;
     if (!this.ready) return;
@@ -255,15 +263,7 @@ export class WorkoutManager implements WorkoutManagerI {
       ),
     );
 
-    if (this._timer?.totalTime) {
-      this._timeLeft =
-        this._timeFromBeginningOfSet -
-        (this._timer.totalTime - this._timer.remainingTime);
-    } else {
-      this._timeLeft = this.timeFromBeginningOfSet;
-    }
-
-    //    this._timeLeft = this._timeFromBeginningOfSet;
+    this.computeTimeLeft();
     this._playedThreeSecondSound = false;
     await this.refresh();
   }
@@ -285,9 +285,7 @@ export class WorkoutManager implements WorkoutManagerI {
   onTimerTick() {
     if (this._timer && this.dispatch) {
       const state = this._timer.state();
-      this._timeLeft =
-        this._timeFromBeginningOfSet -
-        (this._timer.totalTime - this._timer.remainingTime);
+      this.computeTimeLeft();
       if (state.remainingTime <= 4000 && !this.playedThreeSecondSound) {
         if (soundPlayer) {
           soundPlayer.play();
