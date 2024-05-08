@@ -31,6 +31,7 @@ bun dev
 ```
 
 ## Screenshots
+
 <table>
 <tr>
   <td valign="top">
@@ -64,7 +65,12 @@ bun dev
 
 ## Demo
 
-See demo in [./docs/Web5 Tabata Timer Demo v0.0.2.mp4](./docs/Web5 Tabata Timer Demo v0.0.2.mp4)
+[See demo in Web5 Tabata Timer Demo v0.0.2](./docs/Web5%20Tabata%20Timer%20Demo%20v0.0.2.mp4)
+
+<video width="320" height="240" controls>
+  <source src="./docs/Web5 Tabata Timer Demo v0.0.2.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Work in Progress
 
