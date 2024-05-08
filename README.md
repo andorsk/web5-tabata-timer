@@ -33,7 +33,9 @@ bun dev
 ## Screenshots
 
 * Encrypt your data with your own DWN
+<div style="height:200px">
 ![./docs/screenshots/01.png](./docs/screenshots/01.png)
+</div>
 
 * Create a Routine
 ![./docs/screenshots/02.png](./docs/screenshots/02.png)
