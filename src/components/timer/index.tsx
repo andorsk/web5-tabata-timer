@@ -15,6 +15,8 @@ class Timer {
   private _timerId: string;
   private _finished: boolean = false;
   private _intervalId: any;
+  private _timeStarted: number;
+  private _targetTime: number;
   tickHandler: () => void;
 
   constructor(tickHandler: () => void) {
@@ -25,7 +27,8 @@ class Timer {
     this._timerId = crypto.randomUUID();
     this.tickHandler = tickHandler;
     this._intervalId = null;
-
+    this._timeStarted = 0;
+    this._targetTime = 0;
     // Start a background sync to update timer state
   }
 
@@ -64,10 +67,14 @@ class Timer {
   play() {
     if (!this._isPlaying && this._remainingTime > 0) {
       this._isPlaying = true;
+      this._timeStarted = Date.now();
+      this._targetTime = this._timeStarted + this._remainingTime;
       this._intervalId = setInterval(() => {
         this.sendTimerMessage();
         if (this._remainingTime > 0) {
-          this._remainingTime -= 10; // Decrease by 10 milliseconds each tick
+          const currentTime = Date.now();
+          this._remainingTime = this._targetTime - currentTime;
+          //this._remainingTime -= 10; // Decrease by 10 milliseconds each tick
           this.update();
         } else {
           this.setFinished();
