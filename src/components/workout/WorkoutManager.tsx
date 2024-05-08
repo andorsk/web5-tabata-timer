@@ -171,7 +171,9 @@ export class WorkoutManager implements WorkoutManagerI {
     if (!this._isWorkoutActive || !this._timer) return;
     this._isWorkoutActive = false;
     this._timer.pause();
+    console.log("pausing timer...");
     const state = this._timer.state();
+    console.log("state is refreshed", state);
     await this.refresh();
   }
 
