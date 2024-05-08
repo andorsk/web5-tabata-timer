@@ -32,10 +32,6 @@ const nextConfig = {
       },
     ];
   },
-  pwa: {
-    runtimeCaching,
-    buildExcludes: [/middleware-manifest.json$/, "/app-build-manifest.json$/"],
-  },
   webpack: (config, { isServer }) => {
     const registerJs = path.join(
       path.dirname(require.resolve("next-pwa")),
