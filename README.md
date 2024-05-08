@@ -31,18 +31,40 @@ bun dev
 ```
 
 ## Screenshots
-
-* Choose your routine
-![./imgs/home.png](./docs/imgs/home.png)
-
-* Play through the routine
-![./docs/imgs/play.png](./docs/imgs/play.png)
+<table>
+<tr>
+  <td valign="top">
+    <p><strong>Encrypt your data with your own DWN</strong></p>
+    <img src="./docs/screenshots/01.png" alt="Encrypt your data" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>Create a Routine</strong></p>
+    <img src="./docs/screenshots/02.png" alt="Create a Routine" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>Choose your routine</strong></p>
+    <img src="./docs/screenshots/07.png" alt="Choose your routine" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>Play Screen. See your cycles.</strong></p>
+    <img src="./docs/screenshots/04.png" alt="Play Screen" height="400">
+  </td>
+</tr>
+<tr>
+  <td valign="top">
+    <p><strong>Toolbar to see your workout on the home page</strong></p>
+    <img src="./docs/screenshots/05.png" alt="Toolbar" height="400">
+  </td>
+  <td valign="top">
+    <p><strong>See your work history</strong></p>
+    <img src="./docs/screenshots/06.png" alt="Work History" height="400">
+  </td>
+</tr>
+</table>
 
 ## Demo
 
-<div class="align-center">
- <img src="./docs/imgs/demo.gif" width=400px />
-</div>
+See demo in [./docs/Web5 Tabata Timer Demo v0.0.2.mp4](./docs/Web5 Tabata Timer Demo v0.0.2.mp4)
 
 ## Work in Progress
 
