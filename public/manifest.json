@@ -1,8 +1,8 @@
 {
   "name": "Web5 Tabata Timer",
   "short_name": "Web5 Tabata",
-  "theme_color": "#22c55e",
-  "background_color": "#22c55e",
+  "theme_color": "#fffff",
+  "background_color": "#fffff",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
@@ -45,7 +45,7 @@
       "purpose": "maskable any"
     },
     {
-      "src": "icons/android-chrome-512x512.png",
+      "src": "icons/maskable-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
