@@ -15,7 +15,7 @@ class Timer {
   private _timerId: string;
   private _finished: boolean = false;
   private _intervalId: any;
-  private _timeStarted: number;
+  private _startTime: number;
   private _targetTime: number;
   tickHandler: () => void;
 
@@ -27,7 +27,7 @@ class Timer {
     this._timerId = crypto.randomUUID();
     this.tickHandler = tickHandler;
     this._intervalId = null;
-    this._timeStarted = 0;
+    this._startTime = 0;
     this._targetTime = 0;
   }
 
@@ -51,7 +51,7 @@ class Timer {
     return this._finished;
   }
 
-  computeTargetTime(from: Date, n: number) {
+  computeTargetTime(from: number, n: number) {
     this._targetTime = from + n; // Set the target time by adding n milliseconds to the current time.
   }
 
