@@ -33,22 +33,22 @@ bun dev
 ## Screenshots
 
 * Encrypt your data with your own DWN
-![./docs/screnshots/01.png](./docs/screnshots/01.png)
+![./docs/screenshots/01.png](./docs/screenshots/01.png)
 
 * Create a Routine
-![./docs/screnshots/02.png](./docs/screnshots/02.png)
+![./docs/screenshots/02.png](./docs/screenshots/02.png)
 
 * Choose your routine
-![./docs/screnshots/07.png](./docs/screnshots/07.png)
+![./docs/screenshots/07.png](./docs/screenshots/07.png)
 
 * Play Screen. See your cycles. 
-![./docs/screnshots/04.png](./docs/screnshots/04.png)
+![./docs/screenshots/04.png](./docs/screenshots/04.png)
 
 * Toolbar to see your workout on the home page
-![./docs/screnshots/05.png](./docs/screnshots/05.png)
+![./docs/screenshots/05.png](./docs/screenshots/05.png)
 
 * See your work history
-![./docs/screnshots/06.png](./docs/screnshots/06.png)
+![./docs/screenshots/06.png](./docs/screenshots/06.png)
 
 
 ## Demo
