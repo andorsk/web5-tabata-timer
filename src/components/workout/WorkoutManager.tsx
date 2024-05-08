@@ -255,9 +255,13 @@ export class WorkoutManager implements WorkoutManagerI {
       ),
     );
 
-    this._timeLeft =
-      this._timeFromBeginningOfSet -
-      (this._timer.totalTime - this._timer.remainingTime);
+    if (this._timer?.totalTime) {
+      this._timeLeft =
+        this._timeFromBeginningOfSet -
+        (this._timer.totalTime - this._timer.remainingTime);
+    } else {
+      this._timeLeft = this.timeFromBeginningOfSet;
+    }
 
     //    this._timeLeft = this._timeFromBeginningOfSet;
     this._playedThreeSecondSound = false;
