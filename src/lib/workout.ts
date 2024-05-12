@@ -23,7 +23,7 @@ export const createSteps = (config: RoutineConfiguration): Step[] => {
         totalSets: config.Sets.value,
         totalCycles: config.Cycles.value,
       });
-      if (j <= config.Cycles.value - 1 && i <= config.Sets.value) {
+      if (i <= config.Cycles.value - 2) {
         steps.push({
           name: config.Rest.name,
           duration: config.Rest.duration,
