@@ -36,29 +36,29 @@ bun dev
 <tr>
   <td valign="top">
     <p><strong>Encrypt your data with your own DWN</strong></p>
-    <img src="./docs/screenshots/01.png" alt="Encrypt your data" height="400">
+    <img src="./docs/screenshots/01.png" alt="Encrypt your data" width="300">
   </td>
   <td valign="top">
     <p><strong>Create a Routine</strong></p>
-    <img src="./docs/screenshots/02.png" alt="Create a Routine" height="400">
+    <img src="./docs/screenshots/02.png" alt="Create a Routine" width="300">
   </td>
   <td valign="top">
     <p><strong>Choose your routine</strong></p>
-    <img src="./docs/screenshots/07.png" alt="Choose your routine" height="400">
+    <img src="./docs/screenshots/07.png" alt="Choose your routine" width="300">
   </td>
   <td valign="top">
     <p><strong>Play Screen. See your cycles.</strong></p>
-    <img src="./docs/screenshots/04.png" alt="Play Screen" height="400">
+    <img src="./docs/screenshots/04.png" alt="Play Screen" width="300">
   </td>
 </tr>
 <tr>
   <td valign="top">
     <p><strong>Toolbar to see your workout on the home page</strong></p>
-    <img src="./docs/screenshots/05.png" alt="Toolbar" height="400">
+    <img src="./docs/screenshots/05.png" alt="Toolbar" width="300">
   </td>
   <td valign="top">
     <p><strong>See your work history</strong></p>
-    <img src="./docs/screenshots/06.png" alt="Work History" height="400">
+    <img src="./docs/screenshots/06.png" alt="Work History" width="300">
   </td>
 </tr>
 </table>
